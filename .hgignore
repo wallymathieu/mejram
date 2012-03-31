@@ -1,0 +1,12 @@
+syntax: regexp
+/bin/
+/obj/
+
+syntax: glob
+*.csproj.user
+*.resharper.user
+*.resharper
+*.ReSharper.user
+*.ReSharper
+*.suo
+*.cache
