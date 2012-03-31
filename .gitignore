@@ -2,8 +2,10 @@
 *.suo
 *.user
 *.*~
+*.swp
 bin/
 obj/
 _ReSharper*/
 build/
 .hg/
+packages/
