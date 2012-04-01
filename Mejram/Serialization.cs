@@ -15,40 +15,40 @@ namespace Mejram
 {
     public class Serialization
     {
-        public static string GetProbableKeysFileName()
+        public string TablesFileName;
+        public string ForeignKeysFileName;
+        public string ProbableKeysFileName;
+        public string ForeignKeysCountFileName;
+        public string TableCountFileName;
+
+        public Serialization()
         {
-            return Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.ProbableForeignKeys.json.txt");
+            TablesFileName = "outfile.Tables.json.txt";
+            ForeignKeysFileName = "outfile.ForeignKeys.json.txt";
+            ProbableKeysFileName = "outfile.ProbableForeignKeys.json.txt";
+            ForeignKeysCountFileName = "outfile.table.fk.count.json.txt";
+            TableCountFileName = "outfile.table.count.json.txt";
         }
 
-        public static string GetForeignKeysFileName()
+        public void Serialize(string connectionString)
         {
-            return Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.ForeignKeys.json.txt");
-        }
-
-        public static string GetTablesFileName()
-        {
-            return Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.Tables.json.txt");
-        }
-
-        public static void Serialize()
-        {
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["database"].ConnectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 var tables = new DataBaseObjects(conn, new ITableFilter[] {}, new ITableFilter[] {});
-                using (FileStream fs = File.Open(GetTablesFileName(), FileMode.Create))
+                using (FileStream fs = File.Open(TablesFileName, FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
                     txtWriter.Write(JsonConvert.SerializeObject(tables.Tables.Values, Formatting.Indented));
                     txtWriter.Flush();
                 }
-                using (FileStream fs = File.Open(GetForeignKeysFileName(), FileMode.Create))
+                using (FileStream fs = File.Open(ForeignKeysFileName, FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
                     txtWriter.Write(JsonConvert.SerializeObject(tables.ForeignKeys, Formatting.Indented));
                     txtWriter.Flush();
                 }
                 var probfk = tables.GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
-                using (FileStream fs = File.Open(GetProbableKeysFileName(), FileMode.Create))
+                using (FileStream fs = File.Open(ProbableKeysFileName, FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
                     txtWriter.Write(JsonConvert.SerializeObject(probfk, Formatting.Indented));
@@ -57,13 +57,13 @@ namespace Mejram
                 using (
                     FileStream fs =
                         File.Open(
-                            Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.table.count.json.txt"),
+                            TableCountFileName,
                             FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
                     var tableCounts = from table in tables.Tables
                                       let count = tables.GetTableCount(table.Key)
-                                      select new System.Collections.Generic.KeyValuePair<string, int>(table.Key, count);
+                                      select new KeyValuePair<string, int>(table.Key, count);
                     // .GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
                     txtWriter.Write(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
                     txtWriter.Flush();
@@ -71,14 +71,14 @@ namespace Mejram
                 using (
                     FileStream fs =
                         File.Open(
-                            Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.table.fk.count.json.txt"),
+                            ForeignKeysCountFileName,
                             FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
                     var fkCounts = from fk in tables.ForeignKeys.Union(probfk)
                                    let count = tables.GetKeyWeight(fk)
                                    select
-                                       new System.Collections.Generic.KeyValuePair<ForeignKeyConstraint, int>(fk, count);
+                                       new KeyValuePair<ForeignKeyConstraint, int>(fk, count);
                     // .GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
                     txtWriter.Write(JsonConvert.SerializeObject(fkCounts, Formatting.Indented));
                     txtWriter.Flush();
@@ -86,16 +86,16 @@ namespace Mejram
             }
         }
 
-        public static SerializedDatabaseSchema Deserialize()
+        public SerializedDatabaseSchema Deserialize()
         {
             List<Table> tables;
-            using (var fs = File.OpenRead(GetTablesFileName()))
+            using (var fs = File.OpenRead(TablesFileName))
             using (var reader = new StreamReader(fs))
             {
                 tables = (List<Table>) JsonConvert.DeserializeObject(reader.ReadToEnd(), typeof (List<Table>));
             }
             List<ForeignKeyConstraint> fks;
-            using (var fs = File.OpenRead(GetForeignKeysFileName()))
+            using (var fs = File.OpenRead(ForeignKeysFileName))
             using (var reader = new StreamReader(fs))
             {
                 fks =
@@ -103,7 +103,7 @@ namespace Mejram
                     JsonConvert.DeserializeObject(reader.ReadToEnd(), typeof (List<ForeignKeyConstraint>));
             }
             List<ForeignKeyConstraint> propable;
-            using (var fs = File.OpenRead(GetProbableKeysFileName()))
+            using (var fs = File.OpenRead(ProbableKeysFileName))
             using (var reader = new StreamReader(fs))
             {
                 propable =
@@ -116,33 +116,16 @@ namespace Mejram
 
     public class SerializedDatabaseSchema
     {
-        private readonly List<Table> _tables;
-
-        public List<Table> X1
-        {
-            get { return _tables; }
-        }
-
-        private readonly List<ForeignKeyConstraint> _foreignKeyConstraints;
-
-        public List<ForeignKeyConstraint> X2
-        {
-            get { return _foreignKeyConstraints; }
-        }
-
-        private readonly List<ForeignKeyConstraint> _propable;
-
-        public List<ForeignKeyConstraint> X3
-        {
-            get { return _propable; }
-        }
+        public List<Table> Tables { get; set; }
+        public List<ForeignKeyConstraint> ForeignKeyConstraints { get; private set; }
+        public List<ForeignKeyConstraint> ProbableForeignKeyConstraints { get; private set; }
 
         public SerializedDatabaseSchema(List<Table> tables, List<ForeignKeyConstraint> foreignKeyConstraints,
                                         List<ForeignKeyConstraint> propable)
         {
-            _tables = tables;
-            _foreignKeyConstraints = foreignKeyConstraints;
-            _propable = propable;
+            Tables = tables;
+            ForeignKeyConstraints = foreignKeyConstraints;
+            ProbableForeignKeyConstraints = propable;
         }
     }
 }

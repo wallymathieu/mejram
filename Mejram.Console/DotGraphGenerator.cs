@@ -11,9 +11,20 @@ namespace Mejram.Console
 {
     public class DotGraphGenerator
     {
-        public static void GenerateDotFile(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
+        public string OutfilePng;
+        public string OutfileNeatoPng;
+        public string OutfileDot;
+
+        public DotGraphGenerator()
         {
-            using (var m = File.Open(GetOutfileDot(), FileMode.Create))
+            OutfilePng = "outfile.png";
+            OutfileNeatoPng = "outfile.neato.png";
+            OutfileDot = "outfile.dot";
+        }
+
+        public void GenerateDotFile(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
+        {
+            using (var m = File.Open(OutfileDot, FileMode.Create))
             using (var sout = new StreamWriter(m))
             {
 //size=""90,90""; 
@@ -35,11 +46,11 @@ node [style=filled];");
             }
         }
 
-        public static void WriteDotFile()
+        public void WriteDotFile()
         {
             var fileName = ConfigurationManager.AppSettings["dot_exe"];
-            var arguments = String.Format("-Tpng {0} -o {1}", GetOutfileDot(),
-                                          Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.png"));
+            var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
+                                           OutfilePng);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
                           {
@@ -52,10 +63,10 @@ node [style=filled];");
             dot.Start();
         }
 
-        public static void WriteNeato()
+        public void WriteNeato()
         {
-            var arguments = String.Format("-Tpng {0} -o {1}", GetOutfileDot(),
-                                          Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.neato.png"));
+            var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
+                                          OutfileNeatoPng);
             var fileName = ConfigurationManager.AppSettings["neato_exe"];
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
@@ -94,11 +105,6 @@ node [style=filled];");
             }
             //v.Compute();
             //var v = GraphAlgorithms.KruskalsAlgorithm(g);
-        }
-
-        public static string GetOutfileDot()
-        {
-            return Path.Combine(ConfigurationManager.AppSettings["temp"], "outfile.dot");
         }
     }
 }

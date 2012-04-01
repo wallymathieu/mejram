@@ -140,7 +140,7 @@ namespace Mejram.Model
         public void Validate()
         {
             if (ConstraintKeys.Any(p => p.From.TableName != this.TableName))
-                throw new Exception("Not valid: ConstraintKeys.Any(p=>p.X1.TableName!=tablename)");
+                throw new Exception("Not valid: ConstraintKeys.Any(p=>p.Tables.TableName!=tablename)");
         }
 
         public ForeignKeyConstraint()
