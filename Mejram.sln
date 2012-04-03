@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mejram", "Mejram", "{EDDAEFEA-D340-4B70-BF4C-4BE848774E76}"
-EndProject
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Mejram\Core.csproj", "{77200C1B-0DC8-424F-86A7-CFC53C6E676D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Mejram.Tests\Tests.csproj", "{2D449097-96D2-4658-B9CF-B217A15E94E4}"

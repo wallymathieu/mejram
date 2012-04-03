@@ -9,3 +9,6 @@ _ReSharper*/
 build/
 .hg/
 packages/
+*.pidb
+*.userprefs
+
