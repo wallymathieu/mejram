@@ -14,16 +14,8 @@ namespace Mejram
         //If a compounded primal key is needed, maybe you should consider a user defined type.
         //Or perhaps it is because you have forgotten a foreign key constraint?");
 
-		private Dictionary<string, Table> Tables ;
-		private List<ForeignKeyConstraint> ForeignKeys;
-		public PrimalKeyAnalysis (IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
+		public PrimalKeyAnalysis ()
 		{
-			Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
-			foreach (var table in tables) 
-			{
-				Tables.Add(table.TableName,table);
-			}
-			this.ForeignKeys = new List<ForeignKeyConstraint>(foreignKeys);
 		}
 		
 		  /// <summary>
@@ -31,8 +23,14 @@ namespace Mejram
         /// They are defined using foreign keys: The primary key that does not have any foreign key reference.
         /// </summary>
         /// <returns></returns>
-        public Dictionary<ColumnKey, PrimalKey> PrimalPrimaryKeys()
+        public Dictionary<ColumnKey, PrimalKey> PrimalPrimaryKeys(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
         {
+			var Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
+			foreach (var table in tables) 
+			{
+				Tables.Add(table.TableName,table);
+			}
+			var ForeignKeys = new List<ForeignKeyConstraint>(foreignKeys);
             var PrimalKeys = new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
             foreach (Table tbl in Tables.Values)
             {
@@ -86,7 +84,7 @@ namespace Mejram
             }
 			return PrimalKeys;
         }
-		public bool TryGetPrimaryKeyConstraint(ColumnKey attr, out PrimaryKeyConstraint primaryKey)
+		private bool TryGetPrimaryKeyConstraint(IDictionary<string,Table> Tables,ColumnKey attr, out PrimaryKeyConstraint primaryKey)
         {
             primaryKey = Tables[attr.TableName].PrimaryKey.ConstraintKeys.Contains(attr)
                              ? Tables[attr.TableName].PrimaryKey
@@ -100,7 +98,7 @@ namespace Mejram
         /// <param name="attr"></param>
         /// <param name="className"></param>
         /// <returns></returns>
-        public bool TryGetPrimalKey(Dictionary<ColumnKey, PrimalKey> PrimalKeys, ColumnKey attr, out string className)
+        public bool TryGetPrimalKey(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys, Dictionary<ColumnKey, PrimalKey> PrimalKeys, ColumnKey attr, out string className)
         {
             #region first try to get primal key
 
@@ -114,7 +112,7 @@ namespace Mejram
 
             #region find the table owning the attribute and then try to find a foreign key pair
 
-            foreach (ForeignKeyConstraint f in ForeignKeys.Where(fk => fk.TableName == attr.TableName))
+            foreach (ForeignKeyConstraint f in foreignKeys.Where(fk => fk.TableName == attr.TableName))
             {
                 foreach (var ta in f.ConstraintKeys)
                 {
@@ -131,7 +129,7 @@ namespace Mejram
                             return true;
                         }
                         // recurse!
-                        return TryGetPrimalKey(PrimalKeys, foreignKeyV, out className);
+                        return TryGetPrimalKey(tables, foreignKeys, PrimalKeys, foreignKeyV, out className);
 
                         #endregion
                     }

@@ -57,20 +57,6 @@ namespace Mejram.Data
             }
         }
 
-        public static DataTable ExecuteDataAdapter<T>(this SqlConnection conn, String cmdtxt, T binds)
-        {
-            using (SqlCommand command = GetCommand(conn, cmdtxt, binds))
-            {
-                using (var adapter = new SqlDataAdapter(command))
-                {
-                    var t = new DataTable();
-                    adapter.Fill(t);
-                    return t;
-                }
-            }
-        }
-
-
         public static SqlCommand GetCommand<T>(SqlConnection conn, String cmdtxt, T binds)
         {
             var enumerable = binds as IEnumerable<Object>;
@@ -78,11 +64,6 @@ namespace Mejram.Data
             {
                 return GetCommandArr(conn, cmdtxt, enumerable);
             }
-            //var stringenumerable = binds as IEnumerable<string>;
-            //if (null != stringenumerable)
-            //{
-            //    return GetCommandArr(conn, cmdtxt, stringenumerable);
-            //}
             return GetCommandObj(conn, cmdtxt, binds);
         }
 

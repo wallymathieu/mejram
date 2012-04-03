@@ -27,7 +27,7 @@ namespace Mejram.Tests
                 {
                     file.WriteLine("primal keys");
                     file.WriteLine(String.Join(Environment.NewLine,
-					                           new PrimalKeyAnalysis(tables.Tables.Values, tables.ForeignKeys).PrimalPrimaryKeys()
+					                           new PrimalKeyAnalysis().PrimalPrimaryKeys(tables.Tables.Values, tables.ForeignKeys)
                                                .Select(p => p.Key + ": " + p.Value).ToArray()));
                     var fks = new PropableForeignKeyAnalysis().GetProbableForeignKeys(tables.Tables.Values);
                     file.WriteLine("fks");
