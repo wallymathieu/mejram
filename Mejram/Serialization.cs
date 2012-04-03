@@ -47,13 +47,7 @@ namespace Mejram
                     txtWriter.Write(JsonConvert.SerializeObject(tables.ForeignKeys, Formatting.Indented));
                     txtWriter.Flush();
                 }
-                var probfk = tables.GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
-                using (FileStream fs = File.Open(ProbableKeysFileName, FileMode.Create))
-                using (TextWriter txtWriter = new StreamWriter(fs))
-                {
-                    txtWriter.Write(JsonConvert.SerializeObject(probfk, Formatting.Indented));
-                    txtWriter.Flush();
-                }
+              
                 using (
                     FileStream fs =
                         File.Open(
@@ -75,7 +69,7 @@ namespace Mejram
                             FileMode.Create))
                 using (TextWriter txtWriter = new StreamWriter(fs))
                 {
-                    var fkCounts = from fk in tables.ForeignKeys.Union(probfk)
+                    var fkCounts = from fk in tables.ForeignKeys//.Union(probfk)
                                    let count = tables.GetKeyWeight(fk)
                                    select
                                        new KeyValuePair<ForeignKeyConstraint, int>(fk, count);
@@ -102,30 +96,7 @@ namespace Mejram
                     (List<ForeignKeyConstraint>)
                     JsonConvert.DeserializeObject(reader.ReadToEnd(), typeof (List<ForeignKeyConstraint>));
             }
-            List<ForeignKeyConstraint> propable;
-            using (var fs = File.OpenRead(ProbableKeysFileName))
-            using (var reader = new StreamReader(fs))
-            {
-                propable =
-                    (List<ForeignKeyConstraint>)
-                    JsonConvert.DeserializeObject(reader.ReadToEnd(), typeof (List<ForeignKeyConstraint>));
-            }
-            return new SerializedDatabaseSchema(tables, fks, propable);
-        }
-    }
-
-    public class SerializedDatabaseSchema
-    {
-        public List<Table> Tables { get; set; }
-        public List<ForeignKeyConstraint> ForeignKeyConstraints { get; private set; }
-        public List<ForeignKeyConstraint> ProbableForeignKeyConstraints { get; private set; }
-
-        public SerializedDatabaseSchema(List<Table> tables, List<ForeignKeyConstraint> foreignKeyConstraints,
-                                        List<ForeignKeyConstraint> propable)
-        {
-            Tables = tables;
-            ForeignKeyConstraints = foreignKeyConstraints;
-            ProbableForeignKeyConstraints = propable;
+            return new SerializedDatabaseSchema(tables, fks);
         }
     }
 }

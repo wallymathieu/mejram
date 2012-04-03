@@ -26,7 +26,8 @@ namespace Mejram.Console
         public IEnumerable<string> Find(string starttable)
         {
             var v = new Serialization().Deserialize();
-            var constraints = v.ForeignKeyConstraints.Union(v.ProbableForeignKeyConstraints)
+			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis().GetProbableForeignKeys(v.Tables);
+            var constraints = v.ForeignKeyConstraints.Union(probableForeignKeyConstraints)
                 .Where(fk => !fk.TableNames().Any(p =>
                     p.ToLower().EndsWith("temp")
                     || p.ToLower().EndsWith("old")));
@@ -96,14 +97,15 @@ namespace Mejram.Console
         public void WriteDot()
         {
             var v = _serialization.Deserialize();
-
-            _dotGraphGenerator.GenerateDotFile(v.Tables, v.ForeignKeyConstraints.Union(v.ProbableForeignKeyConstraints));
+			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis().GetProbableForeignKeys(v.Tables);
+            _dotGraphGenerator.GenerateDotFile(v.Tables, v.ForeignKeyConstraints.Union(probableForeignKeyConstraints));
             _dotGraphGenerator.WriteDotFile();
         }
         public void WriteNeato()
         {
             var v = _serialization.Deserialize();
-            _dotGraphGenerator.GenerateDotFile(v.Tables, v.ForeignKeyConstraints.Union(v.ProbableForeignKeyConstraints));
+			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis().GetProbableForeignKeys(v.Tables);
+            _dotGraphGenerator.GenerateDotFile(v.Tables, v.ForeignKeyConstraints.Union(probableForeignKeyConstraints));
             _dotGraphGenerator.WriteNeato();
         }
     }

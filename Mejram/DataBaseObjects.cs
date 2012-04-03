@@ -19,9 +19,6 @@ namespace Mejram
     {
         private readonly SqlConnection _conn;
 
-        public Dictionary<ColumnKey, PrimalKey> PrimalKeys =
-            new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
-
         public Dictionary<ColumnKey, Column> Columns =
             new Dictionary<ColumnKey, Column>(new AttributeComparer());
 
@@ -29,18 +26,12 @@ namespace Mejram
         public List<UniqueConstraint> UniqueConstraints = new List<UniqueConstraint>();
 
         public Dictionary<string, Table> Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
-
-
+		
         public DataBaseObjects(SqlConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
                                IEnumerable<ITableFilter> columnsToGenerate)
         {
             _conn = conn;
             InitPublicTables(tablesToGenerate, columnsToGenerate);
-            InitPrimalPrimaryKeys();
-        }
-
-        public DataBaseObjects()
-        {
         }
 
         public Column GetTableAttributeCached(ColumnKey key)
@@ -49,73 +40,6 @@ namespace Mejram
                 return Columns[key];
             throw new Exception("not found: " + key);
         }
-
-        /// <summary>
-        /// Primal keys:
-        /// They are defined using foreign keys: The primary key that does not have any foreign key reference.
-        /// </summary>
-        /// <returns></returns>
-        private void InitPrimalPrimaryKeys()
-        {
-            PrimalKeys = new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
-            foreach (Table tbl in Tables.Values)
-            {
-                // all primary keys that are not part of any foreign keys referencing other tables
-
-                Boolean found = false;
-                if (tbl.PrimaryKey == null) continue;
-
-                var primaryKeyConstraintKeys = tbl.PrimaryKey.ConstraintKeys;
-                foreach (var key in primaryKeyConstraintKeys)
-                {
-                    foreach (ForeignKeyConstraint con in ForeignKeys.Where(fk => fk.TableName == key.TableName))
-                    {
-                        foreach (var fkeys in con.ConstraintKeys)
-                        {
-                            if (fkeys.From.Equals(key))
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!found)
-                {
-                    switch (primaryKeyConstraintKeys.Count)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            var enumerator =
-                                primaryKeyConstraintKeys.GetEnumerator();
-                            enumerator.MoveNext();
-                            PrimalKeys.Add(enumerator.Current,
-                                           new PrimalKey(tbl.TableName, enumerator.Current));
-
-                            break;
-                        default: // several keys
-                            Console.WriteLine(
-                                string.Format(
-                                    "Warning: Primal key with several keys is currently not supported. Ignoring primal key in {0}",
-                                    tbl.TableName));
-                            // BUG: This should be handled!
-                            break;
-                            //throw new Exception("Primal key with several keys is currently not supported: " +
-                            //                    tbl.TableName +
-                            //                    ", foreignKeys:" + tbl.ForeignKeys +
-                            //                    ", primaryKey: " + primaryKeyConstraintKeys);
-                    }
-                }
-            }
-        }
-
-        //                // primal key
-        //                if (col.Attributes.Count != 1)
-        //                    throw new Exception(
-        //                        @"Well, need to rewrite some code below concerning primal keys if this is going to work.
-        //If a compounded primal key is needed, maybe you should consider a user defined type.
-        //Or perhaps it is because you have forgotten a foreign key constraint?");
 
         public void GetPublicTableAttributesCached(string tableName,
                                                    IList<Column> attributes)
@@ -360,14 +284,6 @@ where tcon.table_name = @id
             #endregion
         }
 
-        public bool TryGetPrimaryKeyConstraint(ColumnKey attr, out PrimaryKeyConstraint primaryKey)
-        {
-            primaryKey = Tables[attr.TableName].PrimaryKey.ConstraintKeys.Contains(attr)
-                             ? Tables[attr.TableName].PrimaryKey
-                             : null;
-            return primaryKey != null;
-        }
-
         private static bool GetBoolean(string boolean)
         {
             var valids = new[] {"yes", "true", "1"};
@@ -455,170 +371,6 @@ t.TABLE_TYPE = 'BASE TABLE'
                 GetTableConstraintsCached(curr.Value.TableName, curr.Value);
             }
             // namespace
-        }
-
-        /// <summary>
-        /// not safe if the db contains foreign key loops
-        /// </summary>
-        /// <param name="attr"></param>
-        /// <param name="className"></param>
-        /// <returns></returns>
-        public bool TryGetPrimalKey(ColumnKey attr, out string className)
-        {
-            #region first try to get primal key
-
-            if (PrimalKeys.ContainsKey(attr))
-            {
-                className = PrimalKeys[attr].ClassTypeName;
-                return true;
-            }
-
-            #endregion
-
-            #region find the table owning the attribute and then try to find a foreign key pair
-
-            foreach (ForeignKeyConstraint f in ForeignKeys.Where(fk => fk.TableName == attr.TableName))
-            {
-                foreach (var ta in f.ConstraintKeys)
-                {
-                    if (ta.From.TableName == attr.TableName && ta.From.ColumnName == attr.ColumnName)
-                    {
-                        #region foreign key found
-
-                        var foreignKeyV = new ColumnKey
-                            (ta.To.TableName, ta.To.ColumnName);
-
-                        if (PrimalKeys.ContainsKey(foreignKeyV))
-                        {
-                            className = PrimalKeys[foreignKeyV].ClassTypeName;
-                            return true;
-                        }
-                        // recurse!
-                        return TryGetPrimalKey(foreignKeyV, out className);
-
-                        #endregion
-                    }
-                }
-            }
-
-            #endregion
-
-            // primal key not found
-            className = null;
-            return false;
-        }
-
-        #region Nested type: AttributeComparer
-
-        private class AttributeComparer : IEqualityComparer<ColumnKey>
-        {
-            #region IEqualityComparer<Rec<string,short>> Members
-
-            public bool Equals(ColumnKey x, ColumnKey y)
-            {
-                return string.Equals(x.TableName, y.TableName, StringComparison.CurrentCultureIgnoreCase)
-                       && x.ColumnName.Equals(y.ColumnName);
-            }
-
-            public int GetHashCode(ColumnKey obj)
-            {
-                return obj.TableName.ToLower().GetHashCode() + obj.ColumnName.GetHashCode();
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        private readonly string[] _tablePrefix = new[] {"tbl"};
-
-        public String TableNameTrim(string s)
-        {
-            var v = s.ToLower();
-            foreach (var prefix in _tablePrefix)
-            {
-                if (v.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-                    return v.Remove(0, prefix.Length);
-            }
-            return v;
-        }
-
-        private readonly string[] _keynames = new[] {/*"number",*/ "id" /*, "key"*/};
-
-        public string ColumnExtractTableName(string s)
-        {
-            var v = s.ToLower();
-            v = RegexUtil.ReplaceColumnPrefix(v);
-            foreach (var prefix in _tablePrefix)
-            {
-                if (v.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-                    v = v.Remove(0, prefix.Length);
-            }
-            foreach (var keyName in _keynames)
-            {
-                if (v.EndsWith(keyName, StringComparison.InvariantCultureIgnoreCase))
-                    return v.Substring(0, v.Length - keyName.Length);
-            }
-            return v;
-        }
-
-        public List<ForeignKeyConstraint> GetProbableForeignKeys()
-        {
-            //this.Tables.Values.Select(t=>t.ForeignKeys)
-            var list = new List<ForeignKeyConstraint>();
-            foreach (var table in Tables.Values)
-            {
-                foreach (var attribute in table.Columns)
-                {
-                    var _keyname =
-                        _keynames.FirstOrDefault(
-                            keyname =>
-                            attribute.ColumnName.EndsWith(keyname, StringComparison.InvariantCultureIgnoreCase));
-                    if (null == _keyname) continue;
-
-                    var other =
-                        Tables.Values.Where(
-                            t => TableNameTrim(t.TableName) == ColumnExtractTableName(attribute.ColumnName)
-                                 && t.TableName != table.TableName);
-                    switch (other.Count())
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            var firstOther = other.First();
-
-                            var otherTableKeyAttribute = firstOther.Attributes.FirstOrDefault(a =>
-                                                                                              RegexUtil.
-                                                                                                  ReplaceColumnPrefix(
-                                                                                                      a.ColumnName).
-                                                                                                  Equals(_keyname,
-                                                                                                         StringComparison
-                                                                                                             .
-                                                                                                             InvariantCultureIgnoreCase));
-                            if (null == otherTableKeyAttribute)
-                            {
-                                Console.WriteLine("Could not find matching key: {0}, other : {1}, column: {2}",
-                                                  table.TableName, firstOther.TableName, attribute.Key);
-                                continue;
-                            }
-                            //throw new Exception(string.Format("! {0}_{1}_{2}", table.TableName, first.TableName, attribute.Key));
-                            list.Add(new ForeignKeyConstraint(string.Format("{0}_{1}_{2}",
-                                                                            table.TableName, firstOther.TableName,
-                                                                            attribute.Key.ColumnName), table.TableName)
-                                         {
-                                             ConstraintKeys = new List<ForeignKeyColumn>()
-                                                                  {
-                                                                      new ForeignKeyColumn(attribute.Key,
-                                                                                           otherTableKeyAttribute.Key)
-                                                                  }
-                                         });
-                            break;
-                        default:
-                            throw new Exception("other.Count: " + other.Count());
-                    }
-                }
-            }
-            return list;
         }
     }
 }

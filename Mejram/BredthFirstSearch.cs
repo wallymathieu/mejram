@@ -13,7 +13,7 @@ namespace Mejram
 {
     public class BredthFirstSearch
     {
-        public TextWriter outv = null;
+		public TextWriter outv = null;
 
         public void Print(int depth, string text)
         {
