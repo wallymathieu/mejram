@@ -147,16 +147,7 @@ namespace Mejram.Model
         /// readonly
         /// </summary>
         public bool NotNullConstraint;
-
-        // string repr. of defaultvalue
-        // public string DefaultValue;
-
-        /// <summary>
-        /// The name of the type of the attribute as a class attribute. That is this value should be the typename of the generated
-        /// attribute.
-        /// </summary>
-        public string ClassAttributeTypeName;
-
+       
         public bool HasPrimitiveType;
 
         public Column(string columnName, string columnType, Int16 attributenumber, string tableName,
@@ -168,14 +159,6 @@ namespace Mejram.Model
             this.TableName = tableName;
             this.NotNullConstraint = notNullConstraint;
             Key = new ColumnKey(tableName, columnName);
-        }
-
-        /// <summary>
-        /// The name of the attribute as a class attribute. Different name convention.
-        /// </summary>
-        public string ClassAttributeName
-        {
-            get { return RegexUtil.SQLToDotnetNamingConvention(ColumnName); }
         }
 
         public override string ToString()

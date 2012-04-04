@@ -52,14 +52,6 @@ namespace Mejram.Model
             TableName = tableName;
         }
 
-        /// <summary>
-        /// The name of the type (class) generated
-        /// </summary>
-        public string ClassTypeName
-        {
-            get { return RegexUtil.SQLToDotnetNamingConvention(TableName); }
-        }
-
         public IList<Column> Attributes
         {
             get { return _attributes; }

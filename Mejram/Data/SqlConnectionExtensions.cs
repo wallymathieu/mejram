@@ -9,20 +9,21 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Mejram.Util;
+using System.Data.Common;
 
 namespace Mejram.Data
 {
     public static class SqlConnectionExtensions
     {
-        public static int ExecuteNonQuery<T>(this SqlConnection conn, String cmdtxt, T binds)
+        public static int ExecuteNonQuery<T>(this DbConnection conn, String cmdtxt, T binds)
         {
-            using (SqlCommand command = GetCommand(conn, cmdtxt, binds))
+            using (DbCommand command = GetCommand(conn, cmdtxt, binds))
             {
                 return command.ExecuteNonQuery();
             }
         }
 
-        public static object[] ExecuteSingleRow<T>(this SqlConnection conn, String cmdtxt, T binds)
+        public static object[] ExecuteSingleRow<T>(this DbConnection conn, String cmdtxt, T binds)
         {
             using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
             {
@@ -41,9 +42,9 @@ namespace Mejram.Data
             return new object[] {};
         }
 
-        public static SqlDataRecordExtended ExecuteDataReader<T>(this SqlConnection conn, String cmdtxt, T binds)
+        public static SqlDataRecordExtended ExecuteDataReader<T>(this DbConnection conn, String cmdtxt, T binds)
         {
-            using (SqlCommand command = GetCommand(conn, cmdtxt, binds))
+            using (DbCommand command = GetCommand(conn, cmdtxt, binds))
             {
                 command.CommandTimeout = Int32.MaxValue;
                 try
@@ -57,7 +58,7 @@ namespace Mejram.Data
             }
         }
 
-        public static SqlCommand GetCommand<T>(SqlConnection conn, String cmdtxt, T binds)
+        public static DbCommand GetCommand<T>(DbConnection conn, String cmdtxt, T binds)
         {
             var enumerable = binds as IEnumerable<Object>;
             if (null != enumerable)
@@ -67,22 +68,27 @@ namespace Mejram.Data
             return GetCommandObj(conn, cmdtxt, binds);
         }
 
-        private static SqlCommand GetCommandArr<T>(SqlConnection conn, string cmdtxt, IEnumerable<T> binds)
+        private static DbCommand GetCommandArr<T>(DbConnection conn, string cmdtxt, IEnumerable<T> binds)
         {
-            var command = new SqlCommand(cmdtxt, conn) {CommandType = CommandType.Text};
-            SqlParameter[] parameters = BindsToSqlParameter(binds.Cast<object>());
-            foreach (SqlParameter t in parameters)
+            var command = conn.CreateCommand();
+			command.CommandText = cmdtxt;
+			command.CommandType = CommandType.Text;
+            DbParameter[] parameters = BindsToSqlParameter(command, binds.Cast<object>());
+            foreach (var t in parameters)
             {
                 command.Parameters.Add(t);
             }
             return command;
         }
 
-        private static SqlCommand GetCommandObj(SqlConnection conn, string cmdtxt, object binds)
+        private static DbCommand GetCommandObj(DbConnection conn, string cmdtxt, object binds)
         {
-            var command = new SqlCommand(cmdtxt, conn) {CommandType = CommandType.Text};
-            SqlParameter[] parameters = BindsToSqlParameter2(ReflectionHelper.PropertiesToDictionary(binds));
-            foreach (SqlParameter t in parameters)
+           var command = conn.CreateCommand();
+			command.CommandText = cmdtxt;
+			command.CommandType = CommandType.Text;
+			
+            DbParameter[] parameters = BindsToSqlParameter2(command, ReflectionHelper.PropertiesToDictionary(binds));
+            foreach (var t in parameters)
             {
                 command.Parameters.Add(t);
             }
@@ -90,9 +96,9 @@ namespace Mejram.Data
         }
 
 
-        private static SqlParameter[] BindsToSqlParameter(IEnumerable<Object> binds)
+        private static DbParameter[] BindsToSqlParameter(DbCommand command, IEnumerable<Object> binds)
         {
-            var parameters = new List<SqlParameter>();
+            var parameters = new List<DbParameter>();
 
             int count = binds.Count();
             if (count%2 != 0)
@@ -101,15 +107,23 @@ namespace Mejram.Data
             object[] arr = binds.ToArray();
             for (int i = 0; i < arr.Length; i += 2)
             {
-                parameters.Add(new SqlParameter((string) arr[i], arr[i + 1]));
+				var p = command.CreateParameter();
+				p.ParameterName = (string) arr[i];
+				p.Value = arr[i + 1];
+                parameters.Add(p);
             }
             return parameters.ToArray();
         }
 
 
-        private static SqlParameter[] BindsToSqlParameter2(IEnumerable<KeyValuePair<string, object>> binds)
+        private static DbParameter[] BindsToSqlParameter2(DbCommand command, IEnumerable<KeyValuePair<string, object>> binds)
         {
-            return binds.Select(o => new SqlParameter(o.Key, o.Value)).ToArray();
+            return binds.Select(o => {
+				var p = command.CreateParameter();
+				p.ParameterName=o.Key;
+				p.Value = o.Value;
+				return p;
+			}).ToArray();
         }
     }
 }

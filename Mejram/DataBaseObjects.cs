@@ -12,12 +12,13 @@ using Mejram.Model;
 using Mejram.Util;
 using ForeignKeyConstraint = Mejram.Model.ForeignKeyConstraint;
 using UniqueConstraint = Mejram.Model.UniqueConstraint;
+using System.Data.Common;
 
 namespace Mejram
 {
     public class DataBaseObjects
     {
-        private readonly SqlConnection _conn;
+        private readonly DbConnection _conn;
 
         public Dictionary<ColumnKey, Column> Columns =
             new Dictionary<ColumnKey, Column>(new AttributeComparer());
@@ -27,7 +28,7 @@ namespace Mejram
 
         public Dictionary<string, Table> Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
 		
-        public DataBaseObjects(SqlConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
+        public DataBaseObjects(DbConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
                                IEnumerable<ITableFilter> columnsToGenerate)
         {
             _conn = conn;
@@ -310,7 +311,9 @@ where tcon.table_name = @id
                         _conn.ExecuteDataReader(
                             @"
 select table_name from INFORMATION_SCHEMA.TABLES t where 
-t.TABLE_TYPE = 'BASE TABLE'
+t.TABLE_TYPE = 'BASE TABLE' 
+-- POSTGRES:
+AND t.TABLE_SCHEMA <> 'pg_catalog' AND t.TABLE_SCHEMA <> 'information_schema'
 " +
                             StringUtil.Agg(" AND ",
                                            sqlBuffer.ToArray()),

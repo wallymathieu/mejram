@@ -8,15 +8,16 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.Common;
 
 namespace Mejram.Data
 {
     public class SqlDataRecordExtended : IDisposable
     {
-        private readonly SqlDataReader _dataReader;
+        private readonly DbDataReader _dataReader;
         private readonly Dictionary<string, int> _ordinals;
 
-        public SqlDataRecordExtended(SqlDataReader reader)
+        public SqlDataRecordExtended(DbDataReader reader)
         {
             //
             _dataReader = reader;
