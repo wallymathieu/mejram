@@ -22,7 +22,7 @@ namespace Mejram.Tests
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
 				conn.Open();
-                var tables = new DataBaseObjects(conn, new ITableFilter[] {},
+                var tables = new DataBaseObjects(conn, new ITableFilter[] {new PostgresTableFilter()},
                                                  new ITableFilter[] {});
                 using (var filef = File.Open("out.txt", FileMode.Create))
                 using (var file = new StreamWriter(filef))

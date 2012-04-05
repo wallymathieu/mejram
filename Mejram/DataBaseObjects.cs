@@ -312,8 +312,6 @@ where tcon.table_name = @id
                             @"
 select table_name from INFORMATION_SCHEMA.TABLES t where 
 t.TABLE_TYPE = 'BASE TABLE' 
--- POSTGRES:
-AND t.TABLE_SCHEMA <> 'pg_catalog' AND t.TABLE_SCHEMA <> 'information_schema'
 " +
                             StringUtil.Agg(" AND ",
                                            sqlBuffer.ToArray()),

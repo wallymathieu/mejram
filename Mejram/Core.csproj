@@ -79,6 +79,7 @@
     <Compile Include="PrimalKeyAnalysis.cs" />
     <Compile Include="AttributeComparer.cs" />
     <Compile Include="SerializedDatabaseSchema.cs" />
+    <Compile Include="PostgresTableFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BredthFirstTraversal.cs" />
