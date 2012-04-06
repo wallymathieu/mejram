@@ -17,7 +17,9 @@ class Relations():
         relations = []
         tables = json.loads(text)
         for table in tables:
-            for column in (filter(lambda c: c['ColumnName'].endswith('id'),table['Columns'])):
+            for column in (filter(lambda c:
+                    c['ColumnName'].endswith('id'),
+                    table['Columns'])):
                 val = [ column['TableName'].lower(),
                         column['ColumnName'].replace('_id','').lower(),
                         column['ColumnName'].lower()

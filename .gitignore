@@ -13,3 +13,4 @@ packages/
 *.userprefs
 
 Mejram.Tests/test-results
+TestResult.xml

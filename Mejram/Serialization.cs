@@ -26,9 +26,6 @@ namespace Mejram
 		{
 			TablesFileName = "outfile.Tables.json.txt";
 			ForeignKeysFileName = "outfile.ForeignKeys.json.txt";
-			ProbableKeysFileName = "outfile.ProbableForeignKeys.json.txt";
-			ForeignKeysCountFileName = "outfile.table.fk.count.json.txt";
-			TableCountFileName = "outfile.table.count.json.txt";
 		}
 
 		public void Serialize (string connectionString)
@@ -40,8 +37,7 @@ namespace Mejram
 		
 		public void Serialize (DbConnection conn)
 		{
-            
-			var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+ 			var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
 			using (FileStream fs = File.Open(TablesFileName, FileMode.Create))
 			using (TextWriter txtWriter = new StreamWriter(fs)) {
 				txtWriter.Write (JsonConvert.SerializeObject (tables.Tables.Values, Formatting.Indented));
@@ -52,37 +48,6 @@ namespace Mejram
 				txtWriter.Write (JsonConvert.SerializeObject (tables.ForeignKeys, Formatting.Indented));
 				txtWriter.Flush ();
 			}
-			return;
-			// ----------------------------------------------------------------
-			// the below does not work in postgres
-			using (
-                    FileStream fs =
-                        File.Open(
-                            TableCountFileName,
-                            FileMode.Create))
-			using (TextWriter txtWriter = new StreamWriter(fs)) {
-				var tableCounts = from table in tables.Tables
-                                      let count = tables.GetTableCount (table.Key)
-                                      select new KeyValuePair<string, int> (table.Key, count);
-				// .GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
-				txtWriter.Write (JsonConvert.SerializeObject (tableCounts, Formatting.Indented));
-				txtWriter.Flush ();
-			}
-			using (
-                    FileStream fs =
-                        File.Open(
-                            ForeignKeysCountFileName,
-                            FileMode.Create))
-			using (TextWriter txtWriter = new StreamWriter(fs)) {
-				var fkCounts = from fk in tables.ForeignKeys//.Union(probfk)
-                                   let count = tables.GetKeyWeight (fk)
-                                   select
-                                       new KeyValuePair<ForeignKeyConstraint, int> (fk, count);
-				// .GetProbableForeignKeys().Where(fk => !tables.ForeignKeys.Any(rfk => rfk.Equals(fk)));
-				txtWriter.Write (JsonConvert.SerializeObject (fkCounts, Formatting.Indented));
-				txtWriter.Flush ();
-			}
-            
 		}
 
 		public SerializedDatabaseSchema Deserialize ()
