@@ -3,7 +3,7 @@ require 'relations'
 require 'test/unit'
 
 require 'rgl/traversal'
-
+require 'rgl/dot'
 class RelationsTest < Test::Unit::TestCase
     def setup
         @content = File.open('sakila.Tables.json.txt').read 
@@ -12,8 +12,11 @@ class RelationsTest < Test::Unit::TestCase
 
     def test_graph_traversal
         p=@rel.parse_json_text(@content)
-        puts p.bfs_search_tree_from(p.detect{ |x| 
-            x.methods; x == 'store' 
+        #p.write_to_graphic_file
+        t = p.bfs_search_tree_from(p.detect{ |x| 
+            x == 'store' 
         })
+        #t.dotty
+        #t.write_to_graphic_file
     end
 end
