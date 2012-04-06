@@ -11,7 +11,6 @@ class ProbableForeignKeysAnalysis():
         for prefix in self.table_prefixes:
             if n.startswith(prefix):
                 i = len(prefix)
-                #j = len(n)-i
                 return n[i:]
         return n
 
@@ -40,15 +39,15 @@ class ProbableForeignKeysAnalysis():
             return col
         raise "No key column found!"
     
-    def parse_json_file(self,filename,id):
+    def parseJsonFile(self,filename,id):
         try:
             file = open(filename)
             jsondata= file.read()
         finally:
             file.close()
-        return self.parse_json_data(jsondata,id)
+        return self.parseJsonData(jsondata,id)
 
-    def parse_json_data(self,text,id):
+    def parseJsonData(self,text,id):
         count = 0
         tables = {}
         probable = []
@@ -99,7 +98,7 @@ class ProbableForeignKeysAnalysisTests(unittest.TestCase):
         self.assertEqual('store',self.analysis.columnExtractTableName('store_id'))
         
     def testStoreTableHasProbableForeignKey(self):
-        data = self.analysis.parse_json_file('sakila.Tables.json.txt','id')
+        data = self.analysis.parseJsonFile('sakila.Tables.json.txt','id')
 
         foreignkeysstore = filter(lambda fk:
                     fk['from']['table']=='store',
