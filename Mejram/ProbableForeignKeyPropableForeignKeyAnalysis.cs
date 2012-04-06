@@ -68,7 +68,7 @@ namespace Mejram
                         case 1:
                             var firstOther = other.First();
 
-                            var otherTableKeyAttribute = firstOther.Attributes.FirstOrDefault(a =>
+                            var otherTableKeyAttribute = firstOther.Columns.FirstOrDefault(a =>
                                                                                               RegexUtil.
                                                                                                   ReplaceColumnPrefix(
                                                                                                       a.ColumnName).
@@ -79,18 +79,18 @@ namespace Mejram
                             if (null == otherTableKeyAttribute)
                             {
                                 Console.WriteLine("Could not find matching key: {0}, other : {1}, column: {2}",
-                                                  table.TableName, firstOther.TableName, attribute.Key);
+                                                  table.TableName, firstOther.TableName, attribute.GetKey());
                                 continue;
                             }
                             //throw new Exception(string.Format("! {0}_{1}_{2}", table.TableName, first.TableName, attribute.Key));
                             list.Add(new ForeignKeyConstraint(string.Format("{0}_{1}_{2}",
                                                                             table.TableName, firstOther.TableName,
-                                                                            attribute.Key.ColumnName), table.TableName)
+                                                                            attribute.GetKey().ColumnName), table.TableName)
                                          {
                                              ConstraintKeys = new List<ForeignKeyColumn>()
                                                                   {
-                                                                      new ForeignKeyColumn(attribute.Key,
-                                                                                           otherTableKeyAttribute.Key)
+                                                                      new ForeignKeyColumn(attribute.GetKey(),
+                                                                                           otherTableKeyAttribute.GetKey())
                                                                   }
                                          });
                             break;

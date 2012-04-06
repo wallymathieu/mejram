@@ -141,8 +141,12 @@ namespace Mejram.Model
         /// <summary>
         /// readonly
         /// </summary>
-        public ColumnKey Key;
-
+        private ColumnKey Key;
+		public ColumnKey GetKey()
+		{
+			return Key;
+		}
+		
         /// <summary>
         /// readonly
         /// </summary>

@@ -32,7 +32,13 @@ namespace Mejram
                                IEnumerable<ITableFilter> columnsToGenerate)
         {
             _conn = conn;
-            InitPublicTables(tablesToGenerate, columnsToGenerate);
+			var tablefilters= new List<ITableFilter>();
+			if (_conn.GetType().Name.StartsWith("Npgsql",StringComparison.InvariantCultureIgnoreCase))
+			{
+				 tablefilters.Add(new PostgresTableFilter());
+			}
+            InitPublicTables(tablefilters.Union(tablesToGenerate??new ITableFilter[0]),
+			                 columnsToGenerate);
         }
 
         public Column GetTableAttributeCached(ColumnKey key)
@@ -64,8 +70,8 @@ namespace Mejram
                 }
                 foreach (Column attr in list.Select(rec => GetTableAttributeCached(rec)))
                 {
-                    if (attributes.Any(a => a.Key == attr.Key))
-                        throw new Exception("Key already found: " + attr.Key.TableName + ", " + attr.Key.ColumnName +
+                    if (attributes.Any(a => a.GetKey() == attr.GetKey()))
+                        throw new Exception("Key already found: " + attr.GetKey().TableName + ", " + attr.GetKey().ColumnName +
                                             " in table: " +
                                             tableName);
                     attributes.Add(attr);
@@ -92,7 +98,7 @@ namespace Mejram
             var table = this.Tables[keyConstraint.FromTableName()];
             if (
                 keyConstraint.ConstraintKeys.Any(
-                    p => !table.Attributes.First(atr => atr.ColumnName == p.From.ColumnName).NotNullConstraint))
+                    p => !table.Columns.First(atr => atr.ColumnName == p.From.ColumnName).NotNullConstraint))
                 using (
                     SqlDataRecordExtended rs2 =
                         _conn.ExecuteDataReader(
@@ -360,14 +366,14 @@ t.TABLE_TYPE = 'BASE TABLE'
                             (short) rs2.GetInt32("ordinal_position"),
                             rs2.GetString("TABLE_NAME"),
                             !GetBoolean(rs2.GetString("IsNullable")));
-                        Columns.Add(attr.Key, attr);
+                        Columns.Add(attr.GetKey(), attr);
                     }
                 }
             }
             foreach (var curr in Tables)
             {
                 GetPublicTableAttributesCached(curr.Value.TableName,
-                                               curr.Value.Attributes);
+                                               curr.Value.Columns);
 
                 GetTableConstraintsCached(curr.Value.TableName, curr.Value);
             }

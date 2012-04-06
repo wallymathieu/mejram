@@ -21,41 +21,16 @@ namespace Mejram.Model
         private IList<Column> _attributes =
             new List<Column>();
 
-        public IEnumerable<Column> Columns
+        public IList<Column> Columns
         {
-            get { return Attributes; }
+            get { return _attributes; }
         }
 
-
         public PrimaryKeyConstraint PrimaryKey;
-
-        // <summary>
-        // return all attributes for this class that are foreign keys
-        // </summary>
-        // <returns></returns>
-        //public Set<Pair<long, short>, Column> GetForeignKeyAttributes()
-        //{
-        //  Set<Pair<long, short>, Column> forAttr = new Set<Pair<long, short>, Column>();
-        //  foreach (ForeignKeyConstraint foreign in ForeignKeys)
-        //  {
-        //    foreach (Column attr in foreign.ConstraintKeys)
-        //    {
-        //      forAttr.Add(attr.Key, attr);
-        //    }
-        //  }
-        //  return forAttr;
-        //}
-
 
         public Table(string tableName)
         {
             TableName = tableName;
-        }
-
-        public IList<Column> Attributes
-        {
-            get { return _attributes; }
-            set { _attributes = value; }
         }
     }
 }

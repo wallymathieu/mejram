@@ -22,7 +22,7 @@ namespace Mejram.Tests
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
 				conn.Open();
-                var tables = new DataBaseObjects(conn, new ITableFilter[] {new PostgresTableFilter()},
+                var tables = new DataBaseObjects(conn, new ITableFilter[] {},
                                                  new ITableFilter[] {});
                 using (var filef = File.Open("out.txt", FileMode.Create))
                 using (var file = new StreamWriter(filef))
@@ -48,7 +48,9 @@ namespace Mejram.Tests
                 }
             }
         }
-		[Test,Ignore("need to script setup of sakila db")]
+		[Test
+		 //,Ignore("need to script setup of sakila db")
+		 ]
 		public void SerializeInfo()
 		{
 			using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
