@@ -17,4 +17,9 @@ class FrequencyTest < Test::Unit::TestCase
 
         assert_equal(expected,keys)
     end
+
+    #def test_can_give_format
+    #    format = @freq.key_format
+    #    assert_equal('{tablename}_id',format)
+    #end
 end
