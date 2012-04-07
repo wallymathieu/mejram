@@ -2,15 +2,15 @@ import sys
 import json
 
 class TablesWithRelations():
-    def parse_json_file(self,fileName,id):
+    def parseJsonFile(self,fileName,id):
         try:
             file = open(fileName)
             jsondata= file.read()
         finally:
             file.close()
-        return self.parse_json_data(jsondata,id)
+        return self.parseJsonData(jsondata,id)
 
-    def parse_json_data(self,text,id):
+    def parseJsonData(self,text,id):
         count = 0
         tables = {}
         jtables = json.loads(text)
@@ -34,7 +34,7 @@ class TablesWithRelationsTests(unittest.TestCase):
         self.conn = TablesWithRelations()
 
     def testSomeTable(self):
-        data = self.conn.parse_json_file('sakila.Tables.json.txt','id')
+        data = self.conn.parseJsonFile('sakila.Tables.json.txt','id')
         #print(data)
         c =data['customer']
         #print(dir(c))
