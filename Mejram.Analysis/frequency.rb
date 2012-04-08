@@ -1,3 +1,5 @@
+$:.unshift File.dirname(__FILE__)
+require 'model'
 require 'json'
 
 class Counter
@@ -19,7 +21,7 @@ end
 class Frequency
     #attr
     def initialize(text)
-        tables= JSON::parse(text)
+        tables= parse_json_to_tables(JSON::parse(text))
         @tables = tables
     end
 
@@ -30,11 +32,11 @@ class Frequency
         underscore = 0
         non_underscore = 0
         tablenames = @tables.map do |t|
-            t['TableName']
+            t.name
         end
         @tables.each do |t|
-            column_names = t['Columns'].map do |c|
-                c['ColumnName'].downcase()
+            column_names = t.columns.map do |c|
+                c.name.downcase()
             end
             matching_key =column_names.select do |n|
                 keys.index(n)
@@ -45,7 +47,7 @@ class Frequency
             elsif matching_key.length > 1
                 raise "! ambigous key"
             elsif matching_key.length == 0
-                r = Regexp.new("#{t['TableName']}(_{,1})(\\w+)",Regexp::IGNORECASE)
+                r = Regexp.new("#{t.name}(_{,1})(\\w+)",Regexp::IGNORECASE)
                 matches = column_names.select do |c|
                     r.match(c)
                 end

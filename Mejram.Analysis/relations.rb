@@ -1,18 +1,20 @@
+$:.unshift File.dirname(__FILE__)
+require 'model'
 require 'json'
 require 'rgl/adjacency'
 
 class Relations
     def parse_json_text(text)
-        jtables= JSON::parse(text)
+        jtables= parse_json_to_tables(JSON::parse(text))
         relations = []
         jtables.each do |table|
-            columns = table['Columns']
+            columns = table.columns
             columns.select do |c|
-                c['ColumnName'].end_with?('id')
+                c.name.end_with?('id')
             end.each do |c|
-                val = [c['TableName'].downcase,\
-                       c['ColumnName'].gsub('_id','').downcase,\
-                       c['ColumnName'].downcase\
+                val = [table.name.downcase,\
+                       c.name.gsub(/_?id/,'').downcase,\
+                       c.name.downcase\
                     ]
                 relations.push val
             end

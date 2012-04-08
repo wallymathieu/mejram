@@ -1,5 +1,6 @@
+$:.unshift File.dirname(__FILE__)
 require 'json'
-
+require 'model'
 class ProbableForeignKeysAnalysis
     def initialize(table_prefixes=['tbl'], key_names=['id'])
         @table_prefixes= table_prefixes
@@ -33,13 +34,13 @@ class ProbableForeignKeysAnalysis
     end
 
     def getKeyColumn(table)
-        tablename = tableNameTrim(table['TableName'])
+        tablename = tableNameTrim(table.name)
 
-        columns = table['Columns'].select do |c| 
-            columnHasKeyName(c['ColumnName'])
+        columns = table.columns.select do |c| 
+            columnHasKeyName(c.name)
         end
         withname = columns.select do |c| 
-            columnExtractTableName(c['ColumnName']) == tablename
+            columnExtractTableName(c.name) == tablename
         end
         return withname.first
     end
@@ -50,30 +51,30 @@ class ProbableForeignKeysAnalysis
         count = 0
         tables = {}
         probable = []
-        jtables = JSON::parse(text)
+        jtables = parse_json_to_tables(JSON::parse(text))
 
         jtables.each do |table|
-            tablename = tableNameTrim(table['TableName'])
+            tablename = tableNameTrim(table.name)
             tables[tablename] = table
         end 
 
         jtables.each do |table|
-            tablename = tableNameTrim(table['TableName'])
-            columns = table['Columns'].select do |c|
-                columnHasKeyName(c['ColumnName'])\
-                    && columnExtractTableName(c['ColumnName'])!=tablename
+            tablename = tableNameTrim(table.name)
+            columns = table.columns.select do |c|
+                columnHasKeyName(c.name)\
+                    && columnExtractTableName(c.name)!=tablename
             end
             columns.each do |column| 
-                columntablename = columnExtractTableName(column['ColumnName'])
+                columntablename = columnExtractTableName(column.name)
                 if tables.has_key?(columntablename) 
                     foreigntable = tables[columntablename]
-                    foreigncolumn = getKeyColumn(foreigntable)['ColumnName']
+                    foreigncolumn = getKeyColumn(foreigntable).name
                     probable.push({
                         'from'=>{
-                        'table'=>table['TableName'],
-                        'column'=>column['ColumnName']},
+                        'table'=>table.name,
+                        'column'=>column.name},
                         'to'=>{
-                        'table'=>foreigntable['TableName'],
+                        'table'=>foreigntable.name,
                         'column'=>foreigncolumn}
                     })
                 end
