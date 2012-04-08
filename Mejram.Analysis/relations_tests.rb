@@ -6,12 +6,13 @@ require 'rgl/traversal'
 require 'rgl/dot'
 class RelationsTest < Test::Unit::TestCase
     def setup
-        @content = File.open('sakila.Tables.json.txt').read 
+        text = File.open('sakila.Tables.json.txt').read 
+        @tables= parse_json_to_tables(JSON::parse(text))
         @rel = Relations.new 
     end
 
     def test_graph_traversal
-        p=@rel.parse_json_text(@content)
+        p=@rel.analyse(@tables)
         #p.write_to_graphic_file
         t = p.bfs_search_tree_from(p.detect{ |x| 
             x == 'store' 

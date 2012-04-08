@@ -20,8 +20,7 @@ end
 
 class Frequency
     #attr
-    def initialize(text)
-        tables= parse_json_to_tables(JSON::parse(text))
+    def initialize(tables)
         @tables = tables
     end
 
@@ -47,7 +46,7 @@ class Frequency
             elsif matching_key.length > 1
                 raise "! ambigous key"
             elsif matching_key.length == 0
-                r = Regexp.new("#{t.name}(_{,1})(\\w+)",Regexp::IGNORECASE)
+                r = Regexp.new("#{t.name}(_?)(\\w+)",Regexp::IGNORECASE)
                 matches = column_names.select do |c|
                     r.match(c)
                 end

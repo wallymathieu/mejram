@@ -7,6 +7,8 @@ require 'test/unit'
 class ProbableForeignKeysAnalysisTests < Test::Unit::TestCase
 
     def setup()
+        text = File.open('sakila.Tables.json.txt').read
+        @tables= parse_json_to_tables(JSON::parse(text))
         @analysis = ProbableForeignKeysAnalysis.new()
     end
 
@@ -24,7 +26,7 @@ class ProbableForeignKeysAnalysisTests < Test::Unit::TestCase
     end 
 
     def testStoreTableHasProbableForeignKey()
-        data = @analysis.parseJsonFile('sakila.Tables.json.txt','id')
+        data = @analysis.analyse(@tables,'id')
 
         foreignkeysstore = data.select do |fk|
             fk['from']['table']=='store'

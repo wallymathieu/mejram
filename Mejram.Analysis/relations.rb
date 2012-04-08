@@ -4,8 +4,7 @@ require 'json'
 require 'rgl/adjacency'
 
 class Relations
-    def parse_json_text(text)
-        jtables= parse_json_to_tables(JSON::parse(text))
+    def analyse(jtables)
         relations = []
         jtables.each do |table|
             columns = table.columns

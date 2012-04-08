@@ -4,8 +4,9 @@ require 'test/unit'
 
 class FrequencyTest < Test::Unit::TestCase
     def setup
-        @content = File.open('sakila.Tables.json.txt').read
-        @freq = Frequency.new(@content)
+        text = File.open('sakila.Tables.json.txt').read
+        tables= parse_json_to_tables(JSON::parse(text))
+        @freq = Frequency.new(tables)
     end
 
     def test_can_get_key_frequency
