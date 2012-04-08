@@ -5,12 +5,30 @@ class Table
         @name = name
         @columns = columns
     end
+    def to_s
+        return "table(#{@name})"
+    end
+    def ==(other_table)
+        if nil == other_table
+            return false
+        end
+        return @name == other_table.name
+    end
 end
 
 class Column
     attr_reader :name
     def initialize(name)
         @name = name
+    end
+    def to_s
+        return "col(#{@name})"
+    end
+    def ==(other_column)
+        if nil == other_column
+            return false
+        end
+        return @name == other_column.name
     end
 end
 
