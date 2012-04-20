@@ -22,8 +22,8 @@ pkcon.constraint_type = 'PRIMARY KEY'
 AND
 #{with_tables('t')}
 "       
-        res = @conn.exec(sql)
-        res.each do |row|
+        res = @conn.execute(sql)
+        while row = res.fetch do
             pkname = row[0]
             tablename = row[1]
             columnname = row[2]
@@ -36,6 +36,7 @@ AND
             end
             pk[pkname]['ConstraintKeys'].push(columnname)
         end
+        res.finish
         return pk.values
     end
     def with_tables(alias_)
@@ -59,8 +60,8 @@ WHERE
 #{with_tables('t')}
 "
         tables = {}
-        res = @conn.exec(sql)
-        res.each do |row|
+        res = @conn.execute(sql)
+        while row = res.fetch do
             table_name = row[0]
             if ! tables.has_key?(table_name)
                 tables[table_name] = {\
@@ -75,6 +76,7 @@ WHERE
 
             tables[table_name]['Columns'].push(col)
         end
+        res.finish
         return tables.values
     end
 
@@ -104,8 +106,8 @@ FROM
 WHERE 
 #{with_tables('t')}
 "
-        res = @conn.exec(sql)
-        res.each do |row|
+        res = @conn.execute(sql)
+        while row = res.fetch do
             ucname = row[0]
             cotablename = row[1]
             pktablename = row[2]
@@ -125,6 +127,8 @@ WHERE
                 raise "! not implemented"
             end
         end 
+        res.finish
+        return cons
     end
 end
 

@@ -2,14 +2,15 @@ $:.unshift File.dirname(__FILE__)
 
 require 'databaseobjects'
 require 'test/unit'
-require 'postgres'
-class DatabaseObjectsTests < Test::Unit::TestCase
+require 'dbi'
+class PostGresDatabaseObjectsTests < Test::Unit::TestCase
     def setup
-        @conn = PGconn.connect('localhost',5432,'','','sakila','test','test')
+        #@conn = PGconn.connect('localhost',5432,'','','sakila','test','test')
+        @conn = DBI.connect('DBI:Pg:sakila','test','test')
         @db = DatabaseObjects.new(@conn)
     end
     def teardown
-        @conn.close
+        @conn.disconnect if @conn
     end
     
     def test_can_read_tables
@@ -39,3 +40,4 @@ class DatabaseObjectsTests < Test::Unit::TestCase
         puts fk
     end
 end
+
