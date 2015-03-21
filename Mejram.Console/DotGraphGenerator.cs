@@ -7,7 +7,7 @@ using System.Linq;
 using Mejram.Model;
 using Mejram.NGenerics;
 
-namespace Mejram.Console
+namespace Mejram
 {
     public class DotGraphGenerator
     {
