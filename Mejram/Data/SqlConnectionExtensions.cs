@@ -15,15 +15,15 @@ namespace Mejram.Data
 {
     public static class SqlConnectionExtensions
     {
-        public static int ExecuteNonQuery<T>(this DbConnection conn, String cmdtxt, T binds)
+        public static int ExecuteNonQuery<T>(this IDbConnection conn, String cmdtxt, T binds)
         {
-            using (DbCommand command = GetCommand(conn, cmdtxt, binds))
+            using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
             {
                 return command.ExecuteNonQuery();
             }
         }
 
-        public static object[] ExecuteSingleRow<T>(this DbConnection conn, String cmdtxt, T binds)
+        public static object[] ExecuteSingleRow<T>(this IDbConnection conn, String cmdtxt, T binds)
         {
             using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
             {
@@ -42,9 +42,9 @@ namespace Mejram.Data
             return new object[] {};
         }
 
-        public static SqlDataRecordExtended ExecuteDataReader<T>(this DbConnection conn, String cmdtxt, T binds)
+        public static SqlDataRecordExtended ExecuteDataReader<T>(this IDbConnection conn, String cmdtxt, T binds)
         {
-            using (DbCommand command = GetCommand(conn, cmdtxt, binds))
+            using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
             {
                 command.CommandTimeout = Int32.MaxValue;
                 try
@@ -58,7 +58,7 @@ namespace Mejram.Data
             }
         }
 
-        public static DbCommand GetCommand<T>(DbConnection conn, String cmdtxt, T binds)
+        public static IDbCommand GetCommand<T>(IDbConnection conn, String cmdtxt, T binds)
         {
             var enumerable = binds as IEnumerable<Object>;
             if (null != enumerable)
@@ -68,12 +68,12 @@ namespace Mejram.Data
             return GetCommandObj(conn, cmdtxt, binds);
         }
 
-        private static DbCommand GetCommandArr<T>(DbConnection conn, string cmdtxt, IEnumerable<T> binds)
+        private static IDbCommand GetCommandArr<T>(IDbConnection conn, string cmdtxt, IEnumerable<T> binds)
         {
             var command = conn.CreateCommand();
 			command.CommandText = cmdtxt;
 			command.CommandType = CommandType.Text;
-            DbParameter[] parameters = BindsToSqlParameter(command, binds.Cast<object>());
+            IDbDataParameter[] parameters = BindsToSqlParameter(command, binds.Cast<object>());
             foreach (var t in parameters)
             {
                 command.Parameters.Add(t);
@@ -81,13 +81,13 @@ namespace Mejram.Data
             return command;
         }
 
-        private static DbCommand GetCommandObj(DbConnection conn, string cmdtxt, object binds)
+        private static IDbCommand GetCommandObj(IDbConnection conn, string cmdtxt, object binds)
         {
            var command = conn.CreateCommand();
 			command.CommandText = cmdtxt;
 			command.CommandType = CommandType.Text;
 			
-            DbParameter[] parameters = BindsToSqlParameter2(command, ReflectionHelper.PropertiesToDictionary(binds));
+            IDbDataParameter[] parameters = BindsToSqlParameter2(command, ReflectionHelper.PropertiesToDictionary(binds));
             foreach (var t in parameters)
             {
                 command.Parameters.Add(t);
@@ -96,9 +96,9 @@ namespace Mejram.Data
         }
 
 
-        private static DbParameter[] BindsToSqlParameter(DbCommand command, IEnumerable<Object> binds)
+        private static IDbDataParameter[] BindsToSqlParameter(IDbCommand command, IEnumerable<Object> binds)
         {
-            var parameters = new List<DbParameter>();
+            var parameters = new List<IDbDataParameter>();
 
             int count = binds.Count();
             if (count%2 != 0)
@@ -116,7 +116,7 @@ namespace Mejram.Data
         }
 
 
-        private static DbParameter[] BindsToSqlParameter2(DbCommand command, IEnumerable<KeyValuePair<string, object>> binds)
+        private static IDbDataParameter[] BindsToSqlParameter2(IDbCommand command, IEnumerable<KeyValuePair<string, object>> binds)
         {
             return binds.Select(o => {
 				var p = command.CreateParameter();

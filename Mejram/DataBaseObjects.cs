@@ -13,12 +13,13 @@ using Mejram.Util;
 using ForeignKeyConstraint = Mejram.Model.ForeignKeyConstraint;
 using UniqueConstraint = Mejram.Model.UniqueConstraint;
 using System.Data.Common;
+using System.Data;
 
 namespace Mejram
 {
     public class DataBaseObjects
     {
-        private readonly DbConnection _conn;
+        private readonly IDbConnection _conn;
 
         public Dictionary<ColumnKey, Column> Columns =
             new Dictionary<ColumnKey, Column>(new AttributeComparer());
@@ -28,7 +29,7 @@ namespace Mejram
 
         public Dictionary<string, Table> Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
 		
-        public DataBaseObjects(DbConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
+        public DataBaseObjects(IDbConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
                                IEnumerable<ITableFilter> columnsToGenerate)
         {
             _conn = conn;

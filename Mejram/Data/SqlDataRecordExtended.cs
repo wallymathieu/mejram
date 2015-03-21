@@ -14,10 +14,10 @@ namespace Mejram.Data
 {
     public class SqlDataRecordExtended : IDisposable
     {
-        private readonly DbDataReader _dataReader;
+        private readonly IDataReader _dataReader;
         private readonly Dictionary<string, int> _ordinals;
 
-        public SqlDataRecordExtended(DbDataReader reader)
+        public SqlDataRecordExtended(IDataReader reader)
         {
             //
             _dataReader = reader;
