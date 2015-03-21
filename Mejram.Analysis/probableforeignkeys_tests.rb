@@ -2,9 +2,9 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'probableforeignkeys'
-require 'test/unit'
+require 'minitest/autorun'
 #import unittest
-class ProbableForeignKeysAnalysisTests < Test::Unit::TestCase
+class ProbableForeignKeysAnalysisTests < Minitest::Test
 
     def setup()
         text = File.open('sakila.Tables.json.txt').read

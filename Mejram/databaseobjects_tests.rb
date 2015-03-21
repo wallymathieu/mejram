@@ -1,9 +1,9 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'databaseobjects'
-require 'test/unit'
+require 'minitest/autorun'
 require 'dbi'
-class PostGresDatabaseObjectsTests < Test::Unit::TestCase
+class PostGresDatabaseObjectsTests < Minitest::Test
     def setup
         #@conn = PGconn.connect('localhost',5432,'','','sakila','test','test')
         @conn = DBI.connect('DBI:Pg:sakila','test','test')

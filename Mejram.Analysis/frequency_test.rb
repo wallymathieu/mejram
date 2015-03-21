@@ -1,8 +1,8 @@
 $:.unshift File.dirname(__FILE__)
 require 'frequency'
-require 'test/unit'
+require 'minitest/autorun'
 
-class FrequencyTest < Test::Unit::TestCase
+class FrequencyTest < Minitest::Test
     def setup
         text = File.open('sakila.Tables.json.txt').read
         tables= parse_json_to_tables(JSON::parse(text))

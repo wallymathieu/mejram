@@ -1,10 +1,10 @@
 $:.unshift File.dirname(__FILE__)
 require 'relations'
-require 'test/unit'
+require "minitest/autorun"
 
 require 'rgl/traversal'
 require 'rgl/dot'
-class RelationsTest < Test::Unit::TestCase
+class RelationsTest < Minitest::Test
     def setup
         text = File.open('sakila.Tables.json.txt').read 
         @tables= parse_json_to_tables(JSON::parse(text))
