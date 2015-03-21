@@ -1,8 +1,6 @@
 version: 1.0.{build}
 before_build:
-  - cd src
   - nuget restore Mejram.sln
-  - cd ..
 build:
-  project: src\Mejram.sln
+  project: Mejram.sln
   verbosity: minimal
