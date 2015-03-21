@@ -76,6 +76,8 @@
     <Compile Include="ColumnDeserialize.cs" />
     <Compile Include="DataObjects.cs" />
     <Compile Include="IgnorePasswordColumnTableFilter.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
