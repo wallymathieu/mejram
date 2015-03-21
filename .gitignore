@@ -14,3 +14,5 @@ packages/
 
 Mejram.Tests/test-results
 TestResult.xml
+
+.vs/
