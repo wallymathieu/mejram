@@ -46,7 +46,6 @@ namespace Mejram.Data
         {
             using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
             {
-                command.CommandTimeout = Int32.MaxValue;
                 try
                 {
                     return new SqlDataRecordExtended(command.ExecuteReader(CommandBehavior.Default));

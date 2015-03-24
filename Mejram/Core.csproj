@@ -70,6 +70,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StoredProcedures\IStoredProcedures.cs" />
+    <Compile Include="StoredProcedures\PgSqlServer.cs" />
+    <Compile Include="Model\Routine.cs" />
+    <Compile Include="StoredProcedures\SqlServer.cs" />
     <Compile Include="NGenerics\Edge.cs" />
     <Compile Include="NGenerics\Graph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

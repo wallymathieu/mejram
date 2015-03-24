@@ -10,6 +10,7 @@ using System.Linq;
 using Mejram.Model;
 using NUnit.Framework;
 using Npgsql;
+using Mejram.StoredProcedures;
 
 namespace Mejram.Tests
 {
@@ -48,7 +49,7 @@ namespace Mejram.Tests
                 }
             }
         }
-		[Test,Ignore("need to script setup of sakila db")]
+		[Test]
 		public void SerializeInfo()
 		{
 			using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
@@ -58,5 +59,13 @@ namespace Mejram.Tests
 				s.Serialize(conn);
 			}
 		}
+
+        [Test]
+        public void GetStoredProcedures()
+        {
+            var storedProceduresForPgSql= new PgSqlServer("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;");
+            var r = storedProceduresForPgSql.GetRoutines().ToArray();
+            var def = storedProceduresForPgSql.GetRoutineDefinition(r.First());
+        }
     }
 }
