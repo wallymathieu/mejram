@@ -49,7 +49,7 @@ WHERE
         {
             using (var sqlConnection = new NpgsqlConnection(connectionString))
             {
-                using (var cmd = new NpgsqlCommand(@"SELECT routine_definition FROM INFORMATION_SCHEMA.routines WHERE routine_name = @id
+                using (var cmd = new NpgsqlCommand(@"SELECT prosrc FROM pg_proc where proname =  @id
 ", sqlConnection))
                 {
                     sqlConnection.Open();
@@ -59,9 +59,10 @@ WHERE
                     {
                         if (reader.Read())
                         {
-                            return reader.IsDBNull(0) ? null : reader.GetString(0);
+                            var result =reader.IsDBNull(0) ? null : reader.GetString(0);
+                            return result;
                         }
-                        return null;
+                        throw new Exception("Could not find "+routine.Name);
                     }
                 }
             }

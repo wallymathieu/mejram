@@ -36,38 +36,18 @@ namespace Mejram.StoredProcedures
                 }
             }
         }
+        
         public string GetRoutineDefinition(Routine routine)
         {
             using (var sqlConnection = new SqlConnection(connectionString))
             {
-                using (var cmd = new SqlCommand(@"SELECT routine_definition FROM INFORMATION_SCHEMA.routines WHERE routine_name = @id
-", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = routine.Name;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetString(0);
-                        }
-                        return null;
-                    }
-                }
-            }
-        }
-        public string GetRoutineDefinitionForSqlServer(string name)
-        {
-            using (var sqlConnection = new SqlConnection(connectionString))
-            {
-                using (var cmd = new SqlCommand(@"select top 1 definition from sys.sql_modules 
+                using (var cmd = new SqlCommand(@"select definition from sys.sql_modules 
 where object_id=object_id(@id)
 ", sqlConnection))
                 {
                     sqlConnection.Open();
                     cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = (name ?? string.Empty).Trim();
+                    cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = routine.Name;
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())

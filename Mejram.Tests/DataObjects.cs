@@ -17,25 +17,25 @@ namespace Mejram.Tests
     [TestFixture]
     public class DataObjects
     {
-        [Test,Ignore("need to script setup of sakila db")]
+        [Test, Ignore("need to script setup of sakila db")]
         public void Obj()
         {
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
-				conn.Open();
-                var tables = new DataBaseObjects(conn, new ITableFilter[] {},
-                                                 new ITableFilter[] {});
+                conn.Open();
+                var tables = new DataBaseObjects(conn, new ITableFilter[] { },
+                                                 new ITableFilter[] { });
                 using (var filef = File.Open("out.txt", FileMode.Create))
                 using (var file = new StreamWriter(filef))
                 {
-					file.WriteLine("tables");
-					file.WriteLine(String.Join(Environment.NewLine,
-					                           tables.Tables.Values
+                    file.WriteLine("tables");
+                    file.WriteLine(String.Join(Environment.NewLine,
+                                               tables.Tables.Values
                                                .Select(p => p.TableName).ToArray()));
-					
+
                     file.WriteLine("primal keys");
                     file.WriteLine(String.Join(Environment.NewLine,
-					                           new PrimalKeyAnalysis().PrimalPrimaryKeys(tables.Tables.Values, tables.ForeignKeys)
+                                               new PrimalKeyAnalysis().PrimalPrimaryKeys(tables.Tables.Values, tables.ForeignKeys)
                                                .Select(p => p.Key + ": " + p.Value).ToArray()));
                     var fks = new PropableForeignKeyAnalysis().GetProbableForeignKeys(tables.Tables.Values);
                     file.WriteLine("fks");
@@ -49,23 +49,24 @@ namespace Mejram.Tests
                 }
             }
         }
-		[Test]
-		public void SerializeInfo()
-		{
-			using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
+        [Test]
+        public void SerializeInfo()
+        {
+            using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
-				conn.Open();
-				var s = new Serialization();
-				s.Serialize(conn);
-			}
-		}
+                conn.Open();
+                var s = new Serialization();
+                s.Serialize(conn);
+            }
+        }
 
         [Test]
         public void GetStoredProcedures()
         {
-            var storedProceduresForPgSql= new PgSqlServer("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;");
+            var storedProceduresForPgSql = new PgSqlServer("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;");
             var r = storedProceduresForPgSql.GetRoutines().ToArray();
-            var def = storedProceduresForPgSql.GetRoutineDefinition(r.First());
+            var def = storedProceduresForPgSql.GetRoutineDefinition(r.First(r1 => r1.Name == "film_in_stock"));
+            Assert.That(def, Is.Not.Empty);
         }
     }
 }

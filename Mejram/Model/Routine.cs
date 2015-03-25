@@ -14,5 +14,25 @@ namespace Mejram.Model
         {
             Name = name;
         }
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+            if (obj is Routine)
+            {
+                return Name.Equals((Routine)obj);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return Name.ToString();
+        }
     }
 }

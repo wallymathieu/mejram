@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <ComboBox Name="SearchText" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="200" KeyDown="SearchText_KeyDown" >
+        <ComboBox Name="SearchText" 
+                  IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" IsEditable="true" 
+                  Text="{Binding Path=Name,Mode=OneWay}" 
+                  HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="200" KeyDown="SearchText_KeyDown" >
             <ComboBox.ItemTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding Path=Name,Mode=OneWay}" />
