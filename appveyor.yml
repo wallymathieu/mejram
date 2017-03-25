@@ -8,6 +8,8 @@ install:
 before_build:
   - psql -c "CREATE DATABASE sakila;" -U postgres
   - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+  - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
+  - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 build:
   project: ./csharp/Mejram.sln
   verbosity: minimal
