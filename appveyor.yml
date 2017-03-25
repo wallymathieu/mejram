@@ -1,8 +1,8 @@
 version: 1.0.{build}
 before_build:
-  - nuget restore ./script/Mejram.sln
+  - nuget restore ./csharp/Mejram.sln
 build:
-  project: ./script/Mejram.sln
+  project: ./csharp/Mejram.sln
   verbosity: minimal
 services:
   - postgresql 
