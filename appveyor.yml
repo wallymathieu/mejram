@@ -6,6 +6,7 @@ init:
 install:
   - nuget restore ./csharp/Mejram.sln
 before_build:
+  - git submodule update --init --recursive
   - psql -c "CREATE DATABASE sakila;" -U postgres
   - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
   - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
