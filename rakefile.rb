@@ -1,37 +1,39 @@
 require 'albacore'
-task :test => ["py:test", "cs:test", "rb:test"]
+require 'nuget_helper'
+task :test => ["py_test", "cs:test", "rb_test"]
 
-import 'rakefile_cs.rb'
+namespace :cs do
 
-namespace :py do
-    task :test do
-        Dir.glob(File.join('**','*.py')).each do |file| 
-            puts file
-            cd File.dirname(file) do
-                sh "python #{File.basename(file)}" do |ok, res|
-                    if !ok
-                        raise "!Failed"
-                    end
-                end
-            end
-        end
-    end 
+  dir = File.dirname(__FILE__)
+
+  desc "build using msbuild"
+  build :build do |msb|
+    msb.prop :configuration, :Debug
+    msb.target = [:Rebuild]
+    msb.logging = 'minimal'
+    msb.sln =File.join(dir, "csharp", "Mejram.sln")
+  end
+
+  build :build_release do |msb|
+    msb.prop :configuration, :Release
+    msb.target = [:Rebuild]
+    msb.logging = 'minimal'
+    msb.sln =File.join(dir, "csharp", "Mejram.sln")
+  end
+
+  desc "Install missing NuGet packages."
+  task :restore do
+    NugetHelper.exec("restore ./csharp/Mejram.sln")
+  end
+
+  desc "test using console"
+  test_runner :test => [:build] do |runner|
+    runner.exe = NugetHelper.nunit_path
+    files = Dir.glob(File.join(File.dirname(__FILE__),"csharp",
+      "*Tests","bin","Debug","*Tests.dll"))
+    runner.files = files 
+  end
+
 end
 
-namespace :rb do
-  #TODO: Use rake test runner
-    task :test do
-        Dir.glob(File.join('**','*.rb')).select do |file|
-            file.index('_tests.rb') || file.index('_test.rb')
-        end.each do |file| 
-            puts file
-            cd File.dirname(file) do
-                sh "ruby #{File.basename(file)}" do |ok, res|
-                    if !ok
-                        raise "!Failed"
-                    end
-                end
-            end
-        end
-    end 
-end
+import './script/rakefile.rb'
