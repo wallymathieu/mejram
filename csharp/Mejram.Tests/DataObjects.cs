@@ -1,9 +1,4 @@
-﻿/*  
- This program is licensed under the GNU Lesser General Public License (LGPL).  You should 
- have received a copy of the license along with the source code.  If not, an online copy
- of the license can be found at http://www.gnu.org/copyleft/lesser.html.
-*/
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -17,7 +12,7 @@ namespace Mejram.Tests
     [TestFixture]
     public class DataObjects
     {
-        [Test, Ignore("need to script setup of sakila db")]
+        [Test]
         public void Obj()
         {
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
