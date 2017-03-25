@@ -1,6 +1,6 @@
 version: 1.0.{build}
 before_build:
-  - nuget restore Mejram.sln
+  - nuget restore ./script/Mejram.sln
 build:
-  project: Mejram.sln
+  project: ./script/Mejram.sln
   verbosity: minimal
