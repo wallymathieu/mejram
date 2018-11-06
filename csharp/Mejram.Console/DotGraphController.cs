@@ -16,10 +16,10 @@ namespace Mejram
 		private readonly Serialization _serialization;
 		private readonly DotGraphGenerator _dotGraphGenerator;
 
-		public DotGraphController ()
+        public DotGraphController (Configuration configuration)
 		{
 			_serialization = new Serialization ();
-			_dotGraphGenerator = new DotGraphGenerator ();
+            _dotGraphGenerator = new DotGraphGenerator (configuration);
 		}
 
 		public void WriteDot ()

@@ -11,12 +11,14 @@ namespace Mejram
 {
     public class DotGraphGenerator
     {
+        private Configuration _configuration;
         public string OutfilePng;
         public string OutfileNeatoPng;
         public string OutfileDot;
 
-        public DotGraphGenerator()
+        public DotGraphGenerator(Configuration configuration)
         {
+            _configuration = configuration;
             OutfilePng = "outfile.png";
             OutfileNeatoPng = "outfile.neato.png";
             OutfileDot = "outfile.dot";
@@ -48,7 +50,7 @@ node [style=filled];");
 
         public void WriteDotFile()
         {
-            var fileName = ConfigurationManager.AppSettings["dot_exe"];
+            var fileName = _configuration.DotExe;
             var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
                                            OutfilePng);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
@@ -67,7 +69,7 @@ node [style=filled];");
         {
             var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
                                           OutfileNeatoPng);
-            var fileName = ConfigurationManager.AppSettings["neato_exe"];
+            var fileName = _configuration.NeatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
                           {

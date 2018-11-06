@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using Mejram.Data;
 using Mejram.Model;
 using Mejram.Util;
 using ForeignKeyConstraint = Mejram.Model.ForeignKeyConstraint;
 using UniqueConstraint = Mejram.Model.UniqueConstraint;
-using System.Data.Common;
 using System.Data;
 
 namespace Mejram
