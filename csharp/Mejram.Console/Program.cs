@@ -16,9 +16,12 @@ namespace Mejram
         public static void Main(string[] args)
         {
             var build = new Build()
+
                 .Recognize(typeof(DotGraphController))
                 .Recognize(typeof(GraphController))
-                .Recognize(typeof(SerializeController));
+                .Recognize(typeof(SerializeController))
+                .ShouldRecognizeHelp()
+                ;
             try
             {
                 var parsedMethod = build.Parse(args);
@@ -63,7 +66,8 @@ Did you mean any of these arguments?
                 Console.WriteLine(string.Join(Environment.NewLine, new object[]
                         {
                                 "The invokation failed with exception:",
-                                ex1.Message, ex1.StackTrace
+                                ex1.Message, ex1.StackTrace,
+                    ex1.InnerException?.Message, ex1.InnerException?.StackTrace
                         }));
                 Environment.Exit(1);
             }
