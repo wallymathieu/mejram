@@ -19,7 +19,7 @@ namespace Mejram.Tests
             {
                 conn.Open();
                 var tables = new DataBaseObjects(conn, new ITableFilter[] { },
-                                                 new ITableFilter[] { });
+                                                 new ITableFilter[] { }, onWarn:warning=> { throw new Exception(warning); });
                 using (var filef = File.Open("out.txt", FileMode.Create))
                 using (var file = new StreamWriter(filef))
                 {

@@ -55,7 +55,7 @@ namespace Mejram.Model
         //[Tested]
         public override bool Equals(object obj)
         {
-            return obj is ColumnKey ? Equals((ColumnKey) obj) : false;
+            return obj is ColumnKey ? Equals((ColumnKey)obj) : false;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Mejram.Model
         public override int GetHashCode()
         {
             int hashcode = TableName == null ? 0 : TableName.GetHashCode();
-            hashcode = hashcode*Hashfactor + (ColumnName == null ? 0 : ColumnName.GetHashCode());
+            hashcode = hashcode * Hashfactor + (ColumnName == null ? 0 : ColumnName.GetHashCode());
             return hashcode;
         }
 
@@ -136,16 +136,16 @@ namespace Mejram.Model
         /// readonly
         /// </summary>
         private ColumnKey Key;
-		public ColumnKey GetKey()
-		{
-			return Key;
-		}
-		
+        public ColumnKey GetKey()
+        {
+            return Key;
+        }
+
         /// <summary>
         /// readonly
         /// </summary>
         public bool NotNullConstraint;
-       
+
         public bool HasPrimitiveType;
 
         public Column(string columnName, string columnType, Int16 attributenumber, string tableName,
