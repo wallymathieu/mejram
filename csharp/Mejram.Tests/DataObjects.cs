@@ -47,10 +47,12 @@ namespace Mejram.Tests
         [Test]
         public void SerializeInfo()
         {
+            string tablesFileName = "outfile.Tables.json.txt";
+            string foreignKeysFileName = "outfile.ForeignKeys.json.txt";
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
                 conn.Open();
-                var s = new Serialization();
+                var s = new Serialization(foreignKeysFileName: foreignKeysFileName, tablesFileName: tablesFileName);
                 s.Serialize(conn);
             }
         }

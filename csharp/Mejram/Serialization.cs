@@ -18,10 +18,10 @@ namespace Mejram
 		public string ForeignKeysCountFileName;
 		public string TableCountFileName;
 
-		public Serialization ()
-		{
-			TablesFileName = "outfile.Tables.json.txt";
-			ForeignKeysFileName = "outfile.ForeignKeys.json.txt";
+		public Serialization(string tablesFileName, string foreignKeysFileName)
+        {
+			TablesFileName = tablesFileName;
+			ForeignKeysFileName = foreignKeysFileName;
 		}
 
 		public void Serialize (string connectionString)

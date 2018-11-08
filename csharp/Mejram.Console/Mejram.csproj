@@ -12,7 +12,7 @@
     <ProjectReference Include="..\Mejram\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Isop" Version="3.0.0-alpha-3" />
+    <PackageReference Include="Isop" Version="3.0.0-alpha-4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />

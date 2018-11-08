@@ -9,19 +9,25 @@ using Newtonsoft.Json;
 using System.Data.Common;
 using Npgsql;
 using Isop;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Mejram
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var build = new Build()
-
+            var svc = new ServiceCollection();
+            svc.AddSingleton(di => new DotGraphController());
+            svc.AddSingleton(di => new GraphController());
+            svc.AddSingleton(di => new SerializeController());
+            var build = new Build(svc)
                 .Recognize(typeof(DotGraphController))
                 .Recognize(typeof(GraphController))
                 .Recognize(typeof(SerializeController))
                 .ShouldRecognizeHelp()
                 ;
+
             try
             {
                 var parsedMethod = build.Parse(args);
