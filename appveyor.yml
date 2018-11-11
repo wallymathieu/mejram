@@ -16,3 +16,6 @@ build:
   verbosity: minimal
 services:
   - postgresql
+branches:
+  only:
+    - master

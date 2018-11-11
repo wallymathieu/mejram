@@ -15,3 +15,6 @@ script:
   - bundle install 
   - rake restore
   - rake test
+branches:
+  only:
+    - master
