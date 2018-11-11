@@ -1,18 +1,17 @@
-language: objective-c
-
-env:
-  matrix:
-    - MONO_VERSION="3.8.0.9"
-      # see http://xamarin.com/installer_assets/v3/Mac/Universal/InstallationManifest.xml
-  global:
-    - EnableNuGetPackageRestore=false
-
+language: csharp
+dotnet: 2.1.401
+services:
+  - postgresql
 install:
-  - wget "http://download.xamarin.com/MonoFrameworkMDK/Macx86/MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg" 
-  - sudo installer -pkg "MonoFramework-MDK-${MONO_VERSION}.macos10.xamarin.x86.pkg" -target / 
-
+  - msbuild /t:restore csharp
+before_script:
+  - git submodule update --init --recursive
+  - psql -c "CREATE DATABASE sakila;" -U postgres
+  - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+  - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
+  - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 script: 
-  - bundle install 
+  - bundle install
   - rake restore
   - rake test
 branches:
