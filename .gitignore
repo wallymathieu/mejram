@@ -16,3 +16,4 @@ Mejram.Tests/test-results
 TestResult.xml
 
 .vs/
+\.DS_Store

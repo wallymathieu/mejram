@@ -6,6 +6,7 @@ using System.Linq;
 using Mejram.Model;
 using Newtonsoft.Json;
 using System.Data.Common;
+using System;
 
 namespace Mejram
 {
@@ -17,10 +18,10 @@ namespace Mejram
 		public string ForeignKeysCountFileName;
 		public string TableCountFileName;
 
-		public Serialization ()
-		{
-			TablesFileName = "outfile.Tables.json.txt";
-			ForeignKeysFileName = "outfile.ForeignKeys.json.txt";
+		public Serialization(string tablesFileName, string foreignKeysFileName)
+        {
+			TablesFileName = tablesFileName;
+			ForeignKeysFileName = foreignKeysFileName;
 		}
 
 		public void Serialize (string connectionString)
@@ -32,7 +33,7 @@ namespace Mejram
 		
 		public void Serialize (DbConnection conn)
 		{
- 			var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+            var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn:Console.Error.WriteLine);
 			using (FileStream fs = File.Open(TablesFileName, FileMode.Create))
 			using (TextWriter txtWriter = new StreamWriter(fs)) {
 				txtWriter.Write (JsonConvert.SerializeObject (tables.Tables.Values, Formatting.Indented));

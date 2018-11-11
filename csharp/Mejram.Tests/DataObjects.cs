@@ -19,7 +19,7 @@ namespace Mejram.Tests
             {
                 conn.Open();
                 var tables = new DataBaseObjects(conn, new ITableFilter[] { },
-                                                 new ITableFilter[] { });
+                                                 new ITableFilter[] { }, onWarn:warning=> { throw new Exception(warning); });
                 using (var filef = File.Open("out.txt", FileMode.Create))
                 using (var file = new StreamWriter(filef))
                 {
@@ -47,10 +47,12 @@ namespace Mejram.Tests
         [Test]
         public void SerializeInfo()
         {
+            string tablesFileName = "outfile.Tables.json.txt";
+            string foreignKeysFileName = "outfile.ForeignKeys.json.txt";
             using (var conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"))
             {
                 conn.Open();
-                var s = new Serialization();
+                var s = new Serialization(foreignKeysFileName: foreignKeysFileName, tablesFileName: tablesFileName);
                 s.Serialize(conn);
             }
         }

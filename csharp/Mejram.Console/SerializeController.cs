@@ -21,7 +21,7 @@ namespace Mejram
 		{
 			using (var conn = Connection(database,connectionString)) 
 			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
 				using (FileStream fs = File.Open(fileName, FileMode.Create))
 				using (TextWriter txtWriter = new StreamWriter(fs)) {
 					txtWriter.Write (JsonConvert.SerializeObject (tables.Tables.Values, Formatting.Indented));
@@ -35,7 +35,7 @@ namespace Mejram
 		{
 			using (var conn = Connection(database,connectionString)) 
 			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
 				using (FileStream fs = File.Open(fileName, FileMode.Create))
 				using (TextWriter txtWriter = new StreamWriter(fs)) {
 					txtWriter.Write (JsonConvert.SerializeObject (tables.ForeignKeys, Formatting.Indented));
@@ -49,7 +49,7 @@ namespace Mejram
 		{
 			using (var conn = Connection(database,connectionString)) 
 			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
 
 				using (
                     FileStream fs =
@@ -72,7 +72,7 @@ namespace Mejram
 		{
 			using (var conn = Connection(database,connectionString)) 
 			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {});
+				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
 
 				using (
                     FileStream fs =

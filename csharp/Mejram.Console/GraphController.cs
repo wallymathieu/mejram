@@ -13,9 +13,9 @@ namespace Mejram
 {
 	public class GraphController
 	{
-		public IEnumerable<string> Find (string starttable)
+		public IEnumerable<string> Find (string starttable, string tablesFileName = "outfile.Tables.json.txt", string foreignKeysFileName = "outfile.ForeignKeys.json.txt")
 		{
-			var v = new Serialization ().Deserialize ();
+            var v = new Serialization (foreignKeysFileName:foreignKeysFileName, tablesFileName:tablesFileName).Deserialize ();
 			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis ().GetProbableForeignKeys (v.Tables);
 			var constraints = v.ForeignKeyConstraints.Union (probableForeignKeyConstraints)
                 .Where (fk => !fk.TableNames ().Any (p =>

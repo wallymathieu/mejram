@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using Mejram.Data;
 using Mejram.Model;
 using Mejram.Util;
 using ForeignKeyConstraint = Mejram.Model.ForeignKeyConstraint;
 using UniqueConstraint = Mejram.Model.UniqueConstraint;
-using System.Data.Common;
 using System.Data;
 
 namespace Mejram
@@ -15,7 +13,7 @@ namespace Mejram
     public class DataBaseObjects
     {
         private readonly IDbConnection _conn;
-
+        private readonly Action<string> onWarn;
         public Dictionary<ColumnKey, Column> Columns =
             new Dictionary<ColumnKey, Column>(new AttributeComparer());
 
@@ -23,18 +21,21 @@ namespace Mejram
         public List<UniqueConstraint> UniqueConstraints = new List<UniqueConstraint>();
 
         public Dictionary<string, Table> Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
-		
-        public DataBaseObjects(IDbConnection conn, IEnumerable<ITableFilter> tablesToGenerate,
-                               IEnumerable<ITableFilter> columnsToGenerate)
+
+        public DataBaseObjects(IDbConnection conn,
+                               IEnumerable<ITableFilter> tablesToGenerate,
+                               IEnumerable<ITableFilter> columnsToGenerate,
+                               Action<string> onWarn)
         {
             _conn = conn;
-			var tablefilters= new List<ITableFilter>();
-			if (_conn.GetType().Name.StartsWith("Npgsql",StringComparison.InvariantCultureIgnoreCase))
-			{
-				 tablefilters.Add(new PostgresTableFilter());
-			}
-            InitPublicTables(tablefilters.Union(tablesToGenerate??new ITableFilter[0]),
-			                 columnsToGenerate);
+            this.onWarn = onWarn;
+            var tablefilters = new List<ITableFilter>();
+            if (_conn.GetType().Name.StartsWith("Npgsql", StringComparison.InvariantCultureIgnoreCase))
+            {
+                tablefilters.Add(new PostgresTableFilter());
+            }
+            InitPublicTables(tablefilters.Union(tablesToGenerate ?? new ITableFilter[0]),
+                             columnsToGenerate);
         }
 
         public Column GetTableAttributeCached(ColumnKey key)
@@ -56,21 +57,26 @@ namespace Mejram
             LEFT JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu  on c.TABLE_NAME = ccu.TABLE_NAME and c.COLUMN_NAME = ccu.COLUMN_NAME  
             WHERE t.TABLE_TYPE = 'BASE TABLE' and t.table_name = @id
 ",
-                    new {id = tableName}))
+                    new { id = tableName }))
             {
                 // SqlDataRecordExtended rs2 = new SqlDataRecordExtended(dr2);
                 var list = new List<ColumnKey>();
                 while (dr2.Read())
                 {
-                    list.Add(new ColumnKey((string) dr2.GetString("TABLE_NAME"), (string) dr2.GetString("COLUMN_NAME")));
+                    list.Add(new ColumnKey((string)dr2.GetString("TABLE_NAME"), (string)dr2.GetString("COLUMN_NAME")));
                 }
                 foreach (Column attr in list.Select(rec => GetTableAttributeCached(rec)))
                 {
                     if (attributes.Any(a => a.GetKey() == attr.GetKey()))
-                        throw new Exception("Key already found: " + attr.GetKey().TableName + ", " + attr.GetKey().ColumnName +
+                    {
+                        onWarn("Key already found: " + attr.GetKey().TableName + ", " + attr.GetKey().ColumnName +
                                             " in table: " +
                                             tableName);
-                    attributes.Add(attr);
+                    }
+                    else
+                    {
+                        attributes.Add(attr);
+                    }
                 }
             }
         }
@@ -81,7 +87,7 @@ namespace Mejram
                 SqlDataRecordExtended rs2 = _conn.ExecuteDataReader(
                     @"
       SELECT COUNT(*) _count
-  FROM [" + tableName + @"]", new {}))
+  FROM [" + tableName + @"]", new { }))
             {
                 if (rs2.Read())
                     return rs2.GetInt32("_count");
@@ -104,7 +110,7 @@ namespace Mejram
                                           keyConstraint.FromTableName(),
                                           string.Join(" AND ",
                                                       keyConstraint.ConstraintKeys.Select(
-                                                          c => c.From.ColumnName + " IS NOT NULL ").ToArray())), new {})
+                                                          c => c.From.ColumnName + " IS NOT NULL ").ToArray())), new { })
                     )
                 {
                     if (rs2.Read())
@@ -142,7 +148,7 @@ FROM
 
 WHERE tcon.table_name = @id
 ",
-                    new {id = tablename}))
+                    new { id = tablename }))
             {
                 ForeignKeyConstraint currentConstraint = null;
 
@@ -197,7 +203,7 @@ WHERE
 pkcon.CONSTRAINT_TYPE = 'PRIMARY KEY'
 AND pkcon.table_name = @id
 ",
-                new {id = tablename}))
+                new { id = tablename }))
             {
                 //_conn.ExecuteDataReader("sp_jgljsdklfjsdkljf", new List<object>(){
                 //        "param1", 1,
@@ -262,7 +268,7 @@ join INFORMATION_SCHEMA.COLUMNS pkcon_colc on
 	and pkcon_colc.COLUMN_NAME = pkcon_col.COLUMN_NAME*/
 where tcon.table_name = @id
 ",
-                    new {id = tablename}))
+                    new { id = tablename }))
                 {
                     Model.UniqueConstraint currentConstraint = null;
 
@@ -289,7 +295,7 @@ where tcon.table_name = @id
 
         private static bool GetBoolean(string boolean)
         {
-            var valids = new[] {"yes", "true", "1"};
+            var valids = new[] { "yes", "true", "1" };
             boolean = boolean == null ? "false" : boolean.ToLower();
             bool result = false;
             foreach (string valid in valids)
@@ -359,10 +365,17 @@ t.TABLE_TYPE = 'BASE TABLE'
                         var attr = new Column(
                             rs2.GetString("COLUMN_NAME"),
                             rs2.GetString("DATA_TYPE"),
-                            (short) rs2.GetInt32("ordinal_position"),
+                            (short)rs2.GetInt32("ordinal_position"),
                             rs2.GetString("TABLE_NAME"),
                             !GetBoolean(rs2.GetString("IsNullable")));
-                        Columns.Add(attr.GetKey(), attr);
+                        if (Columns.ContainsKey(attr.GetKey()))
+                        {
+                            onWarn($"Duplicate column {attr.GetKey()}");
+                        }
+                        else
+                        {
+                            Columns.Add(attr.GetKey(), attr);
+                        }
                     }
                 }
             }
