@@ -7,10 +7,12 @@ namespace Mejram
 {
 		public class PropableForeignKeyAnalysis
 		{
-			public PropableForeignKeyAnalysis ()
+			public PropableForeignKeyAnalysis (string[] tablePrefixes, string[] keyNames)
 			{
+                _tablePrefix= new []{ "tbl"}.Union(tablePrefixes).ToArray();
+                _keynames=new[] {/*"number",*/ "id" /*, "key"*/}.Union(keyNames).ToArray();
 			}
-	        private readonly string[] _tablePrefix = new[] {"tbl"};
+	        private readonly string[] _tablePrefix;
 	
 	        public String TableNameTrim(string s)
 	        {
@@ -23,7 +25,7 @@ namespace Mejram
 	            return v;
 	        }
 	
-	        private readonly string[] _keynames = new[] {/*"number",*/ "id" /*, "key"*/};
+	        private readonly string[] _keynames ;
 	
 	        public string ColumnExtractTableName(string s)
 	        {

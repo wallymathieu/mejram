@@ -11,12 +11,25 @@ using Npgsql;
 
 namespace Mejram
 {
+    ///
 	public class GraphController
 	{
-		public IEnumerable<string> Find (string starttable, string tablesFileName = "outfile.Tables.json.txt", string foreignKeysFileName = "outfile.ForeignKeys.json.txt")
+        /// <summary>
+        /// Find tables based on start table
+        /// </summary>
+        /// <param name="starttable"></param>
+        /// <param name="tablePrefixes"></param>
+        /// <param name="keyNames"></param>
+        /// <param name="tablesPath">Tables json file path.</param>
+        /// <param name="foreignKeysPath">Foreign keys file path.</param>
+        public IEnumerable<string> Find (string starttable, string[] tablePrefixes=null, string[] keyNames=null,
+            string tablesPath = "outfile.Tables.json.txt", string foreignKeysPath = "outfile.ForeignKeys.json.txt")
 		{
-            var v = new Serialization (foreignKeysFileName:foreignKeysFileName, tablesFileName:tablesFileName).Deserialize ();
-			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis ().GetProbableForeignKeys (v.Tables);
+            var v = new Serialization (foreignKeysFileName:foreignKeysPath, tablesFileName:tablesPath).Deserialize ();
+			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis (
+                                                    keyNames:keyNames??new string[0], 
+                                                    tablePrefixes:tablePrefixes??new string[0])
+                                                .GetProbableForeignKeys (v.Tables);
 			var constraints = v.ForeignKeyConstraints.Union (probableForeignKeyConstraints)
                 .Where (fk => !fk.TableNames ().Any (p =>
                     p.ToLower ().EndsWith ("temp")

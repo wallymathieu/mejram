@@ -48,7 +48,7 @@ node [style=filled];");
             }
         }
 
-        public void WriteDotFile()
+        public void WriteDot()
         {
             var fileName = _configuration.DotExe;
             var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
