@@ -38,7 +38,7 @@ namespace Mejram
 				tables.Add(table.TableName,table);
 			}
 			var foreignKeys = new List<ForeignKeyConstraint>(_foreignKeys);
-            var primalKeys = new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
+            var primalKeys = new Dictionary<ColumnKey, PrimalKey>(new ColumnComparer());
             foreach (Table tbl in tables.Values)
             {
                 // all primary keys that are not part of any foreign keys referencing other tables
