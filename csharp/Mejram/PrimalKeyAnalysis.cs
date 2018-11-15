@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Mejram.Model;
 using System.Linq;
 using Mejram.Util;
@@ -7,16 +8,21 @@ using Mejram.Util;
 namespace Mejram
 {
 	public class PrimalKeyAnalysis
-	{      
-		//                // primal key
+	{
+	    private readonly IList<Table> _tables;
+
+	    private readonly IList<ForeignKeyConstraint> _foreignKeys;
+	    //                // primal key
         //                if (col.Attributes.Count != 1)
         //                    throw new Exception(
         //                        @"Well, need to rewrite some code below concerning primal keys if this is going to work.
         //If a compounded primal key is needed, maybe you should consider a user defined type.
         //Or perhaps it is because you have forgotten a foreign key constraint?");
 
-		public PrimalKeyAnalysis ()
+		public PrimalKeyAnalysis (IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
 		{
+		    _tables = tables.ToList();
+		    _foreignKeys = foreignKeys.ToList();
 		}
 		
 		  /// <summary>
@@ -24,16 +30,16 @@ namespace Mejram
         /// They are defined using foreign keys: The primary key that does not have any foreign key reference.
         /// </summary>
         /// <returns></returns>
-        public Dictionary<ColumnKey, PrimalKey> PrimalPrimaryKeys(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
+        public PrimalKeys PrimalPrimaryKeys()
         {
-			var Tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
-			foreach (var table in tables) 
+			var tables = new Dictionary<string, Table>(StringComparer.CurrentCultureIgnoreCase);
+			foreach (var table in _tables) 
 			{
-				Tables.Add(table.TableName,table);
+				tables.Add(table.TableName,table);
 			}
-			var ForeignKeys = new List<ForeignKeyConstraint>(foreignKeys);
-            var PrimalKeys = new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
-            foreach (Table tbl in Tables.Values)
+			var foreignKeys = new List<ForeignKeyConstraint>(_foreignKeys);
+            var primalKeys = new Dictionary<ColumnKey, PrimalKey>(new AttributeComparer());
+            foreach (Table tbl in tables.Values)
             {
                 // all primary keys that are not part of any foreign keys referencing other tables
 
@@ -43,7 +49,7 @@ namespace Mejram
                 var primaryKeyConstraintKeys = tbl.PrimaryKey.ConstraintKeys;
                 foreach (var key in primaryKeyConstraintKeys)
                 {
-                    foreach (ForeignKeyConstraint con in ForeignKeys.Where(fk => fk.TableName == key.TableName))
+                    foreach (var con in foreignKeys.Where(fk => fk.TableName == key.TableName))
                     {
                         foreach (var fkeys in con.ConstraintKeys)
                         {
@@ -62,18 +68,14 @@ namespace Mejram
                         case 0:
                             break;
                         case 1:
-                            var enumerator =
-                                primaryKeyConstraintKeys.GetEnumerator();
-                            enumerator.MoveNext();
-                            PrimalKeys.Add(enumerator.Current,
-                                           new PrimalKey(tbl.TableName, enumerator.Current));
+                            var first = primaryKeyConstraintKeys.First();
+                            primalKeys.Add(first,
+                                           new PrimalKey(tbl.TableName, first));
 
                             break;
                         default: // several keys
                             Console.WriteLine(
-                                string.Format(
-                                    "Warning: Primal key with several keys is currently not supported. Ignoring primal key in {0}",
-                                    tbl.TableName));
+                                $"Warning: Primal key with several keys is currently not supported. Ignoring primal key in {tbl.TableName}");
                             // BUG: This should be handled!
                             break;
                             //throw new Exception("Primal key with several keys is currently not supported: " +
@@ -83,29 +85,38 @@ namespace Mejram
                     }
                 }
             }
-			return PrimalKeys;
+			return new PrimalKeys(primalKeys, _tables, _foreignKeys);
         }
-		private bool TryGetPrimaryKeyConstraint(IDictionary<string,Table> Tables,ColumnKey attr, out PrimaryKeyConstraint primaryKey)
-        {
-            primaryKey = Tables[attr.TableName].PrimaryKey.ConstraintKeys.Contains(attr)
-                             ? Tables[attr.TableName].PrimaryKey
-                             : null;
-            return primaryKey != null;
-        }
+
 		
+	}
+
+    public class PrimalKeys
+    {
+        private readonly IList<Table> _tables;
+        private readonly IList<ForeignKeyConstraint> _foreignKeys;
+        public ReadOnlyDictionary<ColumnKey, PrimalKey> Keys { get; }
+
+        public PrimalKeys(Dictionary<ColumnKey,PrimalKey> primalKeys,IList<Table> tables, IList<ForeignKeyConstraint> foreignKeys)
+        {
+            _tables = tables;
+            _foreignKeys = foreignKeys;
+            Keys = new ReadOnlyDictionary<ColumnKey,PrimalKey>(primalKeys);
+        }
+
         /// <summary>
         /// not safe if the db contains foreign key loops
         /// </summary>
         /// <param name="attr"></param>
         /// <param name="className"></param>
         /// <returns></returns>
-        public bool TryGetPrimalKey(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys, Dictionary<ColumnKey, PrimalKey> PrimalKeys, ColumnKey attr, out string className)
+        public bool TryGetPrimalKey(ColumnKey attr, out string className)
         {
             #region first try to get primal key
 
-            if (PrimalKeys.ContainsKey(attr))
+            if (Keys.ContainsKey(attr))
             {
-                className = PrimalKeys[attr].ClassTypeName;
+                className = Keys[attr].ClassTypeName;
                 return true;
             }
 
@@ -113,7 +124,7 @@ namespace Mejram
 
             #region find the table owning the attribute and then try to find a foreign key pair
 
-            foreach (ForeignKeyConstraint f in foreignKeys.Where(fk => fk.TableName == attr.TableName))
+            foreach (var f in _foreignKeys.Where(fk => fk.TableName == attr.TableName))
             {
                 foreach (var ta in f.ConstraintKeys)
                 {
@@ -124,13 +135,13 @@ namespace Mejram
                         var foreignKeyV = new ColumnKey
                             (ta.To.TableName, ta.To.ColumnName);
 
-                        if (PrimalKeys.ContainsKey(foreignKeyV))
+                        if (Keys.ContainsKey(foreignKeyV))
                         {
-                            className = PrimalKeys[foreignKeyV].ClassTypeName;
+                            className = Keys[foreignKeyV].ClassTypeName;
                             return true;
                         }
                         // recurse!
-                        return TryGetPrimalKey(tables, foreignKeys, PrimalKeys, foreignKeyV, out className);
+                        return TryGetPrimalKey(foreignKeyV, out className);
 
                         #endregion
                     }
@@ -143,6 +154,6 @@ namespace Mejram
             className = null;
             return false;
         }
-	}
+    }
 }
 

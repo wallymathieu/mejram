@@ -5,7 +5,6 @@ using System.Diagnostics;
 namespace Mejram.Model
 {
     [Serializable]
-    [DebuggerDisplay("{TableName}, {Oid}, {ClassTypeName}, #pk: {PrimaryKeys.Count}, #fk {ForeignKeys.Count} ")]
     public class Table
     {
         /// <summary>

@@ -27,6 +27,7 @@ namespace Mejram
 		{
             var v = new Serialization (foreignKeysFileName:foreignKeysPath, tablesFileName:tablesPath).Deserialize ();
 			var probableForeignKeyConstraints = new ProbableForeignKeyAnalysis (
+			                                        onWarn:err=>Console.Error.WriteLine(err),
                                                     keyNames:keyNames??new string[0], 
                                                     tablePrefixes:tablePrefixes??new string[0])
                                                 .GetProbableForeignKeys (v.Tables);
