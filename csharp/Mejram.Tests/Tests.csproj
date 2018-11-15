@@ -7,7 +7,7 @@
     <AssemblyName>Mejram.Tests</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mejram\Core.csproj" />
+    <ProjectReference Include="..\Mejram\Mejram.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sakila.Tables.json.txt" />

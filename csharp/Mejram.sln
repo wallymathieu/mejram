@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Mejram\Core.csproj", "{77200C1B-0DC8-424F-86A7-CFC53C6E676D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Mejram\Mejram.csproj", "{77200C1B-0DC8-424F-86A7-CFC53C6E676D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Mejram.Tests\Tests.csproj", "{2D449097-96D2-4658-B9CF-B217A15E94E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mejram", "Mejram.Console\Mejram.csproj", "{A7B624EA-4325-4C0F-872D-BA81B24CC088}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mejram", "Mejram.Console\Mejram.Console.csproj", "{A7B624EA-4325-4C0F-872D-BA81B24CC088}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

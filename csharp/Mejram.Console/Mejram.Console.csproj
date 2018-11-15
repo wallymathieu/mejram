@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix).0</FileVersion>
+    <OutputType>Exe</OutputType>
+    <RepositoryUrl>https://github.com/wallymathieu/mejram</RepositoryUrl>
+    <PackageLicenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/wallymathieu/mejram</PackageProjectUrl>
+    <PackAsTool>true</PackAsTool>
+    <PackageTags>CLI;database;analysis</PackageTags>
+    <RootNamespace>Mejram</RootNamespace>
+    <AssemblyName>Mejram.Console</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mejram\Mejram.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Isop" Version="3.0.0-alpha-4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+</Project>
