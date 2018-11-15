@@ -12,7 +12,6 @@ before_script:
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 script: 
   - bundle install
-  - rake restore
   - rake test
   - dotnet test ./csharp/Mejram.Tests/
 branches:
