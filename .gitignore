@@ -17,3 +17,7 @@ TestResult.xml
 
 .vs/
 \.DS_Store
+.vscode/
+.vs/
+.idea/
+

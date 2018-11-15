@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Mejram
 {
-		public class PropableForeignKeyAnalysis
+		public class ProbableForeignKeyAnalysis
 		{
-			public PropableForeignKeyAnalysis (string[] tablePrefixes, string[] keyNames)
+			public ProbableForeignKeyAnalysis (string[] tablePrefixes, string[] keyNames)
 			{
                 _tablePrefix= new []{ "tbl"}.Union(tablePrefixes).ToArray();
                 _keynames=new[] {/*"number",*/ "id" /*, "key"*/}.Union(keyNames).ToArray();
@@ -64,7 +64,7 @@ namespace Mejram
 	                            var firstOther = other.First();
 	
 	                            var otherTableKeyAttribute = firstOther.Columns.FirstOrDefault(a =>
-	                                                                                              RegexUtil.
+	                                                                                              Regex.
 	                                                                                                  ReplaceColumnPrefix(
 	                                                                                                      a.ColumnName).
 	                                                                                                  Equals(_keyname,
