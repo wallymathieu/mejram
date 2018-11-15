@@ -1,5 +1,4 @@
-require 'albacore'
-task :test => ["py_test", "rb_test"]
+task :test => ["rb_test"] # "py_test"
 $dir = File.dirname(__FILE__)
 desc "python test"
 task :py_test do
