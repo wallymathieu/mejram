@@ -14,6 +14,7 @@ script:
   - bundle install
   - rake restore
   - rake test
+  - dotnet test ./csharp/Mejram.Tests/
 branches:
   only:
     - master
