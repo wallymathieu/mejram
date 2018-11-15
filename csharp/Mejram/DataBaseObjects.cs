@@ -15,7 +15,7 @@ namespace Mejram
         private readonly IDbConnection _conn;
         private readonly Action<string> onWarn;
         public Dictionary<ColumnKey, Column> Columns =
-            new Dictionary<ColumnKey, Column>(new AttributeComparer());
+            new Dictionary<ColumnKey, Column>(new ColumnComparer());
 
         public List<ForeignKeyConstraint> ForeignKeys = new List<ForeignKeyConstraint>();
         public List<UniqueConstraint> UniqueConstraints = new List<UniqueConstraint>();

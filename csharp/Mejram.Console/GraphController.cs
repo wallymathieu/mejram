@@ -26,7 +26,8 @@ namespace Mejram
             string tablesPath = "outfile.Tables.json.txt", string foreignKeysPath = "outfile.ForeignKeys.json.txt")
 		{
             var v = new Serialization (foreignKeysFileName:foreignKeysPath, tablesFileName:tablesPath).Deserialize ();
-			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis (
+			var probableForeignKeyConstraints = new ProbableForeignKeyAnalysis (
+			                                        onWarn:err=>Console.Error.WriteLine(err),
                                                     keyNames:keyNames??new string[0], 
                                                     tablePrefixes:tablePrefixes??new string[0])
                                                 .GetProbableForeignKeys (v.Tables);

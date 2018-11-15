@@ -38,7 +38,8 @@ namespace Mejram
             });
             var _serialization = new Serialization(foreignKeysFileName: foreignKeysPath, tablesFileName: tablesPath);
             var v = _serialization.Deserialize ();
-			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis (
+			var probableForeignKeyConstraints = new ProbableForeignKeyAnalysis (
+			                                        onWarn:err=>Console.Error.WriteLine(err),
                                                     keyNames:keyNames??new string[0], 
                                                     tablePrefixes:tablePrefixes??new string[0])
                                                     .GetProbableForeignKeys (v.Tables);
@@ -62,7 +63,8 @@ namespace Mejram
             });
             var _serialization = new Serialization(foreignKeysFileName: foreignKeysPath, tablesFileName: tablesPath);
             var v = _serialization.Deserialize ();
-			var probableForeignKeyConstraints = new PropableForeignKeyAnalysis (
+			var probableForeignKeyConstraints = new ProbableForeignKeyAnalysis (
+                                			        onWarn:err=>Console.Error.WriteLine(err),
                                                     keyNames:keyNames??new string[0], 
                                                     tablePrefixes:tablePrefixes??new string[0])
                                                     .GetProbableForeignKeys (v.Tables);
