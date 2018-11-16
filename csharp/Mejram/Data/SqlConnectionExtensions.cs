@@ -8,33 +8,6 @@ namespace Mejram.Data
 {
     public static class SqlConnectionExtensions
     {
-        public static int ExecuteNonQuery<T>(this IDbConnection conn, String cmdtxt, T binds)
-        {
-            using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
-            {
-                return command.ExecuteNonQuery();
-            }
-        }
-
-        public static object[] ExecuteSingleRow<T>(this IDbConnection conn, String cmdtxt, T binds)
-        {
-            using (IDbCommand command = GetCommand(conn, cmdtxt, binds))
-            {
-                command.CommandTimeout = Int32.MaxValue;
-                using (IDataReader dataReader = command.ExecuteReader(CommandBehavior.SingleRow))
-                {
-                    if (dataReader.Read())
-                    {
-                        //DataTable table = dataReader.GetSchemaTable();
-                        var row = new object[dataReader.FieldCount];
-                        dataReader.GetValues(row);
-                        return row;
-                    }
-                }
-            }
-            return new object[] {};
-        }
-
         public static SqlDataRecordExtended ExecuteDataReader<T>(this IDbConnection conn, String cmdtxt, T binds)
         {
             using (IDbCommand command = GetCommand(conn, cmdtxt, binds))

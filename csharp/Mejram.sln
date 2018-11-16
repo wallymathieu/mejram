@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Mejram.Tests\Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mejram", "Mejram.Console\Mejram.Console.csproj", "{A7B624EA-4325-4C0F-872D-BA81B24CC088}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MejramFs", "MejramFs\MejramFs.fsproj", "{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,14 @@ Global
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Release|x64.ActiveCfg = Release|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Debug|x64.Build.0 = Debug|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
