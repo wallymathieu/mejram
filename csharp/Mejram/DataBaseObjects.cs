@@ -45,42 +45,6 @@ namespace Mejram
             throw new Exception("not found: " + key);
         }
 
-        public void GetPublicTableAttributesCached(string tableName,
-                                                   IList<Column> attributes)
-        {
-            using (
-                SqlDataRecordExtended dr2 = _conn.ExecuteDataReader(
-                    @"
-   SELECT distinct c.TABLE_NAME , c.ordinal_position, c.COLUMN_NAME
-            FROM INFORMATION_SCHEMA.COLUMNS c  
-            INNER JOIN INFORMATION_SCHEMA.TABLES t  ON c.TABLE_NAME = t.TABLE_NAME  
-            LEFT JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu  on c.TABLE_NAME = ccu.TABLE_NAME and c.COLUMN_NAME = ccu.COLUMN_NAME  
-            WHERE t.TABLE_TYPE = 'BASE TABLE' and t.table_name = @id
-",
-                    new { id = tableName }))
-            {
-                // SqlDataRecordExtended rs2 = new SqlDataRecordExtended(dr2);
-                var list = new List<ColumnKey>();
-                while (dr2.Read())
-                {
-                    list.Add(new ColumnKey((string)dr2.GetString("TABLE_NAME"), (string)dr2.GetString("COLUMN_NAME")));
-                }
-                foreach (Column attr in list.Select(rec => GetTableAttributeCached(rec)))
-                {
-                    if (attributes.Any(a => a.GetKey() == attr.GetKey()))
-                    {
-                        onWarn("Key already found: " + attr.GetKey().TableName + ", " + attr.GetKey().ColumnName +
-                                            " in table: " +
-                                            tableName);
-                    }
-                    else
-                    {
-                        attributes.Add(attr);
-                    }
-                }
-            }
-        }
-
         public int GetTableCount(string tableName)
         {
             using (
@@ -381,9 +345,6 @@ t.TABLE_TYPE = 'BASE TABLE'
             }
             foreach (var curr in Tables)
             {
-                GetPublicTableAttributesCached(curr.Value.TableName,
-                                               curr.Value.Columns);
-
                 GetTableConstraintsCached(curr.Value.TableName, curr.Value);
             }
             // namespace

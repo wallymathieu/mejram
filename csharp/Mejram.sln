@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mejram", "Mejram.Console\Me
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MejramFs", "MejramFs\MejramFs.fsproj", "{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TestsFs", "TestsFs\TestsFs.fsproj", "{83B20890-8AFE-4CA3-855A-2E799A91D0C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,14 @@ Global
 		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|x64.ActiveCfg = Release|Any CPU
 		{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}.Release|x64.Build.0 = Release|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Debug|x64.Build.0 = Debug|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Release|x64.ActiveCfg = Release|Any CPU
+		{83B20890-8AFE-4CA3-855A-2E799A91D0C5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
