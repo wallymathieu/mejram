@@ -23,8 +23,17 @@ type Table={
   Columns: Column list
   PrimaryKey: PrimaryKeyConstraint option
   ForeignKeys: ForeignKeyConstraint list}
-
-type Database ={ Tables: Table list }
-
-type Vertex<'t>={Data:'t; Weight:double}
-type Edge<'t>={FromVertex:Vertex<'t>; ToVertex:Vertex<'t>; Weight:double; IsDirected:bool}
+module Table=
+  /// Primal keys are keys that does not have any foreign keys.
+  let hasPrimalKey(this:Table)=
+    match this.PrimaryKey with
+    | Some pk -> 
+      let foreignKeysColumns = 
+        this.ForeignKeys
+        |> List.collect (fun fk->fk.ForeignKeys)
+        |> List.map (fun fk->fk.From)
+      let inForeignKeys key=List.contains key foreignKeysColumns
+      pk.PrimaryKeys 
+        |> List.exists inForeignKeys 
+        |> not
+    | None -> false

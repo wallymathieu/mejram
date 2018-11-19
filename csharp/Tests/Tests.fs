@@ -75,3 +75,11 @@ let ``There is sample primary key`` () =
     PrimaryKeyName="payment_pkey"
     PrimaryKeys=[{TableName="payment";ColumnName="payment_id"}] }, payment.PrimaryKey)
   
+[<Fact>]
+let ``Primal keys`` () =
+  let tables = tablesInDb |> Seq.filter Table.hasPrimalKey |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  
+  Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
+                             "city";"country"; "inventory";"language";"payment"
+                             "rental";"staff";"store"] |> List.sort, tables)
+  
