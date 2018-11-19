@@ -16,24 +16,23 @@ let executeReader text (parameters:Map<string,obj>) map (c:IDbConnection) =
       yield map reader
   }|> Seq.toArray
 let getBoolean (ordinal:int) (r:IDataReader)=
-  let value = string (r.Item ordinal)
-  ["yes"; "true"; "1"] 
-  |> List.tryFind ((=) value) |> Option.isSome
-
+  let value = (string (r.Item ordinal)).ToLower()
+  ["yes"; "true"; "1"] |> List.contains value
+let tableFilter = "t.TABLE_TYPE = 'BASE TABLE' AND t.TABLE_SCHEMA <> 'pg_catalog' AND t.TABLE_SCHEMA <> 'information_schema'"
 let columns c =
   
   //
   let toColumn (r:IDataReader)=
     let key = {TableName= r.GetString 0; ColumnName= r.GetString 1}
     {ColumnKey=key; ColumnType=r.GetString 2; NotNullConstraint=getBoolean 3 r|>not; Number=r.GetInt16 4 }
-  executeReader @"select c.TABLE_NAME , c.COLUMN_NAME , c.DATA_TYPE, c.IS_NULLABLE as IsNullable, c.ordinal_position
-                              from INFORMATION_SCHEMA.COLUMNS c  
-                              inner join INFORMATION_SCHEMA.TABLES t on c.TABLE_NAME = t.TABLE_NAME  
-                              where t.TABLE_TYPE = 'BASE TABLE' " Map.empty toColumn c
+  executeReader (sprintf @"SELECT c.table_name, c.column_name, c.data_type, c.is_nullable, c.ordinal_position
+                  FROM INFORMATION_SCHEMA.COLUMNS c  
+                  INNER JOIN INFORMATION_SCHEMA.TABLES t ON c.TABLE_NAME = t.TABLE_NAME  
+                  WHERE %s" tableFilter) Map.empty toColumn c
   |> Seq.distinctBy (fun c->c.ColumnKey)
 
 let foreignKeyConstraints c :ForeignKeyConstraint seq=
-  let sql = @"
+  let sql = (sprintf @"
             SELECT
                 con.CONSTRAINT_NAME as constraint_name,
                 tcon.table_name tcon_table_name,
@@ -43,11 +42,13 @@ let foreignKeyConstraints c :ForeignKeyConstraint seq=
             FROM 
                 INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS con
                 JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tcon ON con.CONSTRAINT_NAME = tcon.CONSTRAINT_NAME
+                JOIN INFORMATION_SCHEMA.TABLES t ON tcon.TABLE_NAME = t.TABLE_NAME
                 JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS pkcon ON 
             	    con.UNIQUE_CONSTRAINT_NAME = pkcon.CONSTRAINT_NAME
             	    AND pkcon.CONSTRAINT_TYPE = 'PRIMARY KEY'
                 JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE con_col ON con_col.CONSTRAINT_NAME = con.CONSTRAINT_NAME
-                JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE pkcon_col ON pkcon_col.CONSTRAINT_NAME = pkcon.CONSTRAINT_NAME "
+                JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE pkcon_col ON pkcon_col.CONSTRAINT_NAME = pkcon.CONSTRAINT_NAME
+            WHERE %s" tableFilter)
   let map (r:IDataReader)=
     let constraint_name = r.GetString 0
     let con_table_name = r.GetString 1
@@ -70,13 +71,14 @@ let foreignKeyConstraints c :ForeignKeyConstraint seq=
   })
 
 let primaryKeyConstraints c : PrimaryKeyConstraint seq=
-  let sql = @"SELECT 
+  let sql = (sprintf @"SELECT 
               pkcon.constraint_name,
               pkcon.table_name, 
               pkcon_col.column_name
               FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS pkcon 
               JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE pkcon_col ON pkcon_col.CONSTRAINT_NAME = pkcon.CONSTRAINT_NAME
-              WHERE pkcon.CONSTRAINT_TYPE = 'PRIMARY KEY'"
+              JOIN INFORMATION_SCHEMA.TABLES t ON pkcon.TABLE_NAME = t.TABLE_NAME
+              WHERE pkcon.CONSTRAINT_TYPE = 'PRIMARY KEY' AND %s" tableFilter)
   let map (r:IDataReader)=
     let constraint_name = r.GetString 0
     let table_name = r.GetString 1
