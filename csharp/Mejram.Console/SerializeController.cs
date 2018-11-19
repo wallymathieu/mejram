@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Mejram.Model;
-using Mejram.NGenerics;
 using System.Data.SqlClient;
 using System.IO;
 using Newtonsoft.Json;
@@ -21,30 +18,13 @@ namespace Mejram
 		{
 			using (var conn = Connection(database,connectionString)) 
 			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
-				using (FileStream fs = File.Open(fileName, FileMode.Create))
-				using (TextWriter txtWriter = new StreamWriter(fs)) {
-					txtWriter.Write (JsonConvert.SerializeObject (tables.Tables.Values, Formatting.Indented));
-					txtWriter.Flush ();
-				}
+			    var serialization = new Serialization(fileName);
+			    serialization.Serialize(conn);
 			}
-			return null;
+			return "Serialized";
 		}
-		
-		public string ForeignKeys (string connectionString, string database, string fileName)
-		{
-			using (var conn = Connection(database,connectionString)) 
-			{
-				var tables = new DataBaseObjects (conn, new ITableFilter[] {}, new ITableFilter[] {}, onWarn: Console.Error.WriteLine);
-				using (FileStream fs = File.Open(fileName, FileMode.Create))
-				using (TextWriter txtWriter = new StreamWriter(fs)) {
-					txtWriter.Write (JsonConvert.SerializeObject (tables.ForeignKeys, Formatting.Indented));
-					txtWriter.Flush ();
-				}
-			}
-			return null;
-		}
-		
+
+/*
 		public string TableCount (string connectionString, string database, string fileName)
 		{
 			using (var conn = Connection(database,connectionString)) 
@@ -91,6 +71,7 @@ namespace Mejram
 			}
 			return null;
 		}
+*/
 		private DbConnection Connection(string database, string connstr)
 		{
 			switch (database.ToLower()) {

@@ -1,30 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Mejram.Model;
-using Mejram.NGenerics;
+using Mejram.Models;
 
 namespace Mejram
 {
     public class DotGraphGenerator
     {
-        private Configuration _configuration;
         public string OutfilePng;
         public string OutfileNeatoPng;
         public string OutfileDot;
 
-        public DotGraphGenerator(Configuration configuration)
+        public DotGraphGenerator()
         {
-            _configuration = configuration;
             OutfilePng = "outfile.png";
             OutfileNeatoPng = "outfile.neato.png";
             OutfileDot = "outfile.dot";
         }
 
-        public void GenerateDotFile(IEnumerable<Table> tables, IEnumerable<ForeignKeyConstraint> foreignKeys)
+        public void GenerateDotFile(ICollection<Table> tables)
         {
             using (var m = File.Open(OutfileDot, FileMode.Create))
             using (var sout = new StreamWriter(m))
@@ -38,9 +34,9 @@ node [style=filled];");
                 {
                     sout.WriteLine("\"{0}\";", table.TableName); //[shape=box];
                 }
-                foreach (var key in foreignKeys)
+                foreach (var key in tables.SelectMany(table=>table.ForeignKeys))
                 {
-                    var first = key.ConstraintKeys.First();
+                    var first = key.ForeignKeys.First();
                     sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", first.From.TableName, first.To.TableName,
                                    first.From.ColumnName);
                 }
@@ -48,9 +44,9 @@ node [style=filled];");
             }
         }
 
-        public void WriteDot()
+        public void WriteDot(string dotExe)
         {
-            var fileName = _configuration.DotExe;
+            var fileName = dotExe;
             var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
                                            OutfilePng);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
@@ -65,11 +61,11 @@ node [style=filled];");
             dot.Start();
         }
 
-        public void WriteNeato()
+        public void WriteNeato(string neatoExe)
         {
             var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
                                           OutfileNeatoPng);
-            var fileName = _configuration.NeatoExe;
+            var fileName = neatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
                           {
@@ -80,33 +76,6 @@ node [style=filled];");
                                   }
                           };
             dot.Start();
-        }
-
-        public static void ComputeGraph(IEnumerable<KeyValuePair<string, Table>> tables1,
-                                        IEnumerable<ForeignKeyConstraint> realforeignKeys,
-                                        IEnumerable<ForeignKeyConstraint> probableForeignKeys)
-        {
-            var g = new Graph<string>(false);
-            foreach (var tbl in tables1)
-            {
-                g.AddVertex(tbl.Key.ToLower());
-            }
-
-            foreach (var key in realforeignKeys)
-            {
-                g.AddEdge(g.GetVertex(key.ConstraintKeys.First().From.TableName.ToLower()),
-                          g.GetVertex(key.ConstraintKeys.First().To.TableName.ToLower()), 1);
-            }
-            foreach (var key in probableForeignKeys)
-            {
-                var first = key.ConstraintKeys.First();
-                var vertex = g.GetVertex(first.From.TableName.ToLower());
-                var vertex1 = g.GetVertex(first.To.TableName.ToLower());
-                if (g.GetEdge(vertex, vertex1) == null)
-                    g.AddEdge(vertex, vertex1, 2);
-            }
-            //v.Compute();
-            //var v = GraphAlgorithms.KruskalsAlgorithm(g);
         }
     }
 }

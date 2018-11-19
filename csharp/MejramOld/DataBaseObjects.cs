@@ -30,10 +30,6 @@ namespace Mejram
             _conn = conn;
             this.onWarn = onWarn;
             var tablefilters = new List<ITableFilter>();
-            if (_conn.GetType().Name.StartsWith("Npgsql", StringComparison.InvariantCultureIgnoreCase))
-            {
-                tablefilters.Add(new PostgresTableFilter());
-            }
             InitPublicTables(tablefilters.Union(tablesToGenerate ?? new ITableFilter[0]),
                              columnsToGenerate);
         }

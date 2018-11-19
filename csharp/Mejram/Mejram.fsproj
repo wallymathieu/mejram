@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <VersionPrefix>0.0.2</VersionPrefix>
+        <VersionSuffix></VersionSuffix>
+        <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+        <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
+        <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+        <FileVersion>$(VersionPrefix).0</FileVersion>
+        <RepositoryUrl>https://github.com/wallymathieu/mejram</RepositoryUrl>
+        <PackageLicenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/wallymathieu/mejram</PackageProjectUrl>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <PackageTags>database;analysis</PackageTags>
+        <RootNamespace>Mejram</RootNamespace>
+        <AssemblyName>Mejram</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Models.fs" />
+        <Compile Include="Sql.fs" />
+        <Compile Include="ProbableForeignKeyAnalysis.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FSharp.Data" Version="3.0.0" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
+    </ItemGroup>
+
+</Project>

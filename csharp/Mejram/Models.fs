@@ -1,4 +1,4 @@
-module MejramFs.Models
+namespace Mejram.Models
 
 type ColumnKey={TableName:string;ColumnName:string}
 type Column={ColumnKey:ColumnKey;Number:int16;ColumnType:string;NotNullConstraint:bool}
@@ -28,4 +28,3 @@ type Database ={ Tables: Table list }
 
 type Vertex<'t>={Data:'t; Weight:double}
 type Edge<'t>={FromVertex:Vertex<'t>; ToVertex:Vertex<'t>; Weight:double; IsDirected:bool}
-
