@@ -16,6 +16,7 @@ before_build:
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 test_script:
   - dotnet test ./csharp/Tests
+  - dotnet pack -c Release ./csharp/Mejram
 build:
   project: ./csharp/Mejram.sln
   verbosity: minimal
