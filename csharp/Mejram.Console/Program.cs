@@ -1,29 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Mejram.Model;
-using Mejram.NGenerics;
-using System.Data.SqlClient;
-using System.IO;
-using Newtonsoft.Json;
-using System.Data.Common;
-using Npgsql;
 using Isop;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mejram
 {
+    ///
     public class Program
     {
+        ///
         public static void Main(string[] args)
         {
             var svc = new ServiceCollection();
             svc.AddSingleton(di => new DotGraphController());
-            svc.AddSingleton(di => new GraphController());
             svc.AddSingleton(di => new SerializeController());
             var build = new Build(svc)
                 .Recognize(typeof(DotGraphController))
-                .Recognize(typeof(GraphController))
                 .Recognize(typeof(SerializeController))
                 .ShouldRecognizeHelp()
                 ;

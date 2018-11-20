@@ -4,16 +4,17 @@ services:
   - postgresql
 install:
   - msbuild /t:restore csharp
+env:
+  - SAKILA_TEST_CONN="Server=127.0.0.1;Port=5432;Database=sakila;User Id=postgres;Password="
 before_script:
   - git submodule update --init --recursive
   - psql -c "CREATE DATABASE sakila;" -U postgres
-  - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
   - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 script: 
   - bundle install
   - rake test
-  - dotnet test ./csharp/Mejram.Tests/
+  - dotnet test ./csharp/Tests/
 branches:
   only:
     - master

@@ -19,10 +19,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mejram\Mejram.csproj" />
+    <ProjectReference Include="..\Mejram\Mejram.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Isop" Version="3.0.0-alpha-4" />
+    <PackageReference Include="Isop" Version="3.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Npgsql" Version="4.0.3" />
+    <PackageReference Include="FSharp.Core" Version="4.3.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />

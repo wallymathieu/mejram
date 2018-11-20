@@ -5,16 +5,18 @@ init:
   - SET PGUSER=postgres
   - SET PGPASSWORD=Password12!
   - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
+environment:
+  SAKILA_TEST_CONN: Server=127.0.0.1;Port=5432;Database=sakila;User Id=postgres;Password=Password12!
 install:
   - msbuild /t:restore ./csharp/Mejram.sln
 before_build:
   - git submodule update --init --recursive
   - psql -c "CREATE DATABASE sakila;" -U postgres
-  - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
   - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 test_script:
-  - dotnet test ./csharp/Mejram.Tests
+  - dotnet test ./csharp/Tests
+  - dotnet pack -c Release ./csharp/Mejram
 build:
   project: ./csharp/Mejram.sln
   verbosity: minimal
@@ -23,6 +25,8 @@ nuget:
   account_feed: false
   project_feed: true
   disable_publish_on_pr: true
+artifacts:
+  - path: '**\*.nupkg'
 services:
   - postgresql
 branches:
