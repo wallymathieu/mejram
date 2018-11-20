@@ -25,6 +25,8 @@ nuget:
   account_feed: false
   project_feed: true
   disable_publish_on_pr: true
+artifacts:
+  - path: '**\*.nupkg'
 services:
   - postgresql
 branches:
