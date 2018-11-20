@@ -8,6 +8,7 @@ before_script:
   - git submodule update --init --recursive
   - psql -c "CREATE DATABASE sakila;" -U postgres
   - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+  - psql -c "GRANT ALL PRIVILEGES ON DATABASE sakila to test" -U postgres
   - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
 script: 
