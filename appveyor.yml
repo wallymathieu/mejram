@@ -12,10 +12,9 @@ before_build:
   - psql -c "CREATE DATABASE sakila;" -U postgres
   - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE sakila to test" -U postgres
-  - psql -d sakila -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to test" -U postgres
-  - psql -d sakila -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to test" -U postgres
   - psql -d sakila -a -f ./pagila/pagila-schema.sql  -U postgres
   - psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U postgres
+  - psql -d sakila -c "alter schema public owner to test" -U postgres
 test_script:
   - dotnet test ./csharp/Tests
 build:
