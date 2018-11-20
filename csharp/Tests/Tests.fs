@@ -15,7 +15,10 @@ type SakilaTables = JsonProvider<"sakila.Tables.json">
 let sakila = SakilaTables.Load "sakila.Tables.json"
             |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
 let tablesInDb=
-  use conn = new NpgsqlConnection("Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;")
+  let defaultStr = "Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"
+  let sakilaConn = Environment.GetEnvironmentVariable("SAKILA_TEST_CONN")
+  let connStr = if String.IsNullOrEmpty( sakilaConn ) then defaultStr else sakilaConn
+  use conn = new NpgsqlConnection(connStr)
   conn.Open()
   Sql.tables conn
   |> Seq.toList
