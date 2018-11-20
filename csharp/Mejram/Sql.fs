@@ -97,7 +97,16 @@ module internal Internals=
         |> Seq.map snd
         |> Seq.toList
     })
-
+[<CompiledName("TableCount")>]
+let tableCount tableName c=
+  let map (r:IDataReader)=
+    r.GetInt32 0
+  let sql = @"
+      SELECT COUNT(*) _count
+  FROM [" + tableName + @"]"
+  executeReader sql Map.empty map c
+  |> Seq.head
+[<CompiledName("Tables")>]
 let tables c=
   let columns = columns c
                 |> Seq.groupBy (fun col->col.TableName)

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Mejram
 {
-    public class Serialization
+    internal class Serialization
     {
         private readonly string _tablesFileName;
         public Serialization(string tablesFileName) => _tablesFileName = tablesFileName;
@@ -17,7 +17,7 @@ namespace Mejram
             using (var fs = File.Open(_tablesFileName, FileMode.Create))
             using (var txtWriter = new StreamWriter(fs))
             {
-                txtWriter.Write (JsonConvert.SerializeObject (Sql.tables(conn).ToArray(), Formatting.Indented));
+                txtWriter.Write (JsonConvert.SerializeObject (Sql.Tables(conn).ToArray(), Formatting.Indented));
                 txtWriter.Flush();
             }
         }

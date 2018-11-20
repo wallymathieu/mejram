@@ -13,7 +13,7 @@ before_script:
 script: 
   - bundle install
   - rake test
-  - dotnet test ./csharp/Mejram.Tests/
+  - dotnet test ./csharp/Tests/
 branches:
   only:
     - master

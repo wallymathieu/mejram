@@ -6,7 +6,8 @@ open System.Text.RegularExpressions
 type Parameters = { TablePrefix:string list; KeyNames:string list}
 with
     member __.Default = {TablePrefix=["tbl"]; KeyNames=["id"] }
-let getProbableForeignKeys (tables: Table list) (p:Parameters)=
+[<CompiledName("ProbableForeignKeys")>]
+let probableForeignKeys (tables: Table list) (p:Parameters)=
     let tablePrefixes = p.TablePrefix 
                         |> List.map Regex.Escape
                         |> String.concat "|"

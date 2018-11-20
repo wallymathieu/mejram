@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreOld", "MejramOld\MejramOld.csproj", "{77200C1B-0DC8-424F-86A7-CFC53C6E676D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mejram.Console", "Mejram.Console\Mejram.Console.csproj", "{A7B624EA-4325-4C0F-872D-BA81B24CC088}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mejram", "Mejram\Mejram.fsproj", "{BA4F7530-DB2B-4E78-BFEF-6BEB3DAE60AA}"
@@ -19,12 +17,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77200C1B-0DC8-424F-86A7-CFC53C6E676D}.Release|x64.ActiveCfg = Release|Any CPU
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7B624EA-4325-4C0F-872D-BA81B24CC088}.Debug|x64.ActiveCfg = Debug|Any CPU

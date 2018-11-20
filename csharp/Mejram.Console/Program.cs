@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mejram
 {
+    ///
     public class Program
     {
+        ///
         public static void Main(string[] args)
         {
             var svc = new ServiceCollection();

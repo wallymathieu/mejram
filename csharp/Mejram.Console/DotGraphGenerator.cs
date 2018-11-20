@@ -7,22 +7,22 @@ using Mejram.Models;
 
 namespace Mejram
 {
-    public class DotGraphGenerator
+    internal class DotGraphGenerator
     {
-        public string OutfilePng;
-        public string OutfileNeatoPng;
-        public string OutfileDot;
+        private readonly string _outfilePng;
+        private readonly string _outfileNeatoPng;
+        private readonly string _outfileDot;
 
         public DotGraphGenerator()
         {
-            OutfilePng = "outfile.png";
-            OutfileNeatoPng = "outfile.neato.png";
-            OutfileDot = "outfile.dot";
+            _outfilePng = "outfile.png";
+            _outfileNeatoPng = "outfile.neato.png";
+            _outfileDot = "outfile.dot";
         }
 
         public void GenerateDotFile(ICollection<Table> tables)
         {
-            using (var m = File.Open(OutfileDot, FileMode.Create))
+            using (var m = File.Open(_outfileDot, FileMode.Create))
             using (var sout = new StreamWriter(m))
             {
 //size=""90,90""; 
@@ -47,8 +47,8 @@ node [style=filled];");
         public void WriteDot(string dotExe)
         {
             var fileName = dotExe;
-            var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
-                                           OutfilePng);
+            var arguments = String.Format("-Tpng {0} -o {1}", _outfileDot,
+                                           _outfilePng);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
                           {
@@ -63,8 +63,8 @@ node [style=filled];");
 
         public void WriteNeato(string neatoExe)
         {
-            var arguments = String.Format("-Tpng {0} -o {1}", OutfileDot,
-                                          OutfileNeatoPng);
+            var arguments = String.Format("-Tpng {0} -o {1}", _outfileDot,
+                                          _outfileNeatoPng);
             var fileName = neatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
