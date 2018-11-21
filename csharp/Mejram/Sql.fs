@@ -2,6 +2,8 @@ module Mejram.Sql
 open System.Data
 open Mejram.Models
 open System
+open System.Collections.Generic
+
 [<AutoOpen>]
 module internal Internals=
   let executeReader text (parameters:Map<string,obj>) map (c:IDbConnection) =
@@ -106,8 +108,8 @@ let tableCount tableName c=
   executeReader sql Map.empty map c
   |> Seq.head
 [<CompiledName("KeyWeight")>]
-let keyWeight (fk:ForeignKeyConstraint) (tables:Map<string,Table>) c=
-  let table =Map.find fk.TableName tables
+let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
+  let table = tables.[fk.TableName]
   let canBeNull=fk.ForeignKeys |> List.exists
                             (fun p ->
                               let column = table.Columns |> Seq.find(fun col -> col.ColumnName = p.From.ColumnName)
