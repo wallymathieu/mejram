@@ -14,6 +14,7 @@ with
 type ForeignKeyColumn={From:ColumnKey;To:ColumnKey }
 type ForeignKeyConstraint= {ForeignKeyName:string; ForeignKeys: ForeignKeyColumn list}
 with
+  /// From table
   member this.TableName=
     let first =this.ForeignKeys |> List.head
     first.From.TableName 

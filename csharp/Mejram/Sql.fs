@@ -1,6 +1,7 @@
 module Mejram.Sql
 open System.Data
 open Mejram.Models
+open System
 [<AutoOpen>]
 module internal Internals=
   let executeReader text (parameters:Map<string,obj>) map (c:IDbConnection) =
@@ -101,11 +102,25 @@ module internal Internals=
 let tableCount tableName c=
   let map (r:IDataReader)=
     r.GetInt32 0
-  let sql = @"
-      SELECT COUNT(*) _count
-  FROM [" + tableName + @"]"
+  let sql =sprintf "SELECT COUNT(*) _count FROM [%s]" tableName
   executeReader sql Map.empty map c
   |> Seq.head
+[<CompiledName("KeyWeight")>]
+let keyWeight (fk:ForeignKeyConstraint) (tables:Map<string,Table>) c=
+  let table =Map.find fk.TableName tables
+  let canBeNull=fk.ForeignKeys |> List.exists
+                            (fun p ->
+                              let column = table.Columns |> Seq.find(fun col -> col.ColumnName = p.From.ColumnName)
+                              not <| column.NotNullConstraint)
+  if canBeNull then
+    let map (r:IDataReader)=
+      r.GetInt32 0
+    let fksFilter = String.Join(" AND ", fk.ForeignKeys |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
+    let sql = sprintf @"SELECT COUNT(*) _count FROM [%s] WHERE %s" table.TableName fksFilter
+    executeReader sql Map.empty map c
+    |> Seq.head
+  else
+    tableCount table.TableName c
 [<CompiledName("Tables")>]
 let tables c=
   let columns = columns c
