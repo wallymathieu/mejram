@@ -38,3 +38,4 @@ module Table=
         |> List.exists inForeignKeys 
         |> not
     | None -> false
+

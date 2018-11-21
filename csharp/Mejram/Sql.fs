@@ -102,7 +102,7 @@ module internal Internals=
 let tableCount tableName c=
   let map (r:IDataReader)=
     r.GetInt32 0
-  let sql =sprintf "SELECT COUNT(*) _count FROM [%s]" tableName
+  let sql =sprintf "SELECT COUNT(*) _count FROM %s" tableName
   executeReader sql Map.empty map c
   |> Seq.head
 [<CompiledName("KeyWeight")>]
@@ -116,7 +116,7 @@ let keyWeight (fk:ForeignKeyConstraint) (tables:Map<string,Table>) c=
     let map (r:IDataReader)=
       r.GetInt32 0
     let fksFilter = String.Join(" AND ", fk.ForeignKeys |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
-    let sql = sprintf @"SELECT COUNT(*) _count FROM [%s] WHERE %s" table.TableName fksFilter
+    let sql = sprintf @"SELECT COUNT(*) _count FROM %s WHERE %s" table.TableName fksFilter
     executeReader sql Map.empty map c
     |> Seq.head
   else

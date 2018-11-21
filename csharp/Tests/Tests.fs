@@ -14,12 +14,15 @@ let inline tableNameStartsWithPaymentP r = (getTableName r).StartsWith "payment_
 type SakilaTables = JsonProvider<"sakila.Tables.json">
 let sakila = SakilaTables.Load "sakila.Tables.json"
             |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
-let tablesInDb=
+let createConn ()=
   let defaultStr = "Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"
   let sakilaConn = Environment.GetEnvironmentVariable("SAKILA_TEST_CONN")
   let connStr = if String.IsNullOrEmpty( sakilaConn ) then defaultStr else sakilaConn
-  use conn = new NpgsqlConnection(connStr)
+  let conn = new NpgsqlConnection(connStr)
   conn.Open()
+  conn
+let tablesInDb=
+  use conn =createConn()
   Sql.tables conn
   |> Seq.toList
   |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
@@ -77,11 +80,20 @@ let ``There is sample primary key`` () =
   Assert.Equal(Some {
     PrimaryKeyName="payment_pkey"
     PrimaryKeys=[{TableName="payment";ColumnName="payment_id"}] }, payment.PrimaryKey)
-  
+
+[<Fact>]
+let ``Can get count for each foreign key`` () =
+  use conn =createConn()
+  let map =tablesInDb |> Seq.map (fun t-> t.TableName, t) |> Map.ofSeq
+  let keyWeights = tablesInDb
+                   |> Seq.collect (fun t-> t.ForeignKeys)
+                   |> Seq.map( fun fk->fk.ForeignKeyName, Sql.keyWeight fk map conn)
+                   |> Seq.toList
+  Assert.Contains( ("store_address_id_fkey", 0), keyWeights)
+
 [<Fact>]
 let ``Primal keys`` () =
   let tables = tablesInDb |> Seq.filter Table.hasPrimalKey |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
-  
   Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
                              "city";"country"; "inventory";"language";"payment"
                              "rental";"staff";"store"] |> List.sort, tables)
