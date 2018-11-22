@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Isop;
+using Mejram.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mejram
@@ -19,7 +20,6 @@ namespace Mejram
                 .Recognize(typeof(SerializeController))
                 .ShouldRecognizeHelp()
                 ;
-
             try
             {
                 var parsedMethod = build.Parse(args);

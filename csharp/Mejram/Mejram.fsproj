@@ -19,7 +19,7 @@
     <ItemGroup>
         <Compile Include="Models.fs" />
         <Compile Include="Sql.fs" />
-        <Compile Include="ProbableForeignKeyAnalysis.fs" />
+        <Compile Include="Analysis.fs" />
     </ItemGroup>
 
     <ItemGroup>

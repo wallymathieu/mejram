@@ -25,7 +25,9 @@ type Table={
   PrimaryKey: PrimaryKeyConstraint option
   ForeignKeys: ForeignKeyConstraint list}
 module Table=
-  /// Primal keys are keys that does not have any foreign keys.
+  /// Primal keys are primary keys that does not have any foreign keys.
+  /// In a database, you would expect the domain entities to have primal keys.
+  /// If other entities have such keys, then it can be due to ORM implementation restrictions.
   let hasPrimalKey(this:Table)=
     match this.PrimaryKey with
     | Some pk -> 
@@ -38,4 +40,7 @@ module Table=
         |> List.exists inForeignKeys 
         |> not
     | None -> false
-
+[<AutoOpen>]
+module Model=
+  let inline columnName(r:^a) = ( ^a : ( member get_ColumnName: unit->string ) (r) )
+  let inline tableName(r:^a) = ( ^a : ( member get_TableName: unit->string ) (r) )
