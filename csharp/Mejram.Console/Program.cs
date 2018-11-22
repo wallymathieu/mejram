@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Isop;
-using Mejram.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mejram
