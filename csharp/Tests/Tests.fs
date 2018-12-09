@@ -89,7 +89,7 @@ let ``Can get count for each foreign key`` () =
                    |> Seq.collect (fun t-> t.ForeignKeys)
                    |> Seq.map( fun fk->fk.ForeignKeyName, Sql.keyWeight fk map conn)
                    |> Seq.toList
-  Assert.Contains( ("store_address_id_fkey", 0), keyWeights)
+  Assert.Contains( ("store_address_id_fkey", Some 0), keyWeights)
 
 [<Fact>]
 let ``Primal keys`` () =
