@@ -3,7 +3,8 @@ open System.Data
 open Mejram.Models
 open System
 open System.Collections.Generic
-
+open Microsoft.FSharp.Linq
+open System
 [<AutoOpen>]
 module internal Internals=
   let executeReader text (parameters:Map<string,obj>) map (c:IDbConnection) =
@@ -100,7 +101,7 @@ module internal Internals=
         |> Seq.map snd
         |> Seq.toList
     })
-[<CompiledName("TableCount")>]
+[<CompiledName("FSharpTableCount")>]
 let tableCount tableName c=
   try
     let map (r:IDataReader)=
@@ -109,7 +110,10 @@ let tableCount tableName c=
     executeReader sql Map.empty map c
     |> Seq.head |> Some
   with | _ -> None
-[<CompiledName("KeyWeight")>]
+[<CompiledName("TableCount")>]
+let __tableCount tableName c= 
+  tableCount tableName c |> Option.toNullable
+[<CompiledName("FSharpKeyWeight")>]
 let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
   let table = tables.[fk.TableName]
   let canBeNull=fk.ForeignKeys |> List.exists
@@ -127,6 +131,9 @@ let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
     with | _ -> None
   else
     tableCount table.TableName c
+[<CompiledName("KeyWeight")>]
+let __keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c= 
+  keyWeight fk tables c |> Option.toNullable
 [<CompiledName("Tables")>]
 let tables c=
   let columns = columns c
