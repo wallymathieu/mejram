@@ -49,7 +49,7 @@ namespace Mejram
 				{
 					var tableCounts = from table in tables
                                       let count = Sql.TableCount(table.TableName, conn) 
-                                      select new KeyValuePair<string, int> (table.TableName, count);
+                                      select new KeyValuePair<string, int?> (table.TableName, count);
 					txtWriter.Write (JsonConvert.SerializeObject (tableCounts, Formatting.Indented));
 					txtWriter.Flush ();
 				}
@@ -77,7 +77,7 @@ namespace Mejram
 	                    from fk in table.ForeignKeys
 	                    let count = Sql.KeyWeight(fk, map, conn) 
 	                    let key = Tuple.Create(table.TableName,fk.ForeignKeyName)
-	                    select new KeyValuePair<Tuple<string,string>, int> (key, count);
+	                    select new KeyValuePair<Tuple<string,string>, int?> (key, count);
 	                txtWriter.Write (JsonConvert.SerializeObject (tableCounts, Formatting.Indented));
 	                txtWriter.Flush ();
 	            }

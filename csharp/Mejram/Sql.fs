@@ -3,7 +3,8 @@ open System.Data
 open Mejram.Models
 open System
 open System.Collections.Generic
-
+open Microsoft.FSharp.Linq
+open System
 [<AutoOpen>]
 module internal Internals=
   let executeReader text (parameters:Map<string,obj>) map (c:IDbConnection) =
@@ -100,14 +101,19 @@ module internal Internals=
         |> Seq.map snd
         |> Seq.toList
     })
-[<CompiledName("TableCount")>]
+[<CompiledName("FSharpTableCount")>]
 let tableCount tableName c=
-  let map (r:IDataReader)=
-    r.GetInt32 0
-  let sql =sprintf "SELECT COUNT(*) _count FROM %s" tableName
-  executeReader sql Map.empty map c
-  |> Seq.head
-[<CompiledName("KeyWeight")>]
+  try
+    let map (r:IDataReader)=
+      r.GetInt32 0
+    let sql =sprintf "SELECT COUNT(*) _count FROM %s" tableName
+    executeReader sql Map.empty map c
+    |> Seq.head |> Some
+  with | _ -> None
+[<CompiledName("TableCount")>]
+let __tableCount tableName c= 
+  tableCount tableName c |> Option.toNullable
+[<CompiledName("FSharpKeyWeight")>]
 let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
   let table = tables.[fk.TableName]
   let canBeNull=fk.ForeignKeys |> List.exists
@@ -115,14 +121,19 @@ let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
                               let column = table.Columns |> Seq.find(fun col -> col.ColumnName = p.From.ColumnName)
                               not <| column.NotNullConstraint)
   if canBeNull then
-    let map (r:IDataReader)=
-      r.GetInt32 0
-    let fksFilter = String.Join(" AND ", fk.ForeignKeys |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
-    let sql = sprintf @"SELECT COUNT(*) _count FROM %s WHERE %s" table.TableName fksFilter
-    executeReader sql Map.empty map c
-    |> Seq.head
+    try
+      let map (r:IDataReader)=
+        r.GetInt32 0
+      let fksFilter = String.Join(" AND ", fk.ForeignKeys |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
+      let sql = sprintf @"SELECT COUNT(*) _count FROM %s WHERE %s" table.TableName fksFilter
+      executeReader sql Map.empty map c
+      |> Seq.head |> Some
+    with | _ -> None
   else
     tableCount table.TableName c
+[<CompiledName("KeyWeight")>]
+let __keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c= 
+  keyWeight fk tables c |> Option.toNullable
 [<CompiledName("Tables")>]
 let tables c=
   let columns = columns c
