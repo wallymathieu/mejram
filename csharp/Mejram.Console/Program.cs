@@ -19,7 +19,6 @@ namespace Mejram
                 .Recognize(typeof(SerializeController))
                 .ShouldRecognizeHelp()
                 ;
-
             try
             {
                 var parsedMethod = build.Parse(args);

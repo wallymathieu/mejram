@@ -6,11 +6,9 @@ open Xunit
 open Mejram
 open Mejram.Models
 open FSharp.Data
-let inline getTableName(r:^a) = ( ^a : ( member get_TableName: unit->String ) (r) )
-let inline tableNameToLower t =(getTableName t).ToLower()
-let inline getColumnName(r:^a) = ( ^a : ( member get_ColumnName: unit->String ) (r) )
-let inline columnNameToLower t = (getColumnName t).ToLower()
-let inline tableNameStartsWithPaymentP r = (getTableName r).StartsWith "payment_p"
+let inline tableNameToLower t =(tableName t).ToLower()
+let inline columnNameToLower t = (columnName t).ToLower()
+let inline tableNameStartsWithPaymentP r = (tableName r).StartsWith "payment_p"
 type SakilaTables = JsonProvider<"sakila.Tables.json">
 let sakila = SakilaTables.Load "sakila.Tables.json"
             |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
@@ -31,7 +29,7 @@ let tableChanges =
 let columnChanges=
   tableChanges.ToChange 
   |> List.map (fun (t1,t2)-> Seq.changes t1.Columns columnNameToLower t2.Columns columnNameToLower)
-
+let findTableWithName name tables = tables |> Seq.find ((=) name << tableNameToLower)
 [<Fact>]
 let ``No tables missing`` () =
   Assert.Empty tableChanges.ToRemove
@@ -76,7 +74,7 @@ let ``There are sample foreign keys`` () =
       To={TableName="customer";ColumnName="customer_id"}} ] }, payment.ForeignKeys)
 [<Fact>]
 let ``There is sample primary key`` () =
-  let payment = tablesInDb |> Seq.find ((=) "payment" << tableNameToLower)
+  let payment = findTableWithName "payment" tablesInDb
   Assert.Equal(Some {
     PrimaryKeyName="payment_pkey"
     PrimaryKeys=[{TableName="payment";ColumnName="payment_id"}] }, payment.PrimaryKey)
@@ -90,6 +88,20 @@ let ``Can get count for each foreign key`` () =
                    |> Seq.map( fun fk->fk.ForeignKeyName, Sql.keyWeight fk map conn)
                    |> Seq.toList
   Assert.Contains( ("store_address_id_fkey", Some 0), keyWeights)
+[<Fact>]
+let ``Can infer primary keys`` () =
+  let store = findTableWithName "store" tablesInDb
+  let primary = Analysis.probablePrimaryKeys [store] Analysis.TableNameConventions.Default 
+  Assert.Contains({TableName="store";ColumnName="store_id"}, primary)
+
+[<Fact>]
+let ``Can infer foreign keys`` () =
+  let tables = ["store"; "staff"; "address"] |> List.map (fun name->findTableWithName name tablesInDb)
+  let foreignKeys = Analysis.probableForeignKeys tables Analysis.TableNameConventions.Default
+                    |> List.map (fun fk->fk.ForeignKeyName)
+  Assert.Contains("store__address__address_id", foreignKeys)
+  Assert.Contains("staff__address__address_id", foreignKeys)
+  Assert.Contains("staff__store__store_id", foreignKeys)
 
 [<Fact>]
 let ``Primal keys`` () =
