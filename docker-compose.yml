@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+# TODO:
+# https://github.com/twright-msft/mssql-node-docker-demo-app/blob/master/import-data.sh
+
+  pg:
+    # ConnectionString=
+    #   Host=pg;
+    #   Database=pakila;
+    #   Username=postgres;
+    #   Password=Pass@word;
+    #   Port=5432;
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=Pass@word
+      - POSTGRES_DB=pakila
+
+  mssql:
+    # ConnectionString=
+    #   Server=mssql;
+    #   Database=sakila;
+    #   User Id=sa;
+    #   Password=Pass@word
+    #image: microsoft/mssql-server-linux:2017-latest
+    build:
+      context: .
+      dockerfile: mssql/Dockerfile
+
+    environment:
+      - MSSQL_SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    ports:
+      - "5433:1433"
