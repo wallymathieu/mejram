@@ -1,7 +1,7 @@
 namespace Mejram.Models
 
 type ColumnKey={TableName:string;ColumnName:string}
-type Column={ColumnKey:ColumnKey;Number:int16;ColumnType:string;NotNullConstraint:bool}
+type Column={ColumnKey:ColumnKey;Number:int;ColumnType:string;NotNullConstraint:bool}
 with
   member this.ColumnName=this.ColumnKey.ColumnName
   member this.TableName=this.ColumnKey.TableName

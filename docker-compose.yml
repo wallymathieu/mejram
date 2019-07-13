@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  pg:
+    # ConnectionString=
+    #   Host=pg;
+    #   Database=pakila;
+    #   Username=postgres;
+    #   Password=Pass@word;
+    #   Port=5432;
+    image: postgres
+    #build:
+    #  context: .
+    #  dockerfile: pg/Dockerfile
+    #restart: always
+    environment:
+      - POSTGRES_PASSWORD=Pass@word
+      - PGPASSWORD=Pass@word
+      - POSTGRES_DB=pakila
+    volumes: 
+      - ./jOOQ/jOOQ-examples/Sakila/postgres-sakila-db:/db-import
+      - ./pg:/docker-entrypoint-initdb.d
+
+  mssql:
+    # ConnectionString=
+    #   Server=mssql;
+    #   Database=sakila;
+    #   User Id=sa;
+    #   Password=Pass@word
+    #image: microsoft/mssql-server-linux:2017-latest
+    build:
+      context: .
+      dockerfile: mssql/Dockerfile
+
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    ports:
+      - "5433:1433"

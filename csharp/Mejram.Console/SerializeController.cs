@@ -88,6 +88,7 @@ namespace Mejram
 		private DbConnection Connection(string database, string connstr)
 		{
 			switch (database.ToLower()) {
+			case "pg":
 			case "npgsql":
 			case "postgres":
 			{
@@ -100,7 +101,9 @@ namespace Mejram
 			case null:
 			case "":
 			{
-				return new SqlConnection(connstr);
+                var sconn = new SqlConnection(connstr);
+                sconn.Open();
+				return sconn;
 			}
 			default:
 				throw new Exception("Unknown db");
