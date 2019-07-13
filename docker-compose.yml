@@ -1,9 +1,6 @@
 version: '3.4'
 
 services:
-# TODO:
-# https://github.com/twright-msft/mssql-node-docker-demo-app/blob/master/import-data.sh
-
   pg:
     # ConnectionString=
     #   Host=pg;
@@ -36,7 +33,7 @@ services:
       dockerfile: mssql/Dockerfile
 
     environment:
-      - MSSQL_SA_PASSWORD=Pass@word
+      - SA_PASSWORD=Pass@word
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
     ports:

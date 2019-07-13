@@ -30,7 +30,7 @@ module internal Internals=
     //
     let toColumn (r:IDataReader)=
       let key = {TableName= r.GetString 0; ColumnName= r.GetString 1}
-      {ColumnKey=key; ColumnType=r.GetString 2; NotNullConstraint=getBoolean 3 r|>not; Number=r.GetInt16 4 }
+      {ColumnKey=key; ColumnType=r.GetString 2; NotNullConstraint=getBoolean 3 r|>not; Number=r.GetInt32 4 }
     executeReader (sprintf @"SELECT c.table_name, c.column_name, c.data_type, c.is_nullable, c.ordinal_position
                     FROM INFORMATION_SCHEMA.COLUMNS c  
                     INNER JOIN INFORMATION_SCHEMA.TABLES t ON c.TABLE_NAME = t.TABLE_NAME  
