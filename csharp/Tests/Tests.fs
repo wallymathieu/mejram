@@ -59,17 +59,17 @@ let ``There are sample foreign keys`` () =
   let payment = tablesInDb |> Seq.find ((=) "payment" << tableNameToLower)
   Assert.Contains({
     ForeignKeyName="payment_staff_id_fkey"
-    ForeignKeys=[ 
+    Columns=[ 
     { From={TableName="payment";ColumnName="staff_id"}
       To={TableName="staff";ColumnName="staff_id"}} ] }, payment.ForeignKeys)
   Assert.Contains({
     ForeignKeyName="payment_rental_id_fkey"
-    ForeignKeys=[ 
+    Columns=[ 
     { From={TableName="payment";ColumnName="rental_id"}
       To={TableName="rental";ColumnName="rental_id"}} ] }, payment.ForeignKeys)
   Assert.Contains({
     ForeignKeyName="payment_customer_id_fkey"
-    ForeignKeys=[ 
+    Columns=[ 
     { From={TableName="payment";ColumnName="customer_id"}
       To={TableName="customer";ColumnName="customer_id"}} ] }, payment.ForeignKeys)
 [<Fact>]

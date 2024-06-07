@@ -70,7 +70,7 @@ module internal Internals=
     |> Seq.groupBy fst
     |> Seq.map (fun (name, list)-> {
        ForeignKeyName=name;
-       ForeignKeys=list
+       Columns=list
         |> Seq.map snd
         |> Seq.map (fun (key,fkey)->{From=key;To=fkey})
         |> Seq.toList
@@ -116,7 +116,7 @@ let __tableCount tableName c=
 [<CompiledName("FSharpKeyWeight")>]
 let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
   let table = tables.[fk.TableName]
-  let canBeNull=fk.ForeignKeys |> List.exists
+  let canBeNull=fk.Columns |> List.exists
                             (fun p ->
                               let column = table.Columns |> Seq.find(fun col -> col.ColumnName = p.From.ColumnName)
                               not <| column.NotNullConstraint)
@@ -124,7 +124,7 @@ let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
     try
       let map (r:IDataReader)=
         r.GetInt32 0
-      let fksFilter = String.Join(" AND ", fk.ForeignKeys |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
+      let fksFilter = String.Join(" AND ", fk.Columns |> List.map (fun keys->keys.From.ColumnName+" IS NOT NULL "))
       let sql = sprintf @"SELECT COUNT(*) _count FROM %s WHERE %s" table.TableName fksFilter
       executeReader sql Map.empty map c
       |> Seq.head |> Some

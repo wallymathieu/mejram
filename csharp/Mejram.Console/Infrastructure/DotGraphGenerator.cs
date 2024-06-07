@@ -35,13 +35,16 @@ hexagon [style=bold,style=filled];");
                 {
                     //,style=filled
                     sout.WriteLine("\"{0}\" {1};",
-                        table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : ""); //[shape=box];
+                        table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : "");
                 }
-                foreach (var key in tables.SelectMany(table => table.ForeignKeys))
+                foreach (var (fromTable, columnName, toTable) in (
+                                 from table in tables
+                                 from fk in table.ForeignKeys
+                                 from fkcol in fk.Columns
+                                 select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
                 {
-                    var first = key.ForeignKeys.First();
-                    sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", first.From.TableName, first.To.TableName,
-                                   first.From.ColumnName);
+                    sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
+                                   columnName);
                 }
                 sout.WriteLine("}");
             }

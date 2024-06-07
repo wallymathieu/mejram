@@ -12,11 +12,11 @@ with
     first.TableName 
 
 type ForeignKeyColumn={From:ColumnKey;To:ColumnKey }
-type ForeignKeyConstraint= {ForeignKeyName:string; ForeignKeys: ForeignKeyColumn list}
+type ForeignKeyConstraint= {ForeignKeyName:string; Columns: ForeignKeyColumn list}
 with
   /// From table
   member this.TableName=
-    let first =this.ForeignKeys |> List.head
+    let first =this.Columns |> List.head
     first.From.TableName 
 
 type Table={
@@ -33,13 +33,14 @@ module Table=
     | Some pk -> 
       let foreignKeysColumns = 
         this.ForeignKeys
-        |> List.collect (fun fk->fk.ForeignKeys)
+        |> List.collect (fun fk->fk.Columns)
         |> List.map (fun fk->fk.From)
       let inForeignKeys key=List.contains key foreignKeysColumns
       pk.PrimaryKeys 
         |> List.exists inForeignKeys 
         |> not
     | None -> false
+
 type Table with
   member this.HasPrimalKey() = Table.hasPrimalKey this
 
