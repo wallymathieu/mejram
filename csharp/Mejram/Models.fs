@@ -40,6 +40,9 @@ module Table=
         |> List.exists inForeignKeys 
         |> not
     | None -> false
+type Table with
+  member this.HasPrimalKey() = Table.hasPrimalKey this
+
 [<AutoOpen>]
 module Model=
   let inline columnName(r:^a) = ( ^a : ( member get_ColumnName: unit->string ) (r) )

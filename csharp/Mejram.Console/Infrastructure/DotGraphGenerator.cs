@@ -25,16 +25,19 @@ namespace Mejram
             using (var m = File.Open(_outfileDot, FileMode.Create))
             using (var sout = new StreamWriter(m))
             {
-//size=""90,90""; 
+                //size=""90,90""; 
                 sout.WriteLine(@"digraph graphname { 
 #ratio = square;
-node [style=filled];");
+node [style=filled];
+hexagon [style=bold,style=filled];");
 
                 foreach (var table in tables)
                 {
-                    sout.WriteLine("\"{0}\";", table.TableName); //[shape=box];
+                    //,style=filled
+                    sout.WriteLine("\"{0}\" {1};",
+                        table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : ""); //[shape=box];
                 }
-                foreach (var key in tables.SelectMany(table=>table.ForeignKeys))
+                foreach (var key in tables.SelectMany(table => table.ForeignKeys))
                 {
                     var first = key.ForeignKeys.First();
                     sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", first.From.TableName, first.To.TableName,
@@ -51,13 +54,13 @@ node [style=filled];");
                                            _outfilePng);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
-                          {
-                              StartInfo =
+            {
+                StartInfo =
                                   {
                                       FileName = fileName,
                                       Arguments = arguments
                                   }
-                          };
+            };
             dot.Start();
         }
 
@@ -68,13 +71,13 @@ node [style=filled];");
             var fileName = neatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
-                          {
-                              StartInfo =
+            {
+                StartInfo =
                                   {
                                       FileName = fileName,
                                       Arguments = arguments
                                   }
-                          };
+            };
             dot.Start();
         }
     }

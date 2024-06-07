@@ -62,4 +62,3 @@ let probableForeignKeys (tables: Table list) (p:TableNameConventions)=
         |> List.tryFind (tableMatchingColumn c)
         |> Option.map (fun t->{ ForeignKeyName=String.concat "__" [|c.TableName; t.TableName; c.ColumnName|]
                                 ForeignKeys=[ {From=c.ColumnKey; To=getPrimaryKey t} ]} ))
-    
