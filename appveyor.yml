@@ -4,7 +4,8 @@ configuration: Release
 init:
   - SET PGUSER=postgres
   - SET PGPASSWORD=Password12!
-  - PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
+  # https://www.appveyor.com/docs/services-databases/#postgresql
+  - PATH=C:\Program Files\PostgreSQL\13\bin\;%PATH%
 environment:
   SAKILA_TEST_CONN: Server=127.0.0.1;Port=5432;Database=sakila;User Id=postgres;Password=Password12!
 install:
@@ -28,7 +29,7 @@ nuget:
 artifacts:
   - path: '**\*.nupkg'
 services:
-  - postgresql
+  - postgresql13
 branches:
   only:
     - master
