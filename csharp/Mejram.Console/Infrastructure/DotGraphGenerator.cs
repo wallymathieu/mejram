@@ -7,22 +7,15 @@ using Mejram.Models;
 
 namespace Mejram
 {
-    internal class DotGraphGenerator
+    internal class DotGraphGenerator(
+        string @out= "outfile.png",
+        string outNeato = "outfile.neato.png",
+        string dotfile = "outfile.dot")
     {
-        private readonly string _outfilePng;
-        private readonly string _outfileNeatoPng;
-        private readonly string _outfileDot;
-
-        public DotGraphGenerator()
-        {
-            _outfilePng = "outfile.png";
-            _outfileNeatoPng = "outfile.neato.png";
-            _outfileDot = "outfile.dot";
-        }
 
         public void GenerateDotFile(ICollection<Table> tables)
         {
-            using (var m = File.Open(_outfileDot, FileMode.Create))
+            using (var m = File.Open(dotfile, FileMode.Create))
             using (var sout = new StreamWriter(m))
             {
                 //size=""90,90""; 
@@ -53,8 +46,8 @@ hexagon [style=bold,style=filled];");
         public void WriteDot(string dotExe)
         {
             var fileName = dotExe;
-            var arguments = String.Format("-Tpng {0} -o {1}", _outfileDot,
-                                           _outfilePng);
+            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
+                                           @out);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
             {
@@ -69,8 +62,8 @@ hexagon [style=bold,style=filled];");
 
         public void WriteNeato(string neatoExe)
         {
-            var arguments = String.Format("-Tpng {0} -o {1}", _outfileDot,
-                                          _outfileNeatoPng);
+            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
+                                          outNeato);
             var fileName = neatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process

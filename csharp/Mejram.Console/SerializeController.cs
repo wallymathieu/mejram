@@ -21,7 +21,8 @@ namespace Mejram
         /// <param name="database">npgsql, sqlserver</param>
         /// <param name="tablesPath"></param>
         /// <returns></returns>
-		public string Tables (string connectionString, string database, string tablesPath = "outfile.Tables.json")
+		public string Tables (string connectionString, string database, 
+			string tablesPath = "outfile.Tables.json")
 		{
 			using (var conn = Connection(database, connectionString)) 
 			{
@@ -38,23 +39,20 @@ namespace Mejram
         /// <param name="database">npgsql, sqlserver</param>
         /// <param name="tablesCountPath"></param>
         /// <returns></returns>
-		public string TableCount (string connectionString, string database, string tablesCountPath = "outfile.Tables.Count.json")
+		public string TableCount (string connectionString, string database, 
+			string tablesCountPath = "outfile.Tables.Count.json")
 		{
-			using (var conn = Connection(database,connectionString)) 
-			{
-				var tables = Sql.Tables(conn);
+            using var conn = Connection(database, connectionString);
+            var tables = Sql.Tables(conn);
 
-				using (var fs = File.Open(tablesCountPath, FileMode.Create))
-				using (TextWriter txtWriter = new StreamWriter(fs)) 
-				{
-					var tableCounts = from table in tables
-                                      let count = Sql.TableCount(table.TableName, conn) 
-                                      select new KeyValuePair<string, int?> (table.TableName, count);
-					txtWriter.Write (JsonConvert.SerializeObject (tableCounts, Formatting.Indented));
-					txtWriter.Flush ();
-				}
-			}
-			return null;
+            using var fs = File.Open(tablesCountPath, FileMode.Create);
+            using var txtWriter = new StreamWriter(fs);
+            var tableCounts = from table in tables
+                              let count = Sql.TableCount(table.TableName, conn)
+                              select new KeyValuePair<string, int?>(table.TableName, count);
+            txtWriter.Write(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
+            txtWriter.Flush();
+            return null;
 		}
 	    /// <summary>
 	    /// Get foreign key weights
@@ -63,29 +61,26 @@ namespace Mejram
 	    /// <param name="database">npgsql, sqlserver</param>
 	    /// <param name="keyWeightPath"></param>
 	    /// <returns></returns>
-	    public string KeyWeights (string connectionString, string database, string keyWeightPath = "outfile.Tables.KeyWeights.json")
+	    public string KeyWeights (string connectionString, string database,
+			string keyWeightPath = "outfile.Tables.KeyWeights.json")
 	    {
-	        using (var conn = Connection(database,connectionString)) 
-	        {
-	            var tables = Sql.Tables(conn);
-	            var map = tables.ToDictionary(t => t.TableName, t => t);
+            using var conn = Connection(database, connectionString);
+            var tables = Sql.Tables(conn);
+            var map = tables.ToDictionary(t => t.TableName, t => t);
 
-	            using (var fs = File.Open(keyWeightPath, FileMode.Create))
-	            using (TextWriter txtWriter = new StreamWriter(fs)) 
-	            {
-	                var tableCounts = from table in tables
-	                    from fk in table.ForeignKeys
-	                    let count = Sql.KeyWeight(fk, map, conn) 
-	                    let key = Tuple.Create(table.TableName,fk.ForeignKeyName)
-	                    select new KeyValuePair<Tuple<string,string>, int?> (key, count);
-	                txtWriter.Write (JsonConvert.SerializeObject (tableCounts, Formatting.Indented));
-	                txtWriter.Flush ();
-	            }
-	        }
-	        return null;
+            using var fs = File.Open(keyWeightPath, FileMode.Create);
+            using TextWriter txtWriter = new StreamWriter(fs);
+            var tableCounts = from table in tables
+                              from fk in table.ForeignKeys
+                              let count = Sql.KeyWeight(fk, map, conn)
+                              let key = Tuple.Create(table.TableName, fk.ForeignKeyName)
+                              select new KeyValuePair<Tuple<string, string>, int?>(key, count);
+            txtWriter.Write(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
+            txtWriter.Flush();
+            return null;
 	    }
 
-		private DbConnection Connection(string database, string connstr)
+		private static DbConnection Connection(string database, string connstr)
 		{
 			switch (database.ToLower()) {
 			case "pg":
