@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   pg:
     # ConnectionString=
@@ -21,16 +19,24 @@ services:
       - ./jOOQ/jOOQ-examples/Sakila/postgres-sakila-db:/db-import
       - ./pg:/docker-entrypoint-initdb.d
 
+  importdata:
+    build:
+      context: .
+      dockerfile: mssql/Dockerfile
+
+    environment:
+      - SA_PASSWORD=Pass@word
+    restart: no
+    depends_on:
+      - mssql
+
   mssql:
     # ConnectionString=
     #   Server=mssql;
     #   Database=sakila;
     #   User Id=sa;
     #   Password=Pass@word
-    #image: microsoft/mssql-server-linux:2017-latest
-    build:
-      context: .
-      dockerfile: mssql/Dockerfile
+    image: mcr.microsoft.com/mssql/server
 
     environment:
       - SA_PASSWORD=Pass@word
