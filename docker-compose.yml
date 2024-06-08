@@ -5,15 +5,15 @@ services:
     #   Database=pakila;
     #   Username=postgres;
     #   Password=${POSTGRES_PASSWORD};
-    #   Port=5432;
+    #   Port=5434;
     image: postgres
     #restart: always
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGPASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: pakila
+      #POSTGRES_DB: pakila
     volumes: 
-      - ./jOOQ/jOOQ-examples/Sakila/postgres-sakila-db:/db-import
+      - ./sakila/postgres-sakila-db:/db-import
       - ./pg:/docker-entrypoint-initdb.d # https://stackoverflow.com/questions/74705161/scripts-in-the-docker-entrypoint-initdb-d-folder-are-ignored ?
     ports:
       - "5434:5432"
