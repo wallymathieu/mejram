@@ -11,6 +11,37 @@ The goal is to be able to analyse relational databases with a large number of ta
 
 I've found that the best way to get started is to copy paste Mejram.Console into your own repository and do some small changes (remember to change ProjectReference on Mejram to a PackageReference).
 
+## Testing
+
+You need to either install postgresql locally or use docker. The easiest way is to use docker.
+
+Make sure to create your own .env file. You can use the .env.example file as a template. Make sure to change the passwords.
+
+```sh
+cp .env.sample .env
+```
+
+Then you can start the database.
+
+```sh
+docker-compose up pg -d
+```
+
+Make sure to import the database.
+
+```sh
+./pg/import-data.sh
+```
+
+Then you can run the tests by having an environment variable with the right connection string.
+
+```sh
+source .env
+export SAKILA_TEST_CONN=$LOCAL_PG_CONN
+dotnet test csharp
+```
+
+
 ## Licence
 
 GNU Lesser Public License.
