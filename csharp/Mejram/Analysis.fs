@@ -123,8 +123,9 @@ let probableForeignKeys (tables: Table seq) (p:TableNameConventions) : _ IReadOn
                                 Columns=[ {From=c.ColumnKey; To=getPrimaryKey t} ]} ))
     |> Seq.toIReadOnlyList
 
-[<CompiledName("ProbableManyToManyTables")>]
-let probableManyToManyTables (tables: Table seq) (p:TableNameConventions) : Table IReadOnlyList =
+/// Search for tables that look like many to many based on their names.
+[<CompiledName("ProbableNamedManyToManyTables")>]
+let probableNamedManyToManyTables (tables: Table seq) (p:TableNameConventions) : Table IReadOnlyList =
     let tableNames = map (fun t-> StringIgnoreCase.Create t.TableName) tables 
     let tableNameSet = Set.ofSeq tableNames
     let pluralized tableName =

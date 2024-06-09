@@ -113,6 +113,6 @@ let ``Primal keys`` () =
 
 [<Fact>]
 let ``Can infer probable many to many tables`` () =
-  let manyToMany = Analysis.probableManyToManyTables tablesInDb Analysis.TableNameConventions.Default |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let manyToMany = Analysis.probableNamedManyToManyTables tablesInDb Analysis.TableNameConventions.Default |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
   Assert.Equal<string list>(["film_actor"; "film_category"], manyToMany)
   
