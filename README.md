@@ -30,7 +30,7 @@ docker-compose up pg -d
 Make sure to import the database.
 
 ```sh
-./pg/import-data.sh
+./pg/import-pagila-data.sh
 ```
 
 Then you can run the tests by having an environment variable with the right connection string.
