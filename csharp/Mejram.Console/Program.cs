@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Isop;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,53 +10,47 @@ namespace Mejram
     public class Program
     {
         ///
-        public static void Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             var svc = new ServiceCollection();
             svc.AddSingleton(di => new DotGraphController());
             svc.AddSingleton(di => new SerializeController());
-            var build = new Build(svc)
+            var appHost = AppHostBuilder.Create(svc)
                 .Recognize(typeof(DotGraphController))
                 .Recognize(typeof(SerializeController))
-                .ShouldRecognizeHelp()
+                .BuildAppHost()
                 ;
             try
             {
-                var parsedMethod = build.Parse(args);
-                if (parsedMethod.UnRecognizedArguments.Any())//Warning:
+                var parsedMethod = appHost.Parse(args);
+                if (parsedMethod.Unrecognized.Count != 0)//Warning:
                 {
-                    var unRecognizedArgumentsMessage = string.Format(
-                                                           @"Unrecognized arguments: 
-{0}
-Did you mean any of these arguments?
-{1}", String.Join(",", parsedMethod.UnRecognizedArguments.Select(unrec => unrec.Value).ToArray()),
-                                                           String.Join(",", parsedMethod.ArgumentWithOptions.Select(rec => rec.Name).ToArray()));
-                    Console.WriteLine(unRecognizedArgumentsMessage);
-                    Environment.Exit(1);
+                    await Console.Error.WriteLineAsync($@"Unrecognized arguments: 
+    {string.Join(",", parsedMethod.Unrecognized.Select(arg => arg.Value).ToArray())}");
+                    return 1;
                 }
                 else
                 {
-                    parsedMethod.Invoke(Console.Out);
+                    await parsedMethod.InvokeAsync(Console.Out);
+                    return 0;
                 }
             }
             catch (TypeConversionFailedException ex)
             {
-
-                Console.WriteLine(String.Format("Could not convert argument {0} with value {1} to type {2}",
-                        ex.Argument, ex.Value, ex.TargetType));
+                await Console.Error.WriteLineAsync(
+                    $"Could not convert argument {ex.Argument} with value {ex.Value} to type {ex.TargetType}");
                 if (null != ex.InnerException)
                 {
-                    Console.WriteLine("Inner exception: ");
-                    Console.WriteLine(ex.InnerException.Message);
+                    await Console.Error.WriteLineAsync("Inner exception: ");
+                    await Console.Error.WriteLineAsync(ex.InnerException.Message);
                 }
-                Environment.Exit(1);
+                return 9;
             }
             catch (MissingArgumentException ex)
             {
-                Console.WriteLine(String.Format("Missing argument(s): {0}", String.Join(", ", ex.Arguments.ToArray())));
-                if (build.RecognizesHelp)
-                    Console.WriteLine(build.Help());
-                Environment.Exit(1);
+                await Console.Out.WriteLineAsync($"Missing argument(s): {string.Join(", ", ex.Arguments).ToArray()}");
+                await Console.Out.WriteLineAsync(await appHost.HelpAsync());
+                return 10;
             }
 #if DEBUG
             catch (Exception ex1)
@@ -66,7 +61,7 @@ Did you mean any of these arguments?
                                 ex1.Message, ex1.StackTrace,
                     ex1.InnerException?.Message, ex1.InnerException?.StackTrace
                         }));
-                Environment.Exit(1);
+                return 1;
             }
 #endif
 
