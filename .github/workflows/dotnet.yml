@@ -9,6 +9,11 @@ on:
   pull_request:
     branches: [ "master","main" ]
 
+env:
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+
+
 jobs:
   build:
 
@@ -16,13 +21,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1
+      with:
+        postgresql version: '13'
+        postgresql db: sakila
+        postgresql user: $PGUSER
+        postgresql password: $PGPASSWORD
+
+    - name: Run SQL Scripts
+      run: |
+        psql -c "CREATE DATABASE sakila;" -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-schema.sql  -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U $PGUSER
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: ./csharp/
+
     - name: Build
       run: dotnet build --no-restore
+      working-directory: ./csharp/
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      working-directory: ./csharp/
+      env:
+        SAKILA_TEST_CONN: Server=localhost;Port=5432;Database=sakila;User Id=$PGUSER;Password=$PGPASSWORD
