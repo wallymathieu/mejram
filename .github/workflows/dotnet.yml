@@ -26,15 +26,21 @@ jobs:
       uses: Harmon758/postgresql-action@v1
       with:
         postgresql version: '13'
-        postgresql db: sakila
+        postgresql db: postgres
         postgresql user: $PGUSER
         postgresql password: $PGPASSWORD
-
+        
+    - name: Wait for PostgreSQL
+      run: |
+        while ! psql -U $PGUSER -d postgres -h 127.0.0.1 --quiet -c "SELECT version()"; do
+          sleep 1
+        done
+      shell: bash
     - name: Run SQL Scripts
       run: |
-        psql -c "CREATE DATABASE sakila;" -U $PGUSER
-        psql -d sakila -a -f ./pagila/pagila-schema.sql  -U $PGUSER
-        psql -d sakila -a -f ./pagila/pagila-insert-data.sql  -U $PGUSER
+        psql -c "CREATE DATABASE sakila;" -h 127.0.0.1 -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-schema.sql -h 127.0.0.1 -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-insert-data.sql -h 127.0.0.1 -U $PGUSER
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -51,4 +57,4 @@ jobs:
       run: dotnet test --no-build --verbosity normal
       working-directory: ./csharp/
       env:
-        SAKILA_TEST_CONN: Server=localhost;Port=5432;Database=sakila;User Id=$PGUSER;Password=$PGPASSWORD
+        SAKILA_TEST_CONN: Server=127.0.0.1;Port=5432;Database=sakila;User Id=$PGUSER;Password=$PGPASSWORD
