@@ -1,4 +1,5 @@
-# Mejram [![Build status](https://ci.appveyor.com/api/projects/status/jypcjbt3ipbwmq4x/branch/master?svg=true)](https://ci.appveyor.com/project/wallymathieu/mejram/branch/master)
+# Mejram
+
 ## The name
 
 Mejram is the swedish name for Marjoram. Like any spice it is intended to give flavor to the analysis of sql databases.
