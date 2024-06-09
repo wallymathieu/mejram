@@ -98,7 +98,8 @@ let ``Can infer primary keys`` () =
 let ``Can infer foreign keys`` () =
   let tables = ["store"; "staff"; "address"] |> List.map (fun name->findTableWithName name tablesInDb)
   let foreignKeys = Analysis.probableForeignKeys tables Analysis.TableNameConventions.Default
-                    |> List.map (fun fk->fk.ForeignKeyName)
+                    |> Seq.map (fun fk->fk.ForeignKeyName)
+                    |> Seq.toList
   Assert.Contains("store__address__address_id", foreignKeys)
   Assert.Contains("staff__address__address_id", foreignKeys)
   Assert.Contains("staff__store__store_id", foreignKeys)
@@ -109,4 +110,9 @@ let ``Primal keys`` () =
   Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
                              "city";"country"; "inventory";"language";"payment"
                              "rental";"staff";"store"] |> List.sort, tables)
+
+[<Fact>]
+let ``Can infer probable many to many tables`` () =
+  let manyToMany = Analysis.probableManyToManyTables tablesInDb Analysis.TableNameConventions.Default |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  Assert.Equal<string list>(["film_actor"; "film_category"], manyToMany)
   
