@@ -1,40 +1,23 @@
-version: '3.4'
-
 services:
   pg:
-    # ConnectionString=
-    #   Host=pg;
-    #   Database=pakila;
-    #   Username=postgres;
-    #   Password=Pass@word;
-    #   Port=5432;
     image: postgres
-    #build:
-    #  context: .
-    #  dockerfile: pg/Dockerfile
-    #restart: always
+    restart: always
     environment:
-      - POSTGRES_PASSWORD=Pass@word
-      - PGPASSWORD=Pass@word
-      - POSTGRES_DB=pakila
-    volumes: 
-      - ./jOOQ/jOOQ-examples/Sakila/postgres-sakila-db:/db-import
-      - ./pg:/docker-entrypoint-initdb.d
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      #POSTGRES_DB: pakila
+    #volumes: 
+    #  - ./sakila/postgres-sakila-db:/db-import
+    #  - ./pg:/docker-entrypoint-initdb.d # https://stackoverflow.com/questions/74705161/scripts-in-the-docker-entrypoint-initdb-d-folder-are-ignored ?
+    ports:
+      - "5434:5432"
 
   mssql:
-    # ConnectionString=
-    #   Server=mssql;
-    #   Database=sakila;
-    #   User Id=sa;
-    #   Password=Pass@word
-    #image: microsoft/mssql-server-linux:2017-latest
-    build:
-      context: .
-      dockerfile: mssql/Dockerfile
-
+    image: mcr.microsoft.com/mssql/server
+    restart: always
     environment:
-      - SA_PASSWORD=Pass@word
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
     ports:
       - "5433:1433"
