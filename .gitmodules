@@ -1,6 +1,6 @@
 [submodule "pagila"]
 	path = pagila
 	url = https://github.com/devrimgunduz/pagila.git
-[submodule "sakila"]
+[submodule "sakilahttps"]
 	path = sakila
-	url = git@github.com:jOOQ/sakila.git
+	url = https://github.com/jOOQ/sakila.git
