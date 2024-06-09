@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FSharp.Data" Version="3.0.0" />
+      <PackageReference Include="FSharp.Data" Version="6.4.0" />
       <PackageReference Include="FsharpPlus" Version="1.6.1" />
       <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
       <PackageReference Update="FSharp.Core" Version="8.0.300" />
