@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
+# make sure to install sqlcmd:
+# https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility?view=sql-server-ver16&tabs=go%2Cwindows&pivots=cs1-bash#download-and-install-sqlcmd
 pushd $(dirname "${0}") > /dev/null
 cd ../
-MSSQL_HOST=mssql
-MSSQL_PORT=1433
+MSSQL_HOST=localhost
+MSSQL_PORT=5433
 source .env
-MSSQL_EXEC=" --net=mejram_default mcr.microsoft.com/mssql-tools /opt/mssql-tools/bin/sqlcmd "
-SAKILA_VOLUME="$(pwd)/sakila/sql-server-sakila-db:/db-import"
 
 function mssql_select_1 {
-    # docker run --rm -it --net=mejram_default mcr.microsoft.com/mssql-tools /opt/mssql-tools/bin/sqlcmd -S 'mssql,1433' -U sa -P 'SET_A_PASSWORD_HERE_123' -Q 'SELECT 1'
-    # docker run --rm -it --net=mejram_default mcr.microsoft.com/mssql-tools /opt/mssql-tools/bin/sqlcmd -S 'mssql,1433' -U sa -P 'SET_A_PASSWORD_HERE_123' -Q SELECT 1
-    docker run --rm -it ${MSSQL_EXEC} -S "${MSSQL_HOST},${MSSQL_PORT}" -U sa -P "$MSSQL_PASSWORD" -Q 'SELECT 1'
+    sqlcmd -S "${MSSQL_HOST},${MSSQL_PORT}" -U sa -P "$MSSQL_SA_PASSWORD" -Q 'SELECT 1'
+    return $?
 }
 
 function mssql_wait {
@@ -25,14 +24,13 @@ function mssql_import_schema {
     #run the setup script to create the DB and the schema in the DB
     for VARIABLE in 1 2 
     do
-        docker run --rm -it -v ${SAKILA_VOLUME} ${MSSQL_EXEC} -S "${MSSQL_HOST},${MSSQL_PORT}" -d master -U sa -P "$MSSQL_PASSWORD" -i /db-import/sql-server-sakila-schema.sql
+        sqlcmd -S "${MSSQL_HOST},${MSSQL_PORT}" -d master -U sa -P "$MSSQL_SA_PASSWORD" -i ./sakila/sql-server-sakila-db/sql-server-sakila-schema.sql
     done
 }
 
 
 function mssql_import_data {
-    #import the data
-    if echo docker run --rm -it -v ${SAKILA_VOLUME} ${MSSQL_EXEC} -S "${MSSQL_HOST},${MSSQL_PORT}" -d sakila -U sa -P "$MSSQL_PASSWORD" -i /db-import/sql-server-sakila-insert-data.sql ; then
+    if sqlcmd -S "${MSSQL_HOST},${MSSQL_PORT}" -d sakila -U sa -P "$MSSQL_SA_PASSWORD" -i ./sakila/sql-server-sakila-db/sql-server-sakila-insert-data.sql ; then
         echo "Failed to import sakila data"
         exit 1
     fi
