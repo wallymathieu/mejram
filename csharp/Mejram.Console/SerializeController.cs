@@ -24,12 +24,10 @@ namespace Mejram
 		public string Tables (string connectionString, string database, 
 			string tablesPath = "outfile.Tables.json")
 		{
-			using (var conn = Connection(database, connectionString)) 
-			{
-			    var serialization = new Serialization(tablesPath);
-			    serialization.Serialize(conn);
-			}
-			return "Serialized";
+            using var conn = Connection(database, connectionString);
+            var serialization = new Serialization(tablesPath);
+            serialization.Serialize(conn);
+            return "Serialized";
 		}
 
         /// <summary>
