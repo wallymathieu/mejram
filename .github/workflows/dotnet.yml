@@ -1,0 +1,60 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master","main" ]
+  pull_request:
+    branches: [ "master","main" ]
+
+env:
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+  SAKILA_TEST_CONN: Server=127.0.0.1;Port=5432;Database=sakila;User Id=postgres;Password=Password12!
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1
+      with:
+        postgresql version: '13'
+        postgresql db: postgres
+        postgresql user: $PGUSER
+        postgresql password: $PGPASSWORD
+        
+    - name: Wait for PostgreSQL
+      run: |
+        while ! psql -U $PGUSER -d postgres -h 127.0.0.1 --quiet -c "SELECT version()"; do
+          sleep 1
+        done
+      shell: bash
+    - name: Run SQL Scripts
+      run: |
+        psql -c "CREATE DATABASE sakila;" -h 127.0.0.1 -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-schema.sql -h 127.0.0.1 -U $PGUSER
+        psql -d sakila -a -f ./pagila/pagila-insert-data.sql -h 127.0.0.1 -U $PGUSER
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./csharp/
+
+    - name: Build
+      run: dotnet build --no-restore
+      working-directory: ./csharp/
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+      working-directory: ./csharp/
