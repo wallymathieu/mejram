@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <VersionPrefix>1.0.0</VersionPrefix>
-        <VersionSuffix></VersionSuffix>
+        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionSuffix>alpha-1</VersionSuffix>
         <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
         <Version Condition=" '$(VersionSuffix)' == '' ">$(VersionPrefix)</Version>
         <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
@@ -24,8 +24,9 @@
 
     <ItemGroup>
       <PackageReference Include="FSharp.Data" Version="3.0.0" />
+      <PackageReference Include="FsharpPlus" Version="1.6.1" />
       <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-      <PackageReference Update="FSharp.Core" Version="4.3.4" />
+      <PackageReference Update="FSharp.Core" Version="8.0.300" />
     </ItemGroup>
 
 </Project>
