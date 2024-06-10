@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Mejram.Models;
 
 namespace Mejram
@@ -13,42 +14,39 @@ namespace Mejram
         string dotfile = "outfile.dot")
     {
 
-        public void GenerateDotFile(ICollection<Table> tables)
+        public async Task GenerateDotFile(ICollection<Table> tables)
         {
-            using (var m = File.Open(dotfile, FileMode.Create))
-            using (var sout = new StreamWriter(m))
-            {
-                //size=""90,90""; 
-                sout.WriteLine(@"digraph graphname { 
+            using var m = File.Open(dotfile, FileMode.Create);
+            using var sout = new StreamWriter(m);
+            //size=""90,90""; 
+            await sout.WriteLineAsync(@"digraph graphname { 
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
 
-                foreach (var table in tables)
-                {
-                    //,style=filled
-                    sout.WriteLine("\"{0}\" {1};",
-                        table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : "");
-                }
-                foreach (var (fromTable, columnName, toTable) in (
-                                 from table in tables
-                                 from fk in table.ForeignKeys
-                                 from fkcol in fk.Columns
-                                 select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
-                {
-                    sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
-                                   columnName);
-                }
-                sout.WriteLine("}");
+
+            foreach (var table in tables)
+            {
+                //,style=filled
+                await sout.WriteLineAsync(
+                    $"\"{table.TableName}\" {(table.HasPrimalKey() ? "[shape=hexagon]" : "")};");
             }
+            foreach (var (fromTable, columnName, toTable) in (
+                             from table in tables
+                             from fk in table.ForeignKeys
+                             from fkcol in fk.Columns
+                             select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
+            {
+                await sout.WriteLineAsync($"\"{fromTable}\" -> \"{toTable}\"  [label=\"{columnName}\"];");
+            }
+            await sout.WriteLineAsync("}");
         }
 
-        public void WriteDot(string dotExe)
+        public async Task WriteDot(string dotExe)
         {
             var fileName = dotExe;
-            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
-                                           @out);
-            System.Console.WriteLine("{0} {1}", fileName, arguments);
+            var arguments = $"-Tpng {dotfile} -o {@out}";
+            await Console.Out.WriteLineAsync(string.Format("{0} {1}", fileName, arguments));
             var dot = new Process
             {
                 StartInfo =
@@ -60,12 +58,11 @@ hexagon [style=bold,style=filled];");
             dot.Start();
         }
 
-        public void WriteNeato(string neatoExe)
+        public async Task WriteNeato(string neatoExe)
         {
-            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
-                                          outNeato);
+            var arguments = $"-Tpng {dotfile} -o {outNeato}";
             var fileName = neatoExe;
-            System.Console.WriteLine("{0} {1}", fileName, arguments);
+            await Console.Out.WriteLineAsync(string.Join($"{fileName} {arguments}"));
             var dot = new Process
             {
                 StartInfo =

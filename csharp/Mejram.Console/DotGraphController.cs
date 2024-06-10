@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Mejram
 {
      /// <summary>
@@ -5,18 +7,18 @@ namespace Mejram
     /// </summary>
 	public class DotGraphController
 	{
+        private readonly DotGraphGenerator dotGraphGenerator = new();
 	    /// <summary>
 	    /// Writes dot file and send to dot
 	    /// </summary>
 	    /// <param name="dot">dot tool</param>
 	    /// <param name="tablesPath">Tables json file path.</param>
-	    public void WriteDot (string dot,
+	    public async Task WriteDot (string dot,
             string tablesPath = "outfile.tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
             var serialization = new Serialization(tablesPath);
-		    dotGraphGenerator.GenerateDotFile(serialization.Deserialize());
-			dotGraphGenerator.WriteDot(dot);
+		    await dotGraphGenerator.GenerateDotFile(await serialization.Deserialize());
+			await dotGraphGenerator.WriteDot(dot);
 		}
 
 	    /// <summary>
@@ -24,13 +26,12 @@ namespace Mejram
 	    /// </summary>
 	    /// <param name="neato">neato tool</param>
 	    /// <param name="tablesPath">Tables json file path.</param>
-	    public void WriteNeato (string neato,
+	    public async Task WriteNeato (string neato,
             string tablesPath = "outfile.Tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
 		    var serialization = new Serialization(tablesPath);
-			dotGraphGenerator.GenerateDotFile (serialization.Deserialize());
-			dotGraphGenerator.WriteNeato(neato);
+			await dotGraphGenerator.GenerateDotFile (await serialization.Deserialize());
+			await dotGraphGenerator.WriteNeato(neato);
 		}
 	}
 	

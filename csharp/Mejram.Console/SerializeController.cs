@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Data.Common;
 using Npgsql;
+using System.Threading.Tasks;
 
 namespace Mejram
 {
@@ -21,12 +22,12 @@ namespace Mejram
         /// <param name="database">npgsql, sqlserver</param>
         /// <param name="tablesPath"></param>
         /// <returns></returns>
-		public string Tables (string connectionString, string database, 
+		public async Task<string> Tables (string connectionString, string database, 
 			string tablesPath = "outfile.Tables.json")
 		{
             using var conn = Connection(database, connectionString);
             var serialization = new Serialization(tablesPath);
-            serialization.Serialize(conn);
+            await serialization.Serialize(conn);
             return "Serialized";
 		}
 
@@ -37,7 +38,7 @@ namespace Mejram
         /// <param name="database">npgsql, sqlserver</param>
         /// <param name="tablesCountPath"></param>
         /// <returns></returns>
-		public string TableCount (string connectionString, string database, 
+		public async Task<string> TableCount (string connectionString, string database, 
 			string tablesCountPath = "outfile.Tables.Count.json")
 		{
             using var conn = Connection(database, connectionString);
@@ -48,8 +49,8 @@ namespace Mejram
             var tableCounts = from table in tables
                               let count = Sql.TableCount(table.TableName, conn)
                               select new KeyValuePair<string, int?>(table.TableName, count);
-            txtWriter.Write(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
-            txtWriter.Flush();
+            await txtWriter.WriteAsync(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
+            await txtWriter.FlushAsync();
             return null;
 		}
 	    /// <summary>
@@ -59,7 +60,7 @@ namespace Mejram
 	    /// <param name="database">npgsql, sqlserver</param>
 	    /// <param name="keyWeightPath"></param>
 	    /// <returns></returns>
-	    public string KeyWeights (string connectionString, string database,
+	    public async Task<string> KeyWeights (string connectionString, string database,
 			string keyWeightPath = "outfile.Tables.KeyWeights.json")
 	    {
             using var conn = Connection(database, connectionString);
@@ -67,14 +68,14 @@ namespace Mejram
             var map = tables.ToDictionary(t => t.TableName, t => t);
 
             using var fs = File.Open(keyWeightPath, FileMode.Create);
-            using TextWriter txtWriter = new StreamWriter(fs);
+            using var txtWriter = new StreamWriter(fs);
             var tableCounts = from table in tables
                               from fk in table.ForeignKeys
                               let count = Sql.KeyWeight(fk, map, conn)
                               let key = Tuple.Create(table.TableName, fk.ForeignKeyName)
                               select new KeyValuePair<Tuple<string, string>, int?>(key, count);
-            txtWriter.Write(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
-            txtWriter.Flush();
+            await txtWriter.WriteAsync(JsonConvert.SerializeObject(tableCounts, Formatting.Indented));
+            await txtWriter.FlushAsync();
             return null;
 	    }
 
@@ -102,5 +103,5 @@ namespace Mejram
 				throw new Exception("Unknown db");
 			}			
 		}
-	}	
+	}
 }
