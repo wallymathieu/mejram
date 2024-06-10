@@ -15,6 +15,8 @@ let sakila = SakilaTables.Load "sakila.Tables.json"
 let sakila_1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Table ResizeArray>( IO.File.ReadAllText( "sakila_1.Tables.json"))
                         |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
 let sakilaWithTblPrefix = Newtonsoft.Json.JsonConvert.DeserializeObject<Table ResizeArray>( IO.File.ReadAllText("sakila_tbl.Tables.json"))
+type TC = Analysis.TableNameConventions
+let defaultConventions = TC.Default()
 let createConn ()=
   let defaultStr = "Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"
   let sakilaConn = Environment.GetEnvironmentVariable("SAKILA_TEST_CONN")
@@ -94,13 +96,13 @@ let ``Can get count for each foreign key`` () =
 [<Fact>]
 let ``Can infer primary keys`` () =
   let store = findTableWithName "store" tablesInDb.Value
-  let primary = Analysis.probablePrimaryKeys [store] Analysis.TableNameConventions.Default 
+  let primary = Analysis.probablePrimaryKeys [store] defaultConventions
   Assert.Contains({TableName="store";ColumnName="store_id"}, primary)
 
 [<Fact>]
 let ``Can infer foreign keys`` () =
   let tables = ["store"; "staff"; "address"] |> List.map (fun name->findTableWithName name tablesInDb.Value)
-  let foreignKeys = Analysis.probableForeignKeys tables Analysis.TableNameConventions.Default
+  let foreignKeys = Analysis.probableForeignKeys tables defaultConventions
                     |> Seq.map (fun fk->fk.ForeignKeyName)
                     |> Seq.toList
   Assert.Contains("store__address__address_id", foreignKeys)
@@ -109,21 +111,21 @@ let ``Can infer foreign keys`` () =
 
 [<Fact>]
 let ``Primal keys`` () =
-  let tables = tablesInDb.Value |> Seq.filter Table.hasPrimalKey |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let tables = tablesInDb.Value |> Seq.filter _.HasPrimalKey() |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
   Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
                              "city";"country"; "inventory";"language";"payment"
                              "rental";"staff";"store"] |> List.sort, tables)
-let listOfManyToManyToTableName manyToMany= (manyToMany: Analysis.MaybeManyToManyTable seq) |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+let listOfManyToManyToTableName manyToMany= (manyToMany: MaybeManyToManyTable seq) |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
 
 [<Fact>]
 let ``Can infer probable many to many tables`` () =
-  let analyzed = Analysis.probableNamedManyToManyTables sakila_1 Analysis.TableNameConventions.Default
+  let analyzed = Analysis.probableManyToManyTables sakila_1 defaultConventions
   let manyToMany = analyzed |> listOfManyToManyToTableName
   Assert.Equal<string list>(["film_actor"; "film_category"], manyToMany)
-  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys |> Seq.length)
+  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys() |> Seq.length)
 [<Fact>]
 let ``Can infer probable many to many tables with tbl_ prefix`` () =
-  let analyzed = Analysis.probableNamedManyToManyTables sakilaWithTblPrefix Analysis.TableNameConventions.Default
+  let analyzed = Analysis.probableManyToManyTables sakilaWithTblPrefix defaultConventions
   let manyToMany = analyzed |> listOfManyToManyToTableName
   Assert.Equal<string list>(["tbl_film_actor"; "tbl_film_category"], manyToMany)
-  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys |> Seq.length)
+  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys() |> Seq.length)

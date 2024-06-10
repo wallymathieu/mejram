@@ -23,6 +23,8 @@ namespace Mejram
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
+                var conventions= Analysis.TableNameConventions.Default();
+                var manyToMany = Analysis.ProbableManyToManyTables(tables, conventions).Where(t=>t.HasMatchingOutgoingForeignKeys());
 
                 foreach (var table in tables)
                 {

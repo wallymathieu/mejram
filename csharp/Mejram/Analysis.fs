@@ -4,7 +4,7 @@ open System
 open System.Text.RegularExpressions
 open System.Collections.Generic
 open FSharpPlus
-
+[<CLIMutable>]
 type TableNameConventions = {
     /// Table prefixes to be ignored when looking for primary keys. These are usually "tbl_" or "tbl".
     TablePrefix:string IReadOnlyCollection
@@ -16,43 +16,12 @@ type TableNameConventions = {
     ManyToManyInfixes:string IReadOnlyCollection
 }
 with
-    static member Default = {
+    /// Default conventions
+    static member Default() = {
         TablePrefix = ["tbl_";"tbl";""]
         KeyNames = ["id";"_id"]
         ManyToManyInfixes = ["_"; ""]
     }
-[<AutoOpen>]
-module private Internals=
-    [<CustomEquality;CustomComparison>]
-    type StringIgnoreCase = {CaseInsensitiveValue : string}
-        with
-            static member Create (s:string) = {CaseInsensitiveValue = s}
-
-            interface IComparable<StringIgnoreCase> with
-                member x.CompareTo(y) = StringComparer.InvariantCultureIgnoreCase.Compare(x.CaseInsensitiveValue, y.CaseInsensitiveValue)
-            interface IComparable with
-                member x.CompareTo(y) =
-                    match y with
-                    | :? StringIgnoreCase as y -> StringComparer.InvariantCultureIgnoreCase.Compare(x.CaseInsensitiveValue, y.CaseInsensitiveValue)
-                    | _ -> failwith "Cannot compare StringIgnoreCase with non-StringIgnoreCase"
-
-            override x.Equals(y) =
-                match y with
-                | :? StringIgnoreCase as y -> x.CaseInsensitiveValue.Equals(y.CaseInsensitiveValue, StringComparison.InvariantCultureIgnoreCase)
-                | _ -> false
-            override x.GetHashCode() =  StringComparer.InvariantCultureIgnoreCase.GetHashCode(x.CaseInsensitiveValue)
-/// A table that might be a many to many table.
-type MaybeManyToManyTable = {Table: Table; FirstOtherTable: string; SecondOtherTable: string}
-with
-    member self.HasMatchingOutgoingForeignKeys =
-        let matchesOneOfTheTables c= c.To.TableName = self.FirstOtherTable || c.To.TableName = self.SecondOtherTable
-        let matches = 
-            self.Table.ForeignKeys 
-            |> List.collect _.Columns
-            |> List.filter matchesOneOfTheTables
-            |> List.map _.To.TableName
-            |> List.distinct
-        matches |> List.length = 2
 
 [<AutoOpen>]
 module TableNameConventions=
@@ -127,8 +96,8 @@ let probableForeignKeys (tables: Table seq) (p:TableNameConventions) : _ IReadOn
     |> Seq.toIReadOnlyList
 
 /// Search for tables that look like many to many based on their names.
-[<CompiledName("ProbableNamedManyToManyTables")>]
-let probableNamedManyToManyTables (tables: Table seq) (p:TableNameConventions) : MaybeManyToManyTable IReadOnlyList =
+[<CompiledName("ProbableManyToManyTables")>]
+let probableManyToManyTables (tables: Table seq) (p:TableNameConventions) : MaybeManyToManyTable IReadOnlyList =
     let tableNameTrim t = TC.tableNameTrim t p
     let tableNames = map (fun t-> StringIgnoreCase.Create t.TableName) tables 
     let tableNameSet = Set.ofSeq tableNames
