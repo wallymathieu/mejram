@@ -12,6 +12,9 @@ let inline tableNameStartsWithPaymentP r = (tableName r).StartsWith "payment_p"
 type SakilaTables = JsonProvider<"sakila.Tables.json">
 let sakila = SakilaTables.Load "sakila.Tables.json"
             |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
+let sakila_1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Table ResizeArray>( IO.File.ReadAllText( "sakila_1.Tables.json"))
+                        |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
+let sakilaWithTblPrefix = Newtonsoft.Json.JsonConvert.DeserializeObject<Table ResizeArray>( IO.File.ReadAllText("sakila_tbl.Tables.json"))
 let createConn ()=
   let defaultStr = "Server=127.0.0.1;Port=5432;Database=sakila;User Id=test;Password=test;"
   let sakilaConn = Environment.GetEnvironmentVariable("SAKILA_TEST_CONN")
@@ -19,44 +22,44 @@ let createConn ()=
   let conn = new NpgsqlConnection(connStr)
   conn.Open()
   conn
-let tablesInDb=
+let tablesInDb= lazy (
   use conn =createConn()
   Sql.tables conn
   |> Seq.toList
-  |> Seq.filter (fun t->not <| tableNameStartsWithPaymentP t)
-let tableChanges = 
-  Seq.changes sakila tableNameToLower tablesInDb tableNameToLower
-let columnChanges=
-  tableChanges.ToChange 
-  |> List.map (fun (t1,t2)-> Seq.changes t1.Columns columnNameToLower t2.Columns columnNameToLower)
+  |> Seq.filter (not << tableNameStartsWithPaymentP) )
+let tableChanges = lazy (
+  Seq.changes sakila tableNameToLower tablesInDb.Value tableNameToLower )
+let columnChanges= lazy (
+  tableChanges.Value.ToChange 
+  |> List.map (fun (t1,t2)-> Seq.changes t1.Columns columnNameToLower t2.Columns columnNameToLower) )
 let findTableWithName name tables = tables |> Seq.find ((=) name << tableNameToLower)
 [<Fact>]
 let ``No tables missing`` () =
-  Assert.Empty tableChanges.ToRemove
+  Assert.Empty tableChanges.Value.ToRemove
 [<Fact>]
 let ``No tables added`` () =
-  Assert.Empty tableChanges.ToAdd
+  Assert.Empty tableChanges.Value.ToAdd
 [<Fact>]
 let ``No columns added`` () =
-  let toAdd = columnChanges 
+  let toAdd = columnChanges.Value
               |> List.filter (fun cchanges->not<| List.isEmpty cchanges.ToAdd)
   Assert.Empty toAdd
 [<Fact>]
 let ``No columns missing`` () =
-  let toRemove = columnChanges 
+  let toRemove = columnChanges.Value
                  |> List.filter (fun cchanges->not<| List.isEmpty cchanges.ToRemove)
   Assert.Empty toRemove
 [<Fact>]
 let ``No columns changed`` () =
-  let toChange = columnChanges 
+  let toChange = columnChanges.Value
                  |> List.collect (fun cchanges->cchanges.ToChange)
-                 |> List.filter (fun (c1,c2)->not ( c1.AttributeNumber = int c2.Number 
+                 |> List.filter (fun (c1,c2)->not ( c1.AttributeNumber = c2.Number 
                                                     && c1.ColumnType = c2.ColumnType 
                                                     && c1.NotNullConstraint = c2.NotNullConstraint))
   Assert.Empty toChange
 [<Fact>]
 let ``There are sample foreign keys`` () =
-  let payment = tablesInDb |> Seq.find ((=) "payment" << tableNameToLower)
+  let payment = tablesInDb.Value |> Seq.find ((=) "payment" << tableNameToLower)
   Assert.Contains({
     ForeignKeyName="payment_staff_id_fkey"
     Columns=[ 
@@ -74,7 +77,7 @@ let ``There are sample foreign keys`` () =
       To={TableName="customer";ColumnName="customer_id"}} ] }, payment.ForeignKeys)
 [<Fact>]
 let ``There is sample primary key`` () =
-  let payment = findTableWithName "payment" tablesInDb
+  let payment = findTableWithName "payment" tablesInDb.Value
   Assert.Equal(Some {
     PrimaryKeyName="payment_pkey"
     PrimaryKeys=[{TableName="payment";ColumnName="payment_id"}] }, payment.PrimaryKey)
@@ -82,21 +85,21 @@ let ``There is sample primary key`` () =
 [<Fact>]
 let ``Can get count for each foreign key`` () =
   use conn =createConn()
-  let map =tablesInDb |> Seq.map (fun t-> t.TableName, t) |> Map.ofSeq
-  let keyWeights = tablesInDb
+  let map =tablesInDb.Value |> Seq.map (fun t-> t.TableName, t) |> Map.ofSeq
+  let keyWeights = tablesInDb.Value
                    |> Seq.collect (fun t-> t.ForeignKeys)
                    |> Seq.map( fun fk->fk.ForeignKeyName, Sql.keyWeight fk map conn)
                    |> Seq.toList
   Assert.Contains( ("store_address_id_fkey", Some 0), keyWeights)
 [<Fact>]
 let ``Can infer primary keys`` () =
-  let store = findTableWithName "store" tablesInDb
+  let store = findTableWithName "store" tablesInDb.Value
   let primary = Analysis.probablePrimaryKeys [store] Analysis.TableNameConventions.Default 
   Assert.Contains({TableName="store";ColumnName="store_id"}, primary)
 
 [<Fact>]
 let ``Can infer foreign keys`` () =
-  let tables = ["store"; "staff"; "address"] |> List.map (fun name->findTableWithName name tablesInDb)
+  let tables = ["store"; "staff"; "address"] |> List.map (fun name->findTableWithName name tablesInDb.Value)
   let foreignKeys = Analysis.probableForeignKeys tables Analysis.TableNameConventions.Default
                     |> Seq.map (fun fk->fk.ForeignKeyName)
                     |> Seq.toList
@@ -106,13 +109,16 @@ let ``Can infer foreign keys`` () =
 
 [<Fact>]
 let ``Primal keys`` () =
-  let tables = tablesInDb |> Seq.filter Table.hasPrimalKey |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let tables = tablesInDb.Value |> Seq.filter Table.hasPrimalKey |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
   Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
                              "city";"country"; "inventory";"language";"payment"
                              "rental";"staff";"store"] |> List.sort, tables)
 
 [<Fact>]
 let ``Can infer probable many to many tables`` () =
-  let manyToMany = Analysis.probableNamedManyToManyTables tablesInDb Analysis.TableNameConventions.Default |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let manyToMany = Analysis.probableNamedManyToManyTables sakila_1 Analysis.TableNameConventions.Default |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
   Assert.Equal<string list>(["film_actor"; "film_category"], manyToMany)
-  
+[<Fact>]
+let ``Can infer probable many to many tables with tbl_ prefix`` () =
+  let manyToMany = Analysis.probableNamedManyToManyTables sakilaWithTblPrefix Analysis.TableNameConventions.Default |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  Assert.Equal<string list>(["tbl_film_actor"; "tbl_film_category"], manyToMany)

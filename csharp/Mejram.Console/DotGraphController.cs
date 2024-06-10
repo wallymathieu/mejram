@@ -5,6 +5,8 @@ namespace Mejram
     /// </summary>
 	public class DotGraphController
 	{
+        private readonly DotGraphGenerator dotGraphGenerator = new ();
+
 	    /// <summary>
 	    /// Writes dot file and send to dot
 	    /// </summary>
@@ -13,7 +15,6 @@ namespace Mejram
 	    public void WriteDot (string dot,
             string tablesPath = "outfile.tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
             var serialization = new Serialization(tablesPath);
 		    dotGraphGenerator.GenerateDotFile(serialization.Deserialize());
 			dotGraphGenerator.WriteDot(dot);
@@ -27,7 +28,6 @@ namespace Mejram
 	    public void WriteNeato (string neato,
             string tablesPath = "outfile.Tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
 		    var serialization = new Serialization(tablesPath);
 			dotGraphGenerator.GenerateDotFile (serialization.Deserialize());
 			dotGraphGenerator.WriteNeato(neato);
