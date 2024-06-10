@@ -43,7 +43,7 @@ hexagon [style=bold,style=filled];");
             using var m = File.Open(dotfile, FileMode.Create);
             using var sout = new StreamWriter(m);
             //size=""90,90""; 
-            sout.WriteLine(@"digraph graphname { 
+            sout.WriteLine(@"strict graph graphname { 
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
@@ -61,7 +61,7 @@ hexagon [style=bold,style=filled];");
                              from mm in manyToMany
                              select (mm.FirstOtherTable, mm.SecondOtherTable, mm.Table.TableName)).Distinct())
             {
-                sout.WriteLine("\"{0}\" -> \"{1}\" [label=\"{2}\"] ; \"{1}\" -> \"{0}\" [label=\"{2}\"];", fromTable, toTable, "*");
+                sout.WriteLine("\"{0}\" -- \"{1}\" [label=\"{2}\"] ; ", fromTable, toTable, "*");
             }
             foreach (var (fromTable, columnName, toTable) in (
                              from table in tables
@@ -70,7 +70,7 @@ hexagon [style=bold,style=filled];");
                              from fkcol in fk.Columns
                              select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
             {
-                sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
+                sout.WriteLine("\"{0}\" -- \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
                                columnName);
             }
             sout.WriteLine("}");
