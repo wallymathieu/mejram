@@ -9,9 +9,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "rental_id",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -20,9 +18,7 @@
         },
         "Number": 2,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "rental_date",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -31,9 +27,7 @@
         },
         "Number": 3,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "inventory_id",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -42,9 +36,7 @@
         },
         "Number": 4,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "customer_id",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -53,9 +45,7 @@
         },
         "Number": 5,
         "ColumnType": "datetime",
-        "NotNullConstraint": false,
-        "ColumnName": "return_date",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -64,9 +54,7 @@
         },
         "Number": 6,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "staff_id",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -75,9 +63,7 @@
         },
         "Number": 7,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_rental"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -90,8 +76,7 @@
               "TableName": "tbl_rental",
               "ColumnName": "rental_id"
             }
-          ],
-          "TableName": "tbl_rental"
+          ]
         }
       ]
     },
@@ -109,8 +94,7 @@
               "ColumnName": "customer_id"
             }
           }
-        ],
-        "TableName": "tbl_rental"
+        ]
       },
       {
         "ForeignKeyName": "fk_rental_inventory",
@@ -125,8 +109,7 @@
               "ColumnName": "inventory_id"
             }
           }
-        ],
-        "TableName": "tbl_rental"
+        ]
       },
       {
         "ForeignKeyName": "fk_rental_staff",
@@ -141,8 +124,7 @@
               "ColumnName": "staff_id"
             }
           }
-        ],
-        "TableName": "tbl_rental"
+        ]
       }
     ]
   },
@@ -156,9 +138,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "actor_id",
-        "TableName": "tbl_actor"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -167,9 +147,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "first_name",
-        "TableName": "tbl_actor"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -178,9 +156,7 @@
         },
         "Number": 3,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "last_name",
-        "TableName": "tbl_actor"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -189,9 +165,7 @@
         },
         "Number": 4,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_actor"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -204,8 +178,7 @@
               "TableName": "tbl_actor",
               "ColumnName": "actor_id"
             }
-          ],
-          "TableName": "tbl_actor"
+          ]
         }
       ]
     },
@@ -221,9 +194,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "country_id",
-        "TableName": "tbl_country"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -232,9 +203,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "country",
-        "TableName": "tbl_country"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -243,9 +212,7 @@
         },
         "Number": 3,
         "ColumnType": "datetime",
-        "NotNullConstraint": false,
-        "ColumnName": "last_update",
-        "TableName": "tbl_country"
+        "NotNullConstraint": false
       }
     ],
     "PrimaryKey": {
@@ -258,8 +225,7 @@
               "TableName": "tbl_country",
               "ColumnName": "country_id"
             }
-          ],
-          "TableName": "tbl_country"
+          ]
         }
       ]
     },
@@ -275,9 +241,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "city_id",
-        "TableName": "tbl_city"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -286,9 +250,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "city",
-        "TableName": "tbl_city"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -297,9 +259,7 @@
         },
         "Number": 3,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "country_id",
-        "TableName": "tbl_city"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -308,9 +268,7 @@
         },
         "Number": 4,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_city"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -323,8 +281,7 @@
               "TableName": "tbl_city",
               "ColumnName": "city_id"
             }
-          ],
-          "TableName": "tbl_city"
+          ]
         }
       ]
     },
@@ -342,8 +299,7 @@
               "ColumnName": "country_id"
             }
           }
-        ],
-        "TableName": "tbl_city"
+        ]
       }
     ]
   },
@@ -357,9 +313,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "address_id",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -368,9 +322,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "address",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -379,9 +331,7 @@
         },
         "Number": 3,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "address2",
-        "TableName": "tbl_address"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -390,9 +340,7 @@
         },
         "Number": 4,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "district",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -401,9 +349,7 @@
         },
         "Number": 5,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "city_id",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -412,9 +358,7 @@
         },
         "Number": 6,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "postal_code",
-        "TableName": "tbl_address"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -423,9 +367,7 @@
         },
         "Number": 7,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "phone",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -434,9 +376,7 @@
         },
         "Number": 8,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_address"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -449,8 +389,7 @@
               "TableName": "tbl_address",
               "ColumnName": "address_id"
             }
-          ],
-          "TableName": "tbl_address"
+          ]
         }
       ]
     },
@@ -468,8 +407,7 @@
               "ColumnName": "city_id"
             }
           }
-        ],
-        "TableName": "tbl_address"
+        ]
       }
     ]
   },
@@ -483,9 +421,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "language_id",
-        "TableName": "tbl_language"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -494,9 +430,7 @@
         },
         "Number": 2,
         "ColumnType": "char",
-        "NotNullConstraint": true,
-        "ColumnName": "name",
-        "TableName": "tbl_language"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -505,9 +439,7 @@
         },
         "Number": 3,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_language"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -520,8 +452,7 @@
               "TableName": "tbl_language",
               "ColumnName": "language_id"
             }
-          ],
-          "TableName": "tbl_language"
+          ]
         }
       ]
     },
@@ -537,9 +468,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "category_id",
-        "TableName": "tbl_category"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -548,9 +477,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "name",
-        "TableName": "tbl_category"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -559,9 +486,7 @@
         },
         "Number": 3,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_category"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -574,8 +499,7 @@
               "TableName": "tbl_category",
               "ColumnName": "category_id"
             }
-          ],
-          "TableName": "tbl_category"
+          ]
         }
       ]
     },
@@ -591,9 +515,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "customer_id",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -602,9 +524,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "store_id",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -613,9 +533,7 @@
         },
         "Number": 3,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "first_name",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -624,9 +542,7 @@
         },
         "Number": 4,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "last_name",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -635,9 +551,7 @@
         },
         "Number": 5,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "email",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -646,9 +560,7 @@
         },
         "Number": 6,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "address_id",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -657,9 +569,7 @@
         },
         "Number": 7,
         "ColumnType": "char",
-        "NotNullConstraint": true,
-        "ColumnName": "active",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -668,9 +578,7 @@
         },
         "Number": 8,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "create_date",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -679,9 +587,7 @@
         },
         "Number": 9,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_customer"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -694,8 +600,7 @@
               "TableName": "tbl_customer",
               "ColumnName": "customer_id"
             }
-          ],
-          "TableName": "tbl_customer"
+          ]
         }
       ]
     },
@@ -713,8 +618,7 @@
               "ColumnName": "address_id"
             }
           }
-        ],
-        "TableName": "tbl_customer"
+        ]
       },
       {
         "ForeignKeyName": "fk_customer_store",
@@ -729,8 +633,7 @@
               "ColumnName": "store_id"
             }
           }
-        ],
-        "TableName": "tbl_customer"
+        ]
       }
     ]
   },
@@ -744,9 +647,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "film_id",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -755,9 +656,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "title",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -766,9 +665,7 @@
         },
         "Number": 3,
         "ColumnType": "text",
-        "NotNullConstraint": false,
-        "ColumnName": "description",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -777,9 +674,7 @@
         },
         "Number": 4,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "release_year",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -788,9 +683,7 @@
         },
         "Number": 5,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "language_id",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -799,9 +692,7 @@
         },
         "Number": 6,
         "ColumnType": "int",
-        "NotNullConstraint": false,
-        "ColumnName": "original_language_id",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -810,9 +701,7 @@
         },
         "Number": 7,
         "ColumnType": "tinyint",
-        "NotNullConstraint": true,
-        "ColumnName": "rental_duration",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -821,9 +710,7 @@
         },
         "Number": 8,
         "ColumnType": "decimal",
-        "NotNullConstraint": true,
-        "ColumnName": "rental_rate",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -832,9 +719,7 @@
         },
         "Number": 9,
         "ColumnType": "smallint",
-        "NotNullConstraint": false,
-        "ColumnName": "length",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -843,9 +728,7 @@
         },
         "Number": 10,
         "ColumnType": "decimal",
-        "NotNullConstraint": true,
-        "ColumnName": "replacement_cost",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -854,9 +737,7 @@
         },
         "Number": 11,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "rating",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -865,9 +746,7 @@
         },
         "Number": 12,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "special_features",
-        "TableName": "tbl_film"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -876,9 +755,7 @@
         },
         "Number": 13,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_film"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -891,8 +768,7 @@
               "TableName": "tbl_film",
               "ColumnName": "film_id"
             }
-          ],
-          "TableName": "tbl_film"
+          ]
         }
       ]
     },
@@ -910,8 +786,7 @@
               "ColumnName": "language_id"
             }
           }
-        ],
-        "TableName": "tbl_film"
+        ]
       },
       {
         "ForeignKeyName": "fk_film_language_original",
@@ -926,8 +801,7 @@
               "ColumnName": "language_id"
             }
           }
-        ],
-        "TableName": "tbl_film"
+        ]
       }
     ]
   },
@@ -941,9 +815,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "actor_id",
-        "TableName": "tbl_film_actor"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -952,9 +824,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "film_id",
-        "TableName": "tbl_film_actor"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -963,9 +833,7 @@
         },
         "Number": 3,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_film_actor"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -982,8 +850,7 @@
               "TableName": "tbl_film_actor",
               "ColumnName": "film_id"
             }
-          ],
-          "TableName": "tbl_film_actor"
+          ]
         }
       ]
     },
@@ -1001,8 +868,7 @@
               "ColumnName": "actor_id"
             }
           }
-        ],
-        "TableName": "tbl_film_actor"
+        ]
       },
       {
         "ForeignKeyName": "fk_film_actor_film",
@@ -1017,8 +883,7 @@
               "ColumnName": "film_id"
             }
           }
-        ],
-        "TableName": "tbl_film_actor"
+        ]
       }
     ]
   },
@@ -1032,9 +897,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "film_id",
-        "TableName": "tbl_film_category"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1043,9 +906,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "category_id",
-        "TableName": "tbl_film_category"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1054,9 +915,7 @@
         },
         "Number": 3,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_film_category"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -1073,8 +932,7 @@
               "TableName": "tbl_film_category",
               "ColumnName": "film_id"
             }
-          ],
-          "TableName": "tbl_film_category"
+          ]
         }
       ]
     },
@@ -1092,8 +950,7 @@
               "ColumnName": "category_id"
             }
           }
-        ],
-        "TableName": "tbl_film_category"
+        ]
       },
       {
         "ForeignKeyName": "fk_film_category_film",
@@ -1108,8 +965,7 @@
               "ColumnName": "film_id"
             }
           }
-        ],
-        "TableName": "tbl_film_category"
+        ]
       }
     ]
   },
@@ -1123,9 +979,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "film_id",
-        "TableName": "tbl_film_text"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1134,9 +988,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "title",
-        "TableName": "tbl_film_text"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1145,9 +997,7 @@
         },
         "Number": 3,
         "ColumnType": "text",
-        "NotNullConstraint": false,
-        "ColumnName": "description",
-        "TableName": "tbl_film_text"
+        "NotNullConstraint": false
       }
     ],
     "PrimaryKey": {
@@ -1160,8 +1010,7 @@
               "TableName": "tbl_film_text",
               "ColumnName": "film_id"
             }
-          ],
-          "TableName": "tbl_film_text"
+          ]
         }
       ]
     },
@@ -1177,9 +1026,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "inventory_id",
-        "TableName": "tbl_inventory"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1188,9 +1035,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "film_id",
-        "TableName": "tbl_inventory"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1199,9 +1044,7 @@
         },
         "Number": 3,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "store_id",
-        "TableName": "tbl_inventory"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1210,9 +1053,7 @@
         },
         "Number": 4,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_inventory"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -1225,8 +1066,7 @@
               "TableName": "tbl_inventory",
               "ColumnName": "inventory_id"
             }
-          ],
-          "TableName": "tbl_inventory"
+          ]
         }
       ]
     },
@@ -1244,8 +1084,7 @@
               "ColumnName": "film_id"
             }
           }
-        ],
-        "TableName": "tbl_inventory"
+        ]
       },
       {
         "ForeignKeyName": "fk_inventory_store",
@@ -1260,8 +1099,7 @@
               "ColumnName": "store_id"
             }
           }
-        ],
-        "TableName": "tbl_inventory"
+        ]
       }
     ]
   },
@@ -1275,9 +1113,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "staff_id",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1286,9 +1122,7 @@
         },
         "Number": 2,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "first_name",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1297,9 +1131,7 @@
         },
         "Number": 3,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "last_name",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1308,9 +1140,7 @@
         },
         "Number": 4,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "address_id",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1319,9 +1149,7 @@
         },
         "Number": 5,
         "ColumnType": "image",
-        "NotNullConstraint": false,
-        "ColumnName": "picture",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -1330,9 +1158,7 @@
         },
         "Number": 6,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "email",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -1341,9 +1167,7 @@
         },
         "Number": 7,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "store_id",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1352,9 +1176,7 @@
         },
         "Number": 8,
         "ColumnType": "bit",
-        "NotNullConstraint": true,
-        "ColumnName": "active",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1363,9 +1185,7 @@
         },
         "Number": 9,
         "ColumnType": "varchar",
-        "NotNullConstraint": true,
-        "ColumnName": "username",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1374,9 +1194,7 @@
         },
         "Number": 10,
         "ColumnType": "varchar",
-        "NotNullConstraint": false,
-        "ColumnName": "password",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -1385,9 +1203,7 @@
         },
         "Number": 11,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_staff"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -1400,8 +1216,7 @@
               "TableName": "tbl_staff",
               "ColumnName": "staff_id"
             }
-          ],
-          "TableName": "tbl_staff"
+          ]
         }
       ]
     },
@@ -1419,8 +1234,7 @@
               "ColumnName": "address_id"
             }
           }
-        ],
-        "TableName": "tbl_staff"
+        ]
       },
       {
         "ForeignKeyName": "fk_staff_store",
@@ -1435,8 +1249,7 @@
               "ColumnName": "store_id"
             }
           }
-        ],
-        "TableName": "tbl_staff"
+        ]
       }
     ]
   },
@@ -1450,9 +1263,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "store_id",
-        "TableName": "tbl_store"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1461,9 +1272,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "manager_staff_id",
-        "TableName": "tbl_store"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1472,9 +1281,7 @@
         },
         "Number": 3,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "address_id",
-        "TableName": "tbl_store"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1483,9 +1290,7 @@
         },
         "Number": 4,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_store"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -1498,8 +1303,7 @@
               "TableName": "tbl_store",
               "ColumnName": "store_id"
             }
-          ],
-          "TableName": "tbl_store"
+          ]
         }
       ]
     },
@@ -1517,8 +1321,7 @@
               "ColumnName": "address_id"
             }
           }
-        ],
-        "TableName": "tbl_store"
+        ]
       },
       {
         "ForeignKeyName": "fk_store_staff",
@@ -1533,8 +1336,7 @@
               "ColumnName": "staff_id"
             }
           }
-        ],
-        "TableName": "tbl_store"
+        ]
       }
     ]
   },
@@ -1548,9 +1350,7 @@
         },
         "Number": 1,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "payment_id",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1559,9 +1359,7 @@
         },
         "Number": 2,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "customer_id",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1570,9 +1368,7 @@
         },
         "Number": 3,
         "ColumnType": "int",
-        "NotNullConstraint": true,
-        "ColumnName": "staff_id",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1581,9 +1377,7 @@
         },
         "Number": 4,
         "ColumnType": "int",
-        "NotNullConstraint": false,
-        "ColumnName": "rental_id",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": false
       },
       {
         "ColumnKey": {
@@ -1592,9 +1386,7 @@
         },
         "Number": 5,
         "ColumnType": "decimal",
-        "NotNullConstraint": true,
-        "ColumnName": "amount",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1603,9 +1395,7 @@
         },
         "Number": 6,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "payment_date",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       },
       {
         "ColumnKey": {
@@ -1614,9 +1404,7 @@
         },
         "Number": 7,
         "ColumnType": "datetime",
-        "NotNullConstraint": true,
-        "ColumnName": "last_update",
-        "TableName": "tbl_payment"
+        "NotNullConstraint": true
       }
     ],
     "PrimaryKey": {
@@ -1629,8 +1417,7 @@
               "TableName": "tbl_payment",
               "ColumnName": "payment_id"
             }
-          ],
-          "TableName": "tbl_payment"
+          ]
         }
       ]
     },
@@ -1648,8 +1435,7 @@
               "ColumnName": "customer_id"
             }
           }
-        ],
-        "TableName": "tbl_payment"
+        ]
       },
       {
         "ForeignKeyName": "fk_payment_rental",
@@ -1664,8 +1450,7 @@
               "ColumnName": "rental_id"
             }
           }
-        ],
-        "TableName": "tbl_payment"
+        ]
       },
       {
         "ForeignKeyName": "fk_payment_staff",
@@ -1680,8 +1465,7 @@
               "ColumnName": "staff_id"
             }
           }
-        ],
-        "TableName": "tbl_payment"
+        ]
       }
     ]
   }

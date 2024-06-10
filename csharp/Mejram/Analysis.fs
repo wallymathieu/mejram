@@ -53,16 +53,16 @@ module TableNameConventions=
         let prefix = p.TablePrefix |> map Regex.Escape |> String.concat "|"
         let postfix = p.KeyNames |> map Regex.Escape |> String.concat "|"
         Regex(sprintf "^(%s)(?<value>\w+)(%s)$" prefix postfix, RegexOptions.IgnoreCase)
-        
+
 module TC = TableNameConventions
 [<CompiledName("ProbablePrimaryKeys")>]
 let probablePrimaryKeys (tables: Table seq) (p:TableNameConventions) : _ IReadOnlyList =
     let idColumn= TC.exactlyPrefixAndPostfix p
     let idNamedTableColumn= TC.prefixAndValueAndPostfix p
-    let isIdColumn = columnName >> idColumn.IsMatch
-    let findTableIdColumn column=
-       let t = tableName column
-       let m = idNamedTableColumn.Match <| columnName column
+    let isIdColumn (c:Column) = c.ColumnName() |> idColumn.IsMatch
+    let findTableIdColumn (column:Column)=
+       let t = column.TableName()
+       let m = column.ColumnName() |> idNamedTableColumn.Match
        m.Success && m.Groups.["value"].Value.Trim('_').Equals(t, StringComparison.InvariantCultureIgnoreCase)
     tables |> map (fun t->
         let tryFindColumn p = tryFind p t.Columns
@@ -76,9 +76,9 @@ let probableForeignKeys (tables: Table seq) (p:TableNameConventions) : _ IReadOn
     let tableNameTrim t = TC.tableNameTrim t p
     let tableMatchingColumn (column:Column) t=
         let trimmedTable = tableNameTrim(t.TableName)
-        let columnWithoutPostfix = idColumnPostfixes.Replace(column.ColumnName, "")
-        trimmedTable = columnWithoutPostfix && t.TableName <> column.TableName
-    let idColumnPostfixesMatches (c:Column) = idColumnPostfixes.IsMatch c.ColumnName
+        let columnWithoutPostfix = idColumnPostfixes.Replace(column.ColumnName(), "")
+        trimmedTable = columnWithoutPostfix && t.TableName <> column.TableName()
+    let idColumnPostfixesMatches (c:Column) = c.ColumnName() |> idColumnPostfixes.IsMatch
     let columnsWithIdPostfix=
         tables 
         |> Seq.collect (fun t-> t.Columns |> filter idColumnPostfixesMatches)
@@ -91,7 +91,7 @@ let probableForeignKeys (tables: Table seq) (p:TableNameConventions) : _ IReadOn
     |> Seq.choose (fun c->
         tables
         |> tryFind (tableMatchingColumn c)
-        |> Option.map (fun t->{ ForeignKeyName=String.concat "__" [|c.TableName; t.TableName; c.ColumnName|]
+        |> Option.map (fun t->{ ForeignKeyName=String.concat "__" [|c.TableName(); t.TableName; c.ColumnName()|]
                                 Columns=[ {From=c.ColumnKey; To=getPrimaryKey t} ]} ))
     |> Seq.toIReadOnlyList
 

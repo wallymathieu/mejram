@@ -3,11 +3,11 @@ namespace Mejram.Models
 type ColumnKey={TableName:string;ColumnName:string}
 type Column={ColumnKey:ColumnKey;Number:int;ColumnType:string;NotNullConstraint:bool}
 with
-  member this.ColumnName=this.ColumnKey.ColumnName
-  member this.TableName=this.ColumnKey.TableName
+  member this.ColumnName() = this.ColumnKey.ColumnName
+  member this.TableName() = this.ColumnKey.TableName
 type PrimaryKeyConstraint={PrimaryKeyName:string; PrimaryKeys: ColumnKey list}
 with
-  member this.TableName=
+  member this.TableName() =
     let first =this.PrimaryKeys |> List.head
     first.TableName 
 
@@ -15,7 +15,7 @@ type ForeignKeyColumn={From:ColumnKey;To:ColumnKey }
 type ForeignKeyConstraint= {ForeignKeyName:string; Columns: ForeignKeyColumn list}
 with
   /// From table
-  member this.TableName=
+  member this.TableName() =
     let first =this.Columns |> List.head
     first.From.TableName 
 
@@ -42,10 +42,6 @@ type Table with
         |> not
     | None -> false
 
-[<AutoOpen>]
-module Model=
-  let inline columnName(r:^a) = ( ^a : ( member get_ColumnName: unit->string ) (r) )
-  let inline tableName(r:^a) = ( ^a : ( member get_TableName: unit->string ) (r) )
 
 /// A table that might be a many to many table.
 type MaybeManyToManyTable = {Table: Table; FirstOtherTable: string; SecondOtherTable: string}
@@ -60,7 +56,6 @@ with
             |> List.map _.To.TableName
             |> List.distinct
         matches |> List.length = 2
-
 [<AutoOpen>]
 module internal InternalModels=
     open System

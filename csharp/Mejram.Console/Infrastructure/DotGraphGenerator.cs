@@ -25,15 +25,23 @@ node [style=filled];
 hexagon [style=bold,style=filled];");
                 var conventions= Analysis.TableNameConventions.Default();
                 var manyToMany = Analysis.ProbableManyToManyTables(tables, conventions).Where(t=>t.HasMatchingOutgoingForeignKeys());
-
-                foreach (var table in tables)
+                var manyToManyNames = manyToMany.Select(t=>t.Table.TableName).ToHashSet();
+                bool IsAManyToMany(Table t) => manyToManyNames.Contains(t.TableName);
+                foreach (var table in tables.Where(t=>!IsAManyToMany(t)))
                 {
                     //,style=filled
                     sout.WriteLine("\"{0}\" {1};",
                         table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : "");
                 }
+                foreach (var (fromTable, toTable) in (
+                                 from mm in manyToMany
+                                 select (mm.FirstOtherTable, mm.SecondOtherTable)).Distinct())
+                {
+                    sout.WriteLine("\"{0}\" <-> \"{1}\" ;", fromTable, toTable);
+                }
                 foreach (var (fromTable, columnName, toTable) in (
                                  from table in tables
+                                 where !IsAManyToMany(table)
                                  from fk in table.ForeignKeys
                                  from fkcol in fk.Columns
                                  select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())

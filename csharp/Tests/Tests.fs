@@ -6,6 +6,11 @@ open Xunit
 open Mejram
 open Mejram.Models
 open FSharp.Data
+[<AutoOpen>]
+module Model=
+  let inline columnName(r:^a) = ( ^a : ( member get_ColumnName: unit->string ) (r) )
+  let inline tableName(r:^a) = ( ^a : ( member get_TableName: unit->string ) (r) )
+
 let inline tableNameToLower t =(tableName t).ToLower()
 let inline columnNameToLower t = (columnName t).ToLower()
 let inline tableNameStartsWithPaymentP r = (tableName r).StartsWith "payment_p"
@@ -33,7 +38,7 @@ let tableChanges = lazy (
   Seq.changes sakila tableNameToLower tablesInDb.Value tableNameToLower )
 let columnChanges= lazy (
   tableChanges.Value.ToChange 
-  |> List.map (fun (t1,t2)-> Seq.changes t1.Columns columnNameToLower t2.Columns columnNameToLower) )
+  |> List.map (fun (t1,t2)-> Seq.changes t1.Columns columnNameToLower t2.Columns _.ColumnName().ToLower()) )
 let findTableWithName name tables = tables |> Seq.find ((=) name << tableNameToLower)
 [<Fact>]
 let ``No tables missing`` () =
