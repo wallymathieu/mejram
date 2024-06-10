@@ -43,6 +43,16 @@ module private Internals=
             override x.GetHashCode() =  StringComparer.InvariantCultureIgnoreCase.GetHashCode(x.CaseInsensitiveValue)
 /// A table that might be a many to many table.
 type MaybeManyToManyTable = {Table: Table; FirstOtherTable: string; SecondOtherTable: string}
+with
+    member self.HasMatchingOutgoingForeignKeys =
+        let matchesOneOfTheTables c= c.To.TableName = self.FirstOtherTable || c.To.TableName = self.SecondOtherTable
+        let matches = 
+            self.Table.ForeignKeys 
+            |> List.collect _.Columns
+            |> List.filter matchesOneOfTheTables
+            |> List.map _.To.TableName
+            |> List.distinct
+        matches |> List.length = 2
 
 [<AutoOpen>]
 module TableNameConventions=

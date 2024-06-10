@@ -113,12 +113,17 @@ let ``Primal keys`` () =
   Assert.Equal<string list>(["customer"; "actor"; "category"; "film"; "address" 
                              "city";"country"; "inventory";"language";"payment"
                              "rental";"staff";"store"] |> List.sort, tables)
+let listOfManyToManyToTableName manyToMany= (manyToMany: Analysis.MaybeManyToManyTable seq) |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
 
 [<Fact>]
 let ``Can infer probable many to many tables`` () =
-  let manyToMany = Analysis.probableNamedManyToManyTables sakila_1 Analysis.TableNameConventions.Default |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let analyzed = Analysis.probableNamedManyToManyTables sakila_1 Analysis.TableNameConventions.Default
+  let manyToMany = analyzed |> listOfManyToManyToTableName
   Assert.Equal<string list>(["film_actor"; "film_category"], manyToMany)
+  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys |> Seq.length)
 [<Fact>]
 let ``Can infer probable many to many tables with tbl_ prefix`` () =
-  let manyToMany = Analysis.probableNamedManyToManyTables sakilaWithTblPrefix Analysis.TableNameConventions.Default |> Seq.map _.Table |> Seq.map tableNameToLower |> Seq.sort |> Seq.toList
+  let analyzed = Analysis.probableNamedManyToManyTables sakilaWithTblPrefix Analysis.TableNameConventions.Default
+  let manyToMany = analyzed |> listOfManyToManyToTableName
   Assert.Equal<string list>(["tbl_film_actor"; "tbl_film_category"], manyToMany)
+  Assert.Equal(2, analyzed |>  Seq.filter _.HasMatchingOutgoingForeignKeys |> Seq.length)
