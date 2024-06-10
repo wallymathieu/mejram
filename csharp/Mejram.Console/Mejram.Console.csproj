@@ -22,9 +22,9 @@
     <ProjectReference Include="..\Mejram\Mejram.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Isop" Version="3.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Npgsql" Version="4.0.16" />
+    <PackageReference Include="Isop" Version="4.0.0-RC-1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Update="FSharp.Core" Version="8.0.300" />
   </ItemGroup>
 </Project>
