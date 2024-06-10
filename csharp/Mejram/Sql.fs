@@ -115,10 +115,10 @@ let __tableCount tableName c=
   tableCount tableName c |> Option.toNullable
 [<CompiledName("FSharpKeyWeight")>]
 let keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
-  let table = tables.[fk.TableName]
+  let table = tables.[fk.TableName()]
   let canBeNull=fk.Columns |> List.exists
                             (fun p ->
-                              let column = table.Columns |> Seq.find(fun col -> col.ColumnName = p.From.ColumnName)
+                              let column = table.Columns |> Seq.find(fun col -> col.ColumnName() = p.From.ColumnName)
                               not <| column.NotNullConstraint)
   if canBeNull then
     try
@@ -137,16 +137,16 @@ let __keyWeight (fk:ForeignKeyConstraint) (tables:IDictionary<string,Table>) c=
 [<CompiledName("Tables")>]
 let tables c=
   let columns = columns c
-                |> Seq.groupBy (fun col->col.TableName)
+                |> Seq.groupBy (fun col->col.TableName())
                 //|> Map.ofSeq
   let tables = columns |> Seq.map fst
   let columnMap =columns |> Map.ofSeq
   let foreignKeyConstraints = foreignKeyConstraints c
   let primaryKeyConstraints = primaryKeyConstraints c
   let foreignKeyConstraintsMap =
-                foreignKeyConstraints |> Seq.groupBy (fun constr->constr.TableName) |> Map.ofSeq
+                foreignKeyConstraints |> Seq.groupBy (fun constr->constr.TableName()) |> Map.ofSeq
   let primaryKeyConstraintsMap = 
-                primaryKeyConstraints |> Seq.groupBy (fun constr->constr.TableName) |> Map.ofSeq
+                primaryKeyConstraints |> Seq.groupBy (fun constr->constr.TableName()) |> Map.ofSeq
   let tableNameToTable tableName=
     let columns = Map.find tableName columnMap
     { TableName=tableName

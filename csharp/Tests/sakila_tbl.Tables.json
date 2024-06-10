@@ -1,0 +1,1472 @@
+[
+  {
+    "TableName": "tbl_rental",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "rental_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "rental_date"
+        },
+        "Number": 2,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "inventory_id"
+        },
+        "Number": 3,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "customer_id"
+        },
+        "Number": 4,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "return_date"
+        },
+        "Number": 5,
+        "ColumnType": "datetime",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "staff_id"
+        },
+        "Number": 6,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_rental",
+          "ColumnName": "last_update"
+        },
+        "Number": 7,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__rental__67DB611A4198E691",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_rental",
+              "ColumnName": "rental_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_rental_customer",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_rental",
+              "ColumnName": "customer_id"
+            },
+            "To": {
+              "TableName": "tbl_customer",
+              "ColumnName": "customer_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_rental_inventory",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_rental",
+              "ColumnName": "inventory_id"
+            },
+            "To": {
+              "TableName": "tbl_inventory",
+              "ColumnName": "inventory_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_rental_staff",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_rental",
+              "ColumnName": "staff_id"
+            },
+            "To": {
+              "TableName": "tbl_staff",
+              "ColumnName": "staff_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_actor",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_actor",
+          "ColumnName": "actor_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_actor",
+          "ColumnName": "first_name"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_actor",
+          "ColumnName": "last_name"
+        },
+        "Number": 3,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_actor",
+          "ColumnName": "last_update"
+        },
+        "Number": 4,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__actor__8B2447B54812C7F9",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_actor",
+              "ColumnName": "actor_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": []
+  },
+  {
+    "TableName": "tbl_country",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_country",
+          "ColumnName": "country_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_country",
+          "ColumnName": "country"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_country",
+          "ColumnName": "last_update"
+        },
+        "Number": 3,
+        "ColumnType": "datetime",
+        "NotNullConstraint": false
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__country__7E8CD05414D57E4B",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_country",
+              "ColumnName": "country_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": []
+  },
+  {
+    "TableName": "tbl_city",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_city",
+          "ColumnName": "city_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_city",
+          "ColumnName": "city"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_city",
+          "ColumnName": "country_id"
+        },
+        "Number": 3,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_city",
+          "ColumnName": "last_update"
+        },
+        "Number": 4,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__city__031491A9BC19ACA0",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_city",
+              "ColumnName": "city_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_city_country",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_city",
+              "ColumnName": "country_id"
+            },
+            "To": {
+              "TableName": "tbl_country",
+              "ColumnName": "country_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_address",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "address_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "address"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "address2"
+        },
+        "Number": 3,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "district"
+        },
+        "Number": 4,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "city_id"
+        },
+        "Number": 5,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "postal_code"
+        },
+        "Number": 6,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "phone"
+        },
+        "Number": 7,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_address",
+          "ColumnName": "last_update"
+        },
+        "Number": 8,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__address__CAA247C9E949C6A6",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_address",
+              "ColumnName": "address_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_address_city",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_address",
+              "ColumnName": "city_id"
+            },
+            "To": {
+              "TableName": "tbl_city",
+              "ColumnName": "city_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_language",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_language",
+          "ColumnName": "language_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_language",
+          "ColumnName": "name"
+        },
+        "Number": 2,
+        "ColumnType": "char",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_language",
+          "ColumnName": "last_update"
+        },
+        "Number": 3,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__language__804CF6B2AFFA3EAC",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_language",
+              "ColumnName": "language_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": []
+  },
+  {
+    "TableName": "tbl_category",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_category",
+          "ColumnName": "category_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_category",
+          "ColumnName": "name"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_category",
+          "ColumnName": "last_update"
+        },
+        "Number": 3,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__category__D54EE9B5BFFAB96A",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_category",
+              "ColumnName": "category_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": []
+  },
+  {
+    "TableName": "tbl_customer",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "customer_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "store_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "first_name"
+        },
+        "Number": 3,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "last_name"
+        },
+        "Number": 4,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "email"
+        },
+        "Number": 5,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "address_id"
+        },
+        "Number": 6,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "active"
+        },
+        "Number": 7,
+        "ColumnType": "char",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "create_date"
+        },
+        "Number": 8,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_customer",
+          "ColumnName": "last_update"
+        },
+        "Number": 9,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__customer__CD65CB848D879DA3",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_customer",
+              "ColumnName": "customer_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_customer_address",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_customer",
+              "ColumnName": "address_id"
+            },
+            "To": {
+              "TableName": "tbl_address",
+              "ColumnName": "address_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_customer_store",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_customer",
+              "ColumnName": "store_id"
+            },
+            "To": {
+              "TableName": "tbl_store",
+              "ColumnName": "store_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_film",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "film_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "title"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "description"
+        },
+        "Number": 3,
+        "ColumnType": "text",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "release_year"
+        },
+        "Number": 4,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "language_id"
+        },
+        "Number": 5,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "original_language_id"
+        },
+        "Number": 6,
+        "ColumnType": "int",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "rental_duration"
+        },
+        "Number": 7,
+        "ColumnType": "tinyint",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "rental_rate"
+        },
+        "Number": 8,
+        "ColumnType": "decimal",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "length"
+        },
+        "Number": 9,
+        "ColumnType": "smallint",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "replacement_cost"
+        },
+        "Number": 10,
+        "ColumnType": "decimal",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "rating"
+        },
+        "Number": 11,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "special_features"
+        },
+        "Number": 12,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film",
+          "ColumnName": "last_update"
+        },
+        "Number": 13,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__film__349764A80F805762",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_film",
+              "ColumnName": "film_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_film_language",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film",
+              "ColumnName": "language_id"
+            },
+            "To": {
+              "TableName": "tbl_language",
+              "ColumnName": "language_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_film_language_original",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film",
+              "ColumnName": "original_language_id"
+            },
+            "To": {
+              "TableName": "tbl_language",
+              "ColumnName": "language_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_film_actor",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_actor",
+          "ColumnName": "actor_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_actor",
+          "ColumnName": "film_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_actor",
+          "ColumnName": "last_update"
+        },
+        "Number": 3,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__film_act__086D31FF64028E42",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_film_actor",
+              "ColumnName": "actor_id"
+            },
+            {
+              "TableName": "tbl_film_actor",
+              "ColumnName": "film_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_film_actor_actor",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film_actor",
+              "ColumnName": "actor_id"
+            },
+            "To": {
+              "TableName": "tbl_actor",
+              "ColumnName": "actor_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_film_actor_film",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film_actor",
+              "ColumnName": "film_id"
+            },
+            "To": {
+              "TableName": "tbl_film",
+              "ColumnName": "film_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_film_category",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_category",
+          "ColumnName": "film_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_category",
+          "ColumnName": "category_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_category",
+          "ColumnName": "last_update"
+        },
+        "Number": 3,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__film_cat__69C38A337C53BD2C",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_film_category",
+              "ColumnName": "category_id"
+            },
+            {
+              "TableName": "tbl_film_category",
+              "ColumnName": "film_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_film_category_category",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film_category",
+              "ColumnName": "category_id"
+            },
+            "To": {
+              "TableName": "tbl_category",
+              "ColumnName": "category_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_film_category_film",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_film_category",
+              "ColumnName": "film_id"
+            },
+            "To": {
+              "TableName": "tbl_film",
+              "ColumnName": "film_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_film_text",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_text",
+          "ColumnName": "film_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_text",
+          "ColumnName": "title"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_film_text",
+          "ColumnName": "description"
+        },
+        "Number": 3,
+        "ColumnType": "text",
+        "NotNullConstraint": false
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__film_tex__349764A8AF911F9F",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_film_text",
+              "ColumnName": "film_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": []
+  },
+  {
+    "TableName": "tbl_inventory",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_inventory",
+          "ColumnName": "inventory_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_inventory",
+          "ColumnName": "film_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_inventory",
+          "ColumnName": "store_id"
+        },
+        "Number": 3,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_inventory",
+          "ColumnName": "last_update"
+        },
+        "Number": 4,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__inventor__B59ACC48FFCA974C",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_inventory",
+              "ColumnName": "inventory_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_inventory_film",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_inventory",
+              "ColumnName": "film_id"
+            },
+            "To": {
+              "TableName": "tbl_film",
+              "ColumnName": "film_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_inventory_store",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_inventory",
+              "ColumnName": "store_id"
+            },
+            "To": {
+              "TableName": "tbl_store",
+              "ColumnName": "store_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_staff",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "staff_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "first_name"
+        },
+        "Number": 2,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "last_name"
+        },
+        "Number": 3,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "address_id"
+        },
+        "Number": 4,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "picture"
+        },
+        "Number": 5,
+        "ColumnType": "image",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "email"
+        },
+        "Number": 6,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "store_id"
+        },
+        "Number": 7,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "active"
+        },
+        "Number": 8,
+        "ColumnType": "bit",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "username"
+        },
+        "Number": 9,
+        "ColumnType": "varchar",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "password"
+        },
+        "Number": 10,
+        "ColumnType": "varchar",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_staff",
+          "ColumnName": "last_update"
+        },
+        "Number": 11,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__staff__1963DD9D9C07EE22",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_staff",
+              "ColumnName": "staff_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_staff_address",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_staff",
+              "ColumnName": "address_id"
+            },
+            "To": {
+              "TableName": "tbl_address",
+              "ColumnName": "address_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_staff_store",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_staff",
+              "ColumnName": "store_id"
+            },
+            "To": {
+              "TableName": "tbl_store",
+              "ColumnName": "store_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_store",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_store",
+          "ColumnName": "store_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_store",
+          "ColumnName": "manager_staff_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_store",
+          "ColumnName": "address_id"
+        },
+        "Number": 3,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_store",
+          "ColumnName": "last_update"
+        },
+        "Number": 4,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__store__A2F2A30DBF4C9733",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_store",
+              "ColumnName": "store_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_store_address",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_store",
+              "ColumnName": "address_id"
+            },
+            "To": {
+              "TableName": "tbl_address",
+              "ColumnName": "address_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_store_staff",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_store",
+              "ColumnName": "manager_staff_id"
+            },
+            "To": {
+              "TableName": "tbl_staff",
+              "ColumnName": "staff_id"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "TableName": "tbl_payment",
+    "Columns": [
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "payment_id"
+        },
+        "Number": 1,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "customer_id"
+        },
+        "Number": 2,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "staff_id"
+        },
+        "Number": 3,
+        "ColumnType": "int",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "rental_id"
+        },
+        "Number": 4,
+        "ColumnType": "int",
+        "NotNullConstraint": false
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "amount"
+        },
+        "Number": 5,
+        "ColumnType": "decimal",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "payment_date"
+        },
+        "Number": 6,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      },
+      {
+        "ColumnKey": {
+          "TableName": "tbl_payment",
+          "ColumnName": "last_update"
+        },
+        "Number": 7,
+        "ColumnType": "datetime",
+        "NotNullConstraint": true
+      }
+    ],
+    "PrimaryKey": {
+      "Case": "Some",
+      "Fields": [
+        {
+          "PrimaryKeyName": "PK__payment__ED1FC9EB4FFAFEA6",
+          "PrimaryKeys": [
+            {
+              "TableName": "tbl_payment",
+              "ColumnName": "payment_id"
+            }
+          ]
+        }
+      ]
+    },
+    "ForeignKeys": [
+      {
+        "ForeignKeyName": "fk_payment_customer",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_payment",
+              "ColumnName": "customer_id"
+            },
+            "To": {
+              "TableName": "tbl_customer",
+              "ColumnName": "customer_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_payment_rental",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_payment",
+              "ColumnName": "rental_id"
+            },
+            "To": {
+              "TableName": "tbl_rental",
+              "ColumnName": "rental_id"
+            }
+          }
+        ]
+      },
+      {
+        "ForeignKeyName": "fk_payment_staff",
+        "Columns": [
+          {
+            "From": {
+              "TableName": "tbl_payment",
+              "ColumnName": "staff_id"
+            },
+            "To": {
+              "TableName": "tbl_staff",
+              "ColumnName": "staff_id"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

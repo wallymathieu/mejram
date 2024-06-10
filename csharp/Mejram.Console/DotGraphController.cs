@@ -5,6 +5,8 @@ namespace Mejram
     /// </summary>
 	public class DotGraphController
 	{
+        private readonly DotGraphGenerator dotGraphGenerator = new ();
+
 	    /// <summary>
 	    /// Writes dot file and send to dot
 	    /// </summary>
@@ -13,9 +15,22 @@ namespace Mejram
 	    public void WriteDot (string dot,
             string tablesPath = "outfile.tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
             var serialization = new Serialization(tablesPath);
 		    dotGraphGenerator.GenerateDotFile(serialization.Deserialize());
+			dotGraphGenerator.WriteDot(dot);
+		}
+
+		/// <summary>
+	    /// Writes dot file and send to dot
+		/// Writes out connections between tables that has many as many as direct connections.
+	    /// </summary>
+	    /// <param name="dot">dot tool</param>
+	    /// <param name="tablesPath">Tables json file path.</param>
+	    public void WriteDotMany (string dot,
+            string tablesPath = "outfile.tables.json")
+		{
+            var serialization = new Serialization(tablesPath);
+		    dotGraphGenerator.GenerateDotFileWithLessManyToMany(serialization.Deserialize());
 			dotGraphGenerator.WriteDot(dot);
 		}
 
@@ -27,7 +42,6 @@ namespace Mejram
 	    public void WriteNeato (string neato,
             string tablesPath = "outfile.Tables.json")
 		{
-            var dotGraphGenerator = new DotGraphGenerator();
 		    var serialization = new Serialization(tablesPath);
 			dotGraphGenerator.GenerateDotFile (serialization.Deserialize());
 			dotGraphGenerator.WriteNeato(neato);

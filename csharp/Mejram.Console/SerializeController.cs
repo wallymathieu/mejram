@@ -67,7 +67,7 @@ namespace Mejram
             var map = tables.ToDictionary(t => t.TableName, t => t);
 
             using var fs = File.Open(keyWeightPath, FileMode.Create);
-            using TextWriter txtWriter = new StreamWriter(fs);
+            using var txtWriter = new StreamWriter(fs);
             var tableCounts = from table in tables
                               from fk in table.ForeignKeys
                               let count = Sql.KeyWeight(fk, map, conn)
