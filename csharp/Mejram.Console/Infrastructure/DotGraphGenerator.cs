@@ -20,7 +20,8 @@ namespace Mejram
 node [style=filled];
 hexagon [style=bold,style=filled];");
             var conventions = Analysis.TableNameConventions.Default();
-            foreach (var table in tables)
+            var relatedTable = RelatedTables(tables);
+            foreach (var table in tables.Where(t => relatedTable.Contains(t.TableName)))
             {
                 //,style=filled
                 sout.WriteLine("\"{0}\" {1};",
@@ -47,11 +48,12 @@ hexagon [style=bold,style=filled];");
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
+            var relatedTable = RelatedTables(tables);
             var conventions = Analysis.TableNameConventions.Default();
             var manyToMany = Analysis.ProbableManyToManyTables(tables, conventions).Where(t => t.HasMatchingOutgoingForeignKeys());
             var manyToManyNames = manyToMany.Select(t => t.Table.TableName).ToHashSet();
             bool IsAManyToMany(Table t) => manyToManyNames.Contains(t.TableName);
-            foreach (var table in tables.Where(t => !IsAManyToMany(t)))
+            foreach (var table in tables.Where(t => !IsAManyToMany(t) && relatedTable.Contains(t.TableName)))
             {
                 //,style=filled
                 sout.WriteLine("\"{0}\" {1};",
@@ -75,6 +77,14 @@ hexagon [style=bold,style=filled];");
             }
             sout.WriteLine("}");
         }
+
+        /// <summary> Tables related by foreign keys </summary>
+        private static HashSet<string> RelatedTables(ICollection<Table> tables) => new((
+                            from table in tables
+                            from tfk in table.ForeignKeys
+                            from fkcol in tfk.Columns
+                            from tableName in new[] { fkcol.From.TableName, fkcol.To.TableName }
+                            select tableName).Distinct());
 
         public void WriteDot(string dotExe, string @out= "outfile.png")
         {
