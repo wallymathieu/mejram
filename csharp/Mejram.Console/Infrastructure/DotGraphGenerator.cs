@@ -7,15 +7,21 @@ using Mejram.Models;
 
 namespace Mejram
 {
+    ///<summary> Writes graph files. See <a href="https://graphviz.org/documentation/">Graphviz documentation</a>.</summary>
     internal class DotGraphGenerator(
         string dotfile = "outfile.dot")
     {
+        // References:
+        // https://stackoverflow.com/questions/13417411/laying-out-a-large-graph-with-graphviz
+        // https://stackoverflow.com/questions/16173764/what-is-the-best-way-to-draw-large-graph-using-graphvis
+
         public void GenerateDotFile(ICollection<Table> tables)
         {
             using var m = File.Open(dotfile, FileMode.Create);
             using var sout = new StreamWriter(m);
             //size=""90,90""; 
             sout.WriteLine(@"digraph graphname { 
+splines=true ;overlap=false;
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
@@ -45,6 +51,7 @@ hexagon [style=bold,style=filled];");
             using var sout = new StreamWriter(m);
             //size=""90,90""; 
             sout.WriteLine(@"strict graph graphname { 
+splines=true ;overlap=false;
 #ratio = square;
 node [style=filled];
 hexagon [style=bold,style=filled];");
@@ -89,7 +96,7 @@ hexagon [style=bold,style=filled];");
         public void WriteDot(string dotExe, string @out= "outfile.png")
         {
             var fileName = dotExe;
-            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
+            var arguments = String.Format(" -x -Goverlap=scale -Tpng {0} -o {1}", dotfile,
                                            @out);
             System.Console.WriteLine("{0} {1}", fileName, arguments);
             var dot = new Process
@@ -105,7 +112,7 @@ hexagon [style=bold,style=filled];");
 
         public void WriteNeato(string neatoExe, string outNeato = "outfile.neato.png")
         {
-            var arguments = String.Format("-Tpng {0} -o {1}", dotfile,
+            var arguments = String.Format(" -x -Goverlap=scale -Tpng {0} -o {1}", dotfile,
                                           outNeato);
             var fileName = neatoExe;
             System.Console.WriteLine("{0} {1}", fileName, arguments);
