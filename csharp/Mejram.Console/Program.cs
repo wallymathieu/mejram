@@ -18,6 +18,7 @@ namespace Mejram
             var appHost = AppHostBuilder.Create(svc)
                 .Recognize(typeof(DotGraphController))
                 .Recognize(typeof(SerializeController))
+                .Recognize(typeof(MermaidController))
                 .BuildAppHost()
                 ;
             try

@@ -1,9 +1,9 @@
 namespace Mejram
 {
-     /// <summary>
+    /// <summary>
     /// Writes graph files
     /// </summary>
-	public class DotGraphController
+    public class DotGraphController
 	{
         private readonly DotGraphGenerator dotGraphGenerator = new ();
 

@@ -25,3 +25,9 @@ On windows you might need to specify the path to the dot executable:
 ```ps1
 dotnet run DotGraph WriteDot --dot='c:\program files\graphviz\bin\dot.exe' 
 ```
+
+To generate using [mermaid](https://mermaid.js.org/) make sure you have the [cli installed](https://github.com/mermaid-js/mermaid-cli)
+
+```sh
+dotnet run Mermaid Write --mmdc mmdc
+```
