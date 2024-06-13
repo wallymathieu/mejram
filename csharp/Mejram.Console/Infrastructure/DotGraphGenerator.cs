@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Mejram.Models;
-
-namespace Mejram
+using static Mejram.Infrastructure.Tables;
+namespace Mejram.Infrastructure
 {
     ///<summary> Writes graph files. See <a href="https://graphviz.org/documentation/">Graphviz documentation</a>.</summary>
     internal class DotGraphGenerator(
         string dotfile = "outfile.dot")
     {
+ 
         // References:
         // https://stackoverflow.com/questions/13417411/laying-out-a-large-graph-with-graphviz
         // https://stackoverflow.com/questions/16173764/what-is-the-best-way-to-draw-large-graph-using-graphvis
@@ -27,18 +28,21 @@ node [style=filled];
 hexagon [style=bold,style=filled];");
             var conventions = Analysis.TableNameConventions.Default();
             var relatedTable = RelatedTables(tables);
+          
             foreach (var table in tables.Where(t => relatedTable.Contains(t.TableName)))
             {
                 //,style=filled
                 sout.WriteLine("\"{0}\" {1};",
                     table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : "");
             }
+
             foreach (var (fromTable, columnName, toTable) in (
                              from table in tables
                              from fk in table.ForeignKeys
                              from fkcol in fk.Columns
                              select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
             {
+
                 sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
                                columnName);
             }
@@ -85,13 +89,7 @@ hexagon [style=bold,style=filled];");
             sout.WriteLine("}");
         }
 
-        /// <summary> Tables related by foreign keys </summary>
-        private static HashSet<string> RelatedTables(ICollection<Table> tables) => new((
-                            from table in tables
-                            from tfk in table.ForeignKeys
-                            from fkcol in tfk.Columns
-                            from tableName in new[] { fkcol.From.TableName, fkcol.To.TableName }
-                            select tableName).Distinct());
+       
 
         public void WriteDot(string dotExe, string @out= "outfile.png")
         {

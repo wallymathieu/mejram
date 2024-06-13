@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Data.Common;
 using Npgsql;
+using Mejram.Infrastructure;
 
 namespace Mejram
 {
