@@ -4,7 +4,7 @@ using System.Linq;
 using Mejram.Models;
 using Newtonsoft.Json;
 
-namespace Mejram
+namespace Mejram.Infrastructure
 {
     internal class Serialization(string tablesFileName)
     {
