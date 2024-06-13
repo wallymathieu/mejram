@@ -58,7 +58,7 @@ namespace Mejram
 			foreach	(var (table, refTables) in grouped)
 			{
 				var gen = new DotGraphGenerator(table.TableName+".dot");
-				gen.GenerateDotFileWithLessManyToMany(refTables.ToArray());
+				gen.GenerateDotFile(refTables.ToArray());
 				gen.WriteDot(dot, table.TableName+".png");
 			}
 		}
