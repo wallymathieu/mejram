@@ -23,9 +23,8 @@ namespace Mejram.Infrastructure
             //size=""90,90""; 
             sout.WriteLine(@"digraph graphname { 
 splines=true ;overlap=false;
-#ratio = square;
 node [style=filled];
-hexagon [style=bold,style=filled];");
+");
             var conventions = Analysis.TableNameConventions.Default();
             var relatedTable = RelatedTables(tables);
           
@@ -56,9 +55,8 @@ hexagon [style=bold,style=filled];");
             //size=""90,90""; 
             sout.WriteLine(@"strict graph graphname { 
 splines=true ;overlap=false;
-#ratio = square;
 node [style=filled];
-hexagon [style=bold,style=filled];");
+");
             var relatedTable = RelatedTables(tables);
             var conventions = Analysis.TableNameConventions.Default();
             var manyToMany = Analysis.ProbableManyToManyTables(tables, conventions).Where(t => t.HasMatchingOutgoingForeignKeys());
