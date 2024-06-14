@@ -43,8 +43,3 @@ dotnet test csharp
 ```
 
 
-## Licence
-
-GNU Lesser Public License.
-
-The reason for the license is that the library previously used LGPL c# code. This should not be a problem since the users of this library is intended to be internal users (i.e. developers and *not* regular users).
