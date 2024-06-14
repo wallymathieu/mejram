@@ -35,13 +35,19 @@ node [style=filled];
                     table.TableName, table.HasPrimalKey() ? "[shape=hexagon]" : "");
             }
 
-            foreach (var (fromTable, columnName, toTable) in (
+            foreach (var (fromTable, columnName, toTable, existsAsReferenced) in (
                              from table in tables
                              from fk in table.ForeignKeys
                              from fkcol in fk.Columns
-                             select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName)).Distinct())
+                             select (fkcol.From.TableName, fkcol.From.ColumnName, fkcol.To.TableName,
+                                (from toTable in tables
+                                where fkcol.To.TableName == toTable.TableName
+                                select true).FirstOrDefault())).Distinct())
             {
-
+                if (!existsAsReferenced)
+                {
+                    sout.WriteLine("\"{0}\" [shape=plain];",toTable);
+                }
                 sout.WriteLine("\"{0}\" -> \"{1}\"  [label=\"{2}\"];", fromTable, toTable,
                                columnName);
             }
@@ -53,7 +59,7 @@ node [style=filled];
             using var m = File.Open(dotfile, FileMode.Create);
             using var sout = new StreamWriter(m);
             //size=""90,90""; 
-            sout.WriteLine(@"strict graph graphname { 
+            sout.WriteLine(@"strict graph graphname {
 splines=true ;overlap=false;
 node [style=filled];
 ");
