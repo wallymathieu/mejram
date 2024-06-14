@@ -34,7 +34,7 @@ namespace Mejram
 		{
             var serialization = new Serialization(tablesPath);
 		    dotGraphGenerator.GenerateDotFileWithLessManyToMany(serialization.Deserialize());
-			dotGraphGenerator.WriteDot(dot);
+			dotGraphGenerator.WriteDot(dot, "outfile.many.png");
 		}
 
 		/// <summary>
