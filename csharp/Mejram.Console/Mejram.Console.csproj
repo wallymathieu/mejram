@@ -10,7 +10,7 @@
     <FileVersion>$(VersionPrefix).0</FileVersion>
     <OutputType>Exe</OutputType>
     <RepositoryUrl>https://github.com/wallymathieu/mejram</RepositoryUrl>
-    <PackageLicenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/wallymathieu/mejram/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/wallymathieu/mejram</PackageProjectUrl>
     <PackAsTool>true</PackAsTool>
     <PackageTags>CLI;database;analysis</PackageTags>

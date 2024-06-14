@@ -8,7 +8,7 @@
         <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
         <FileVersion>$(VersionPrefix).0</FileVersion>
         <RepositoryUrl>https://github.com/wallymathieu/mejram</RepositoryUrl>
-        <PackageLicenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</PackageLicenseUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/wallymathieu/mejram/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/wallymathieu/mejram</PackageProjectUrl>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <PackageTags>database;analysis</PackageTags>
